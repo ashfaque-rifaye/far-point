@@ -1,0 +1,68 @@
+from farpoint.doctrine import Profile, default_doctrine
+from farpoint.facts import Facts, render_state, strain
+from farpoint.predicates import PREDICATES
+
+
+def base(**kw) -> Facts:
+    f = Facts(face=True, distance_cm=52, squint_ratio=0.97, blink_per_min=15, usual_distance_cm=55,
+              room="normal", brightness_pct=60, theme="light", app_name="Acrobat Reader", app_category="pdf",
+              zoom_available=True, activity="idle for 30 s (foreground: Acrobat Reader)")
+    for k, v in kw.items():
+        setattr(f, k, v)
+    return f
+
+
+def test_dark_room_light_theme_renders_mismatch_not_balanced():
+    d = default_doctrine()
+    text = render_state(base(room="dark", theme="light", brightness_pct=40), d)
+    assert "Theme: light, in a dark room: mismatch." in text
+    assert "balanced" not in text
+    assert "Room light: dark (estimated from camera brightness)." in text
+    assert PREDICATES["dark_mode"](base(room="dark", theme="light"), d.limits)
+
+
+def test_distance_lines():
+    d = default_doctrine()
+    assert "too close." in render_state(base(distance_cm=27, under_near_s=8), d)
+    t = render_state(base(distance_cm=27, under_near_s=3), d)
+    assert "distance OK for now." in t and "too close." not in t
+    assert "distance OK." in render_state(base(distance_cm=52), d)
+    assert "no face visible" in render_state(base(face=False, distance_cm=None), d)
+
+
+def test_brightness_and_glasses_lines():
+    d = default_doctrine()
+    assert "85%: high for a dark room." in render_state(base(room="dark", theme="dark", brightness_pct=85), d)
+    assert "20%: low for a bright room." in render_state(base(room="bright", brightness_pct=20), d)
+    assert "not adjustable on this display" in render_state(base(brightness_pct=None), d)
+    t = render_state(base(distance_cm=44, squinting=True, squinting_s=9, squint_ratio=0.68, glasses_off_signs=True), d)
+    assert "worn: not checked (text-only mode)" in t
+    assert "signs consistent with glasses off: yes (leaning in 11 cm closer than your usual 55 cm, and squinting)" in t
+
+
+def test_glasses_prescribed_line_follows_profile():
+    d = default_doctrine().model_copy(update={"profile": Profile(glasses_for_screen="yes", conditions=["myopia"])})
+    t = render_state(base(), d)
+    assert "Glasses prescribed for screen work: yes." in t and "Profile (user's own words): myopia." in t
+
+
+def test_strain_levels_counted_in_code():
+    L = default_doctrine().limits
+    assert strain(base(), L)["level"] == "relaxed"
+    one = strain(base(squinting=True), L)
+    assert one["level"] == "mild" and one["expected"] == 1.0 and one["probs"]["mild"] == 1.0
+    two = strain(base(squinting=True, distance_cm=25, under_near_s=9), L)
+    assert two["level"] == "strong" and two["expected"] == 2.0
+    four = strain(base(squinting=True, distance_cm=25, under_near_s=9, bout_min_now=50, blink_per_min=6), L)
+    assert four["level"] == "strong" and four["signs"] == 4
+
+
+def test_predicates_cover_default_rules():
+    L = default_doctrine().limits
+    assert PREDICATES["enlarge_text"](base(distance_cm=27, under_near_s=8), L)
+    assert not PREDICATES["enlarge_text"](base(distance_cm=27, under_near_s=8, zoom_available=False), L)
+    assert PREDICATES["far_look_break"](base(bout_min_now=46), L)
+    assert PREDICATES["reduce_text"](base(zoom_step=1, relaxed_min_now=11), L)
+    assert PREDICATES["ask_user"](base(squinting=True, squinting_s=70, zoom_step=2), L)
+    assert not PREDICATES["glasses_reminder"](base(glasses_off_signs=True), L)
+    assert PREDICATES["glasses_reminder"](base(glasses_off_signs=True, glasses_prescribed="yes"), L)

@@ -71,6 +71,30 @@ class Reading:
     ear: float
     distance_cm: float | None = None
     squint_ratio: float | None = None  # ear / baseline; < ~0.75 suggests squinting
+    yaw_deg: float | None = None  # head turn left/right, 0 = facing the camera
+    pitch_deg: float | None = None  # head tilt up/down
+    frame_luma: float | None = None  # mean gray level of the frame, 0-255
+
+
+def head_angles(matrix) -> tuple[float, float]:
+    """(yaw, pitch) in degrees from MediaPipe's 4x4 facial transformation matrix."""
+    r = [[float(matrix[i][j]) for j in range(3)] for i in range(3)]
+    pitch = math.degrees(math.atan2(r[2][1], r[2][2]))
+    yaw = math.degrees(math.atan2(-r[2][0], math.hypot(r[2][1], r[2][2])))
+    # atan2 on a face looking at the camera can come out near +/-180 depending on axis
+    # conventions; fold it into [-90, 90].
+    if pitch > 90:
+        pitch -= 180
+    elif pitch < -90:
+        pitch += 180
+    return yaw, pitch
+
+
+def frame_luma(frame_bgr) -> float:
+    """Mean gray level of a (downscaled) frame. Used only as a coarse ambient-light estimate."""
+    import cv2
+    small = cv2.resize(frame_bgr, (64, 48), interpolation=cv2.INTER_AREA)
+    return float(cv2.cvtColor(small, cv2.COLOR_BGR2GRAY).mean())
 
 
 class FaceSensor:
@@ -82,6 +106,7 @@ class FaceSensor:
             base_options=BaseOptions(model_asset_path=str(model_path)),
             running_mode=vision.RunningMode.VIDEO,
             num_faces=1,
+            output_facial_transformation_matrixes=True,
         )
         self._lm = vision.FaceLandmarker.create_from_options(opts)
         self._ts = 0
@@ -97,6 +122,9 @@ class FaceSensor:
             return None
         pts = [(p.x * w, p.y * h) for p in res.face_landmarks[0]]
         r = Reading(iris_px=iris_diameter_px(pts), ear=eye_aspect_ratio(pts))
+        mats = getattr(res, "facial_transformation_matrixes", None)
+        if mats:
+            r.yaw_deg, r.pitch_deg = head_angles(mats[0])
         if calib:
             r.distance_cm = distance_cm(r.iris_px, calib.focal_px)
             r.squint_ratio = r.ear / calib.ear_baseline
