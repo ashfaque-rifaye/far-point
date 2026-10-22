@@ -1,10 +1,15 @@
-"""Pre-push scan of STAGED git content. Exits 1 (and prints only file + rule, never the
-match) if anything looks like a credential, the AWS account id, or image bytes.
+"""Pre-push scan. Exits 1 (and prints only file + rule, never the match) if anything looks
+like a credential, the AWS account id, or image bytes.
 
-  python scripts/prepush_scan.py
+  python scripts/prepush_scan.py                       # STAGED content (git diff --cached)
+  python scripts/prepush_scan.py --range origin/main..HEAD   # every file the push would change
+
+Dashboard screenshots under docs/images/ (names starting with "dashboard-") are the only
+images allowed; the UI never shows camera frames, and every other image is refused.
 """
 from __future__ import annotations
 
+import argparse
 import re
 import subprocess
 import sys
@@ -21,7 +26,9 @@ RULES = {
     "jpeg_base64": re.compile(rb"/9j/4[A-Za-z0-9+/]{40,}"),
     "png_base64": re.compile(rb"iVBORw0KGgo[A-Za-z0-9+/]{40,}"),
 }
+IMAGE_RULES = {"jpeg_bytes", "png_bytes"}
 IMAGE_EXT = (".jpg", ".jpeg", ".png", ".bmp", ".webp", ".gif", ".mp4", ".mov")
+SCREENSHOT_PREFIX = "docs/images/dashboard-"
 
 
 def account_id() -> bytes | None:
@@ -32,21 +39,34 @@ def account_id() -> bytes | None:
         return None
 
 
-def main() -> int:
-    files = subprocess.check_output(["git", "diff", "--cached", "--name-only", "-z"]).split(b"\0")
-    files = [f.decode() for f in files if f]
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--range", help="scan files changed in this commit range (blobs at the range end)")
+    a = ap.parse_args(argv)
+    if a.range:
+        out = subprocess.check_output(["git", "diff", "--name-only", "--diff-filter=d", "-z", a.range])
+        ref = a.range.split("..")[-1] or "HEAD"
+        show = lambda f: subprocess.run(["git", "show", f"{ref}:{f}"], capture_output=True).stdout  # noqa: E731
+    else:
+        out = subprocess.check_output(["git", "diff", "--cached", "--name-only", "--diff-filter=d", "-z"])
+        show = lambda f: subprocess.run(["git", "show", f":{f}"], capture_output=True).stdout  # noqa: E731
+    files = [f.decode() for f in out.split(b"\0") if f]
     acct = account_id()
     hits = []
     for f in files:
-        if f.lower().endswith(IMAGE_EXT):
+        screenshot = f.startswith(SCREENSHOT_PREFIX) and f.lower().endswith(".png")
+        if f.lower().endswith(IMAGE_EXT) and not screenshot:
             hits.append((f, "image_file"))
-        blob = subprocess.run(["git", "show", f":{f}"], capture_output=True).stdout
+        blob = show(f)
         for name, rx in RULES.items():
+            if screenshot and name in IMAGE_RULES:
+                continue
             if rx.search(blob):
                 hits.append((f, name))
         if acct and acct in blob:
             hits.append((f, "aws_account_id"))
-    print(f"scanned {len(files)} staged files; account id check {'on' if acct else 'OFF (no AWS creds)'}")
+    scope = a.range or "staged"
+    print(f"scanned {len(files)} files ({scope}); account id check {'on' if acct else 'OFF (no AWS creds)'}")
     for f, r in hits:
         print(f"HIT {r}: {f}")
     return 1 if hits else 0
