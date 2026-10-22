@@ -94,9 +94,20 @@ References: the official Decider + Strands example, https://github.com/strands-l
 
 `python -m patterns.reflex_gate.examples.posture_agent --fake` runs offline. Drop `--fake` to use a Decider on 127.0.0.1:8099. It prints the selection and the gate verdict for 4 canned states. The meeting state is denied by `InterruptGate`.
 
+## Measured (Far Point, `eval/S3_RESULTS.md`)
+
+Preregistered, held-out seed 4, 72 synthetic states, thresholds fixed at 0.35 / 0.65:
+
+- One 9-way choice (Phase 1): 68.1%. Per-rule nouls + code priority: **87.5%** end to end. Every miss was the policy failing quiet on an unsure higher-priority rule, not a wrong action.
+- With Amazon Nova Lite on the unsure rules: 100%. 1.7% of nouls were unsure, and 9 of 72 states were escalated.
+- The same decomposition over the old text, which describes measurements but leaves conditions for the model to combine: 30.6%. The verdict-style rendering carries most of the gain.
+- 9 questions per request: p50 458-574 ms on an RTX 4060 laptop.
+
 ## Limits
 
-- Phase 1 baseline: one 9-way choice agreed with the rulebook on 68.1% of held-out states. The per-rule result (S3) is in `eval/S3_RESULTS.md`.
+- Phase 1 baseline: one 9-way choice agreed with the rulebook on 68.1% of held-out states.
+- With verdict-style rendering, code computes each rule's conditions and the Decider reads the verdict. That is the point of the pattern, but it means rules that combine lines in new ways (for example ones a language model writes) are less reliable than the S3 number.
+- `interrupt_ok` scored 83.3% over the S3 rendering, with misses on typing bursts and video calls. Far Point now appends code's activity verdict to the Activity line. Probes improved, but S3 did not measure it.
 - Wording matters. In the spike, rewording one question moved one label from 100% to 12%. Keep criteria explicit, quote the rendered line the rule should read, and do the arithmetic in code.
 - Every Decider call in a process goes through one lock (`client._LOCK`), because overlapping requests can get each other's answers (strands-decider issue #17). Throughput is one request at a time.
 - `DeciderHttpClient` refuses to send images to any host other than localhost.

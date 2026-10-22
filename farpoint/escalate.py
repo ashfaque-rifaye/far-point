@@ -93,7 +93,9 @@ class NovaEscalator:
 
     def _skip(self, rules: list[Rule], why: str, decider_p: dict | None) -> dict[int, None]:
         self.last = {"model": self.model_id, "skipped": why, "verdicts": {}, "latency_ms": 0}
-        if self.moments is not None:
+        # Rate-limit skips happen every tick while a rule stays unsure; logging each one would
+        # flood the moment log the coach reviews.
+        if self.moments is not None and why not in ("rate limited", "previous call still running"):
             self.moments.log("unsure", f"escalation skipped: {why}", rules=[r.n for r in rules],
                              decider_p=decider_p or {})
         return {r.n: None for r in rules}

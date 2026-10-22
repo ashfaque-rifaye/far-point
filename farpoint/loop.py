@@ -78,6 +78,7 @@ class ReflexLoop:
         self.actions: dict[str, dict] = {}
         self.decisions = 0
         self._demoted_logged: set[tuple[str, str]] = set()
+        self._moment_seen: dict[tuple, float] = {}
         self._d_ids = itertools.count(1)
         self._a_ids = itertools.count(1)
         self._next_t: float | None = None
@@ -191,8 +192,8 @@ class ReflexLoop:
                 return self.escalator(state_text, rules, {n: decider_p.get(n) for n in (r.n for r in rules)})
         sel = select(candidates, answers, self.thresholds, escalate=escalate, now=now, last_ask_t=self.last_ask_t)
         if sel.policy == "quiet" and sel.unsure and self.escalator is None:
-            self.moments.log("unsure", sel.reason, rules=sel.unsure,
-                             p={str(n): decider_p.get(n) for n in sel.unsure})
+            self._moment_once("unsure", tuple(sel.unsure), now, sel.reason, rules=sel.unsure,
+                              p={str(n): decider_p.get(n) for n in sel.unsure})
 
         io_p = sel.interrupt_p if sel.interrupt_p is not None else 0.0
         decision = {
@@ -227,6 +228,15 @@ class ReflexLoop:
         if sel.policy in ("act", "ask") and sel.tool and sel.rule_n is not None:
             self._act(decision_id, by_n[sel.rule_n], sel.interrupt_p, f, now)
         return decision
+
+    def _moment_once(self, kind: str, key, now: float, note: str, **numbers) -> None:
+        """Log a moment unless the same one was logged in the last 60 s (one per episode)."""
+        last = self._moment_seen.get((kind, key))
+        if last is not None and now - last < 60.0:
+            self._moment_seen[(kind, key)] = now
+            return
+        self._moment_seen[(kind, key)] = now
+        self.moments.log(kind, note, **numbers)
 
     # ---- ACT + VERIFY -----------------------------------------------------------------
     def _act(self, decision_id: str, rule: DoctrineRule, interrupt_p, f: Facts, now: float) -> dict:
