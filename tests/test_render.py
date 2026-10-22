@@ -15,35 +15,49 @@ def base(**kw) -> Facts:
 def test_dark_room_light_theme_renders_mismatch_not_balanced():
     d = default_doctrine()
     text = render_state(base(room="dark", theme="light", brightness_pct=40), d)
-    assert "Theme: light, in a dark room: mismatch." in text
+    assert "Theme: light, in a dark room: mismatch, dark mode needed." in text
     assert "balanced" not in text
     assert "Room light: dark (estimated from camera brightness)." in text
     assert PREDICATES["dark_mode"](base(room="dark", theme="light"), d.limits)
+    assert "Theme: dark: no change needed." in render_state(base(room="dark", theme="dark"), d)
 
 
 def test_distance_lines():
     d = default_doctrine()
-    assert "too close." in render_state(base(distance_cm=27, under_near_s=8), d)
+    assert "too close, enlarging needed." in render_state(base(distance_cm=27, under_near_s=8), d)
+    t = render_state(base(distance_cm=27, under_near_s=8, zoom_available=False), d)
+    assert "too close, but this app has no zoom control." in t
     t = render_state(base(distance_cm=27, under_near_s=3), d)
-    assert "distance OK for now." in t and "too close." not in t
-    assert "distance OK." in render_state(base(distance_cm=52), d)
+    assert "no enlarging needed yet." in t and "too close" not in t
+    assert "- Viewing distance: 52 cm: no enlarging needed." in render_state(base(distance_cm=52), d)
     assert "no face visible" in render_state(base(face=False, distance_cm=None), d)
+
+
+def test_relaxed_reading_line():
+    d = default_doctrine()
+    assert "Far Point zoom +1: text can go back one step." in render_state(base(zoom_step=1, relaxed_min_now=11), d)
+    assert "Far Point zoom +0: no change needed." in render_state(base(zoom_step=0, relaxed_min_now=11), d)
 
 
 def test_brightness_and_glasses_lines():
     d = default_doctrine()
-    assert "85%: high for a dark room." in render_state(base(room="dark", theme="dark", brightness_pct=85), d)
-    assert "20%: low for a bright room." in render_state(base(room="bright", brightness_pct=20), d)
+    assert "85%: dimming needed (too bright for a dark room)." in render_state(
+        base(room="dark", theme="dark", brightness_pct=85), d)
+    assert "20%: brightening needed (too dim for a bright room)." in render_state(base(room="bright", brightness_pct=20), d)
+    assert "55%: no change needed." in render_state(base(room="dark", theme="dark", brightness_pct=55), d)
     assert "not adjustable on this display" in render_state(base(brightness_pct=None), d)
     t = render_state(base(distance_cm=44, squinting=True, squinting_s=9, squint_ratio=0.68, glasses_off_signs=True), d)
     assert "worn: not checked (text-only mode)" in t
     assert "signs consistent with glasses off: yes (leaning in 11 cm closer than your usual 55 cm, and squinting)" in t
+    assert t.count("no reminder needed") == 1  # prescription unknown -> no reminder
 
 
-def test_glasses_prescribed_line_follows_profile():
+def test_glasses_line_follows_profile():
     d = default_doctrine().model_copy(update={"profile": Profile(glasses_for_screen="yes", conditions=["myopia"])})
     t = render_state(base(), d)
-    assert "Glasses prescribed for screen work: yes." in t and "Profile (user's own words): myopia." in t
+    assert "Glasses: prescribed for screen work: yes;" in t and "Profile (user's own words): myopia." in t
+    t2 = render_state(base(distance_cm=44, squinting=True, squint_ratio=0.68, glasses_off_signs=True), d)
+    assert t2.split("- Glasses:")[1].split("\n")[0].endswith(": reminder due.")
 
 
 def test_strain_levels_counted_in_code():

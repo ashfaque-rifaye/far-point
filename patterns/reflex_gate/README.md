@@ -18,13 +18,18 @@ Why per-rule nouls: in Far Point's Phase 1 spike, a single 9-way `choice` questi
 ```json
 {
   "type": "noul",
-  "instructions": "Does rule 1 apply right now? Rule 1: The Viewing distance line says too close, and the Text zoom line says zoom control available.",
+  "instructions": "Does rule 1 apply right now? Rule 1: The Viewing distance line says enlarging needed.",
   "criteria": {
-    "true": "The Viewing distance line ends with 'too close' AND the Text zoom line says 'zoom control available'",
-    "false": "The Viewing distance line says 'not too close' or 'no face visible', OR the Text zoom line says zoom control is not available"
+    "true": "the Viewing distance line says 'enlarging needed'",
+    "false": "the Viewing distance line says 'no enlarging needed', 'no enlarging needed yet', 'no face visible' or 'this app has no zoom control'"
   }
 }
 ```
+
+The rendered line it reads is written by code, for example `- Viewing distance: 27 cm, under 30 cm for 8 s (limit 5 s): too close, enlarging needed.` Two wording lessons came from probing the real Decider while building Far Point (single requests, not a held-out eval):
+
+- End each line with one verdict phrase, in the form "X needed" / "no X needed". For the brightness rule, "dimming needed" / "no change needed" scored p 0.97 / 0.10. The descriptive pair "high for a dark room" / "suits the room" scored 0.95 / 0.43, so the no-change case sat in the unsure band.
+- Fold any AND that a rule needs into one line in code. A rule that needed "too close" on one line AND "zoom control available" on another left the no-change states at p 0.37-0.69.
 
 `INTERRUPT_OK` (the v2 wording from the spike, copied verbatim):
 

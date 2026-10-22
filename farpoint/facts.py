@@ -12,6 +12,23 @@ from .doctrine import Doctrine, Limits
 ROOM_WORDS = {"dark": "dark", "dim": "dim", "normal": "normal indoor light", "bright": "bright"}
 STRAIN_LEVELS = ("relaxed", "mild", "strong")
 
+# The exact lines render_state writes and the verdict words each can end with. Rules (from
+# Bedrock, the user or proposals) may only reference these.
+FACT_LINE_GUIDE = """\
+- "Viewing distance: ...": ends with "too close, enlarging needed" | "too close, but this app has no zoom control" | "no enlarging needed yet" | "no enlarging needed" | "no face visible"
+- "Near-work bout: ...": ends with "break is due" | "break not due yet"
+- "Eyes: ...": "squinting for N s (eye opening P% of your baseline)" | "not squinting (...)" | "not measured"
+- "Blink rate: ...": ends with "low" | "normal" | "still measuring"
+- "Glasses: prescribed for screen work: yes|no|unknown; worn: ...; signs consistent with glasses off: yes (...)|no": ends with "reminder due" | "no reminder needed"
+- "Room light: dark" | "dim" | "normal indoor light" | "bright" (estimated from camera brightness)
+- "Theme: light, in a dark room: mismatch, dark mode needed" | "Theme: light: no change needed" | "Theme: dark: no change needed"
+- "Screen brightness: N%: dimming needed (...)" | "brightening needed (...)" | "no change needed" | "not adjustable"
+- "Text zoom: Far Point zoom +N in APP (category); zoom control available" | "zoom control not available for this app"
+- "Relaxed reading: N min ..., Far Point zoom +N": ends with "text can go back one step" | "no change needed"
+- "Squint despite zoom ...": ends with "yes" | "no"
+- "Activity: ...": idle | between tasks | just switched windows | typing in a burst | in a video call | watching a (fullscreen) video
+- "Profile (user's own words): ..." (only when the user described their eyes)"""
+
 
 @dataclass
 class Facts:
@@ -63,14 +80,33 @@ def squint_despite_zoom(f: Facts) -> bool:
     return f.squinting and f.squinting_s > 60 and f.zoom_step >= 2
 
 
+def glasses_reminder_due(f: Facts) -> bool:
+    return f.glasses_prescribed == "yes" and f.glasses_off_signs
+
+
+def text_can_go_back(f: Facts, L: Limits) -> bool:
+    return f.zoom_step > 0 and relaxed_long_enough(f, L)
+
+
+def dimming_needed(f: Facts, L: Limits) -> bool:
+    return f.brightness_pct is not None and f.room == "dark" and f.brightness_pct >= L.dim_pct_high
+
+
+def brightening_needed(f: Facts, L: Limits) -> bool:
+    return f.brightness_pct is not None and f.room == "bright" and f.brightness_pct <= L.bright_pct_low
+
+
 def brightness_verdict(f: Facts, L: Limits) -> str:
+    # Action words, not descriptions: in a probe against the real Decider, "dimming needed" /
+    # "no change needed" separated at p 0.97 / 0.10, while "high for a dark room" / "suits the
+    # room" left the no-change case unsure (p 0.43) whenever the room line said dark.
     if f.brightness_pct is None:
         return "not adjustable"
-    if f.room == "dark" and f.brightness_pct >= L.dim_pct_high:
-        return "high for a dark room"
-    if f.room == "bright" and f.brightness_pct <= L.bright_pct_low:
-        return "low for a bright room"
-    return "suits the room"
+    if dimming_needed(f, L):
+        return "dimming needed (too bright for a dark room)"
+    if brightening_needed(f, L):
+        return "brightening needed (too dim for a bright room)"
+    return "no change needed"
 
 
 def _num(x: float) -> str:
@@ -82,17 +118,21 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
     prof = doctrine.profile
     lines = ["Measured now (code computed every number and comparison):"]
 
+    # Each line ends with ONE verdict phrase that a rule can quote. Conditions that a default
+    # rule combines are folded into a single line by code: probes against the real Decider
+    # showed it reads a single line's verdict reliably but leaves cross-line ANDs unsure.
+    # "X needed" / "no X needed" verdicts separated best in probes (p ~0.96 vs ~0.21).
     if not f.face or f.distance_cm is None:
         lines.append("- Viewing distance: no face visible.")
     elif too_close(f, L):
-        lines.append(f"- Viewing distance: {_num(f.distance_cm)} cm, closer than {_num(L.near_cm)} cm for "
-                     f"{_num(f.under_near_s)} s (limit {_num(L.near_s)} s): too close.")
+        tail = "too close, enlarging needed" if f.zoom_available else "too close, but this app has no zoom control"
+        lines.append(f"- Viewing distance: {_num(f.distance_cm)} cm, under {_num(L.near_cm)} cm for "
+                     f"{_num(f.under_near_s)} s (limit {_num(L.near_s)} s): {tail}.")
     elif f.distance_cm < L.near_cm:
-        lines.append(f"- Viewing distance: {_num(f.distance_cm)} cm, closer than {_num(L.near_cm)} cm for "
-                     f"{_num(f.under_near_s)} s (too close after {_num(L.near_s)} s): distance OK for now.")
+        lines.append(f"- Viewing distance: {_num(f.distance_cm)} cm for {_num(f.under_near_s)} s "
+                     f"(limit {_num(L.near_s)} s under {_num(L.near_cm)} cm): no enlarging needed yet.")
     else:
-        lines.append(f"- Viewing distance: {_num(f.distance_cm)} cm (too close means under {_num(L.near_cm)} cm "
-                     f"for over {_num(L.near_s)} s): distance OK.")
+        lines.append(f"- Viewing distance: {_num(f.distance_cm)} cm: no enlarging needed.")
 
     bout = (f"- Near-work bout: {_num(f.bout_min_now)} min closer than {_num(L.bout_cm)} cm "
             f"(break due at {_num(L.bout_min)} min): ")
@@ -112,7 +152,6 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
         lines.append(f"- Blink rate: {_num(f.blink_per_min)} per minute (normal is {_num(L.low_blink_per_min)} "
                      f"or more): " + ("low." if low_blink(f, L) else "normal."))
 
-    lines.append(f"- Glasses prescribed for screen work: {prof.glasses_for_screen}.")
     if f.glasses_on is None:
         worn = "worn: not checked (text-only mode)"
     else:
@@ -125,13 +164,17 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
                  f"{_num(f.usual_distance_cm)} cm, and squinting)")
     else:
         signs = "signs consistent with glasses off: no"
-    lines.append(f"- Glasses: {worn}; {signs}.")
+    # The loop copies the doctrine profile into the facts; fall back to the profile here.
+    prescribed = prof.glasses_for_screen if f.glasses_prescribed == "unknown" else f.glasses_prescribed
+    due = prescribed == "yes" and f.glasses_off_signs
+    verdict = "reminder due" if due else "no reminder needed"
+    lines.append(f"- Glasses: prescribed for screen work: {prescribed}; {worn}; {signs}: {verdict}.")
 
-    lines.append(f"- Room light: {f.room} (estimated from camera brightness).")
+    lines.append(f"- Room light: {ROOM_WORDS.get(f.room, f.room)} (estimated from camera brightness).")
     if f.room == "dark" and f.theme == "light":
-        lines.append("- Theme: light, in a dark room: mismatch.")
+        lines.append("- Theme: light, in a dark room: mismatch, dark mode needed.")
     else:
-        lines.append(f"- Theme: {f.theme}: suits the room.")
+        lines.append(f"- Theme: {f.theme}: no change needed.")
 
     bv = brightness_verdict(f, L)
     if f.brightness_pct is None:
@@ -145,8 +188,8 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
     lines.append(f"- Text zoom: {zoom}")
 
     lines.append(f"- Relaxed reading: {_num(f.relaxed_min_now)} min at {_num(L.relaxed_cm)} cm or more without "
-                 f"squinting (limit {_num(L.relaxed_min)} min): "
-                 + ("relaxed long enough." if relaxed_long_enough(f, L) else "not long enough yet."))
+                 f"squinting (limit {_num(L.relaxed_min)} min), Far Point zoom {f.zoom_step:+d}: "
+                 + ("text can go back one step." if text_can_go_back(f, L) else "no change needed."))
 
     if squint_despite_zoom(f):
         lines.append(f"- Squint despite zoom: squinting for {_num(f.squinting_s)} s at Far Point zoom "
