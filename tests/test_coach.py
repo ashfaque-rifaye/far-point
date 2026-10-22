@@ -66,6 +66,14 @@ def test_compile_doctrine_gives_unapproved_v2(runtime_dir):
     assert coach.stats.get("bedrock_tokens") > 0
 
 
+def test_second_write_doctrine_in_one_compile_saves_nothing_new(runtime_dir):
+    coach, model, seen, store, *_ = make(runtime_dir, [{"tool": "write_doctrine", "input": DOCTRINE_INPUT},
+                                                       {"tool": "write_doctrine", "input": DOCTRINE_INPUT},
+                                                       {"text": "Done."}])
+    assert coach.compile_doctrine("myopia") == 2
+    assert store.current_draft.version == 2 and len(kinds(seen, "doctrine")) == 1
+
+
 def test_invalid_tool_is_retried_then_saved(runtime_dir):
     bad = {**DOCTRINE_INPUT, "rules": [{**RULE, "tool": "format_disk"}]}
     coach, model, seen, store, *_ = make(runtime_dir, [{"tool": "write_doctrine", "input": bad},

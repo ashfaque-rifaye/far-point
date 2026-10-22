@@ -59,6 +59,11 @@ def test_store_draft_approve_and_stale(runtime_dir):
     # persisted
     again = DoctrineStore(runtime_dir / "profile")
     assert again.active.version == 2 and again.active.limits.near_cm == 35
+    # a newer draft makes the active version stale for approval
+    again.save_draft("v3", Profile(), Limits(), [rule(1)])
+    with pytest.raises(StaleVersion):
+        again.approve(2)
+    assert again.approve(3).version == 3
 
 
 def test_add_rule_goes_above_ask_user(runtime_dir):

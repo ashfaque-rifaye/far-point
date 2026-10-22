@@ -235,6 +235,9 @@ class Coach:
         def write_doctrine(profile: dict, limits: dict, rules: list[dict]) -> dict:
             """Save a DRAFT rulebook (the user approves it in the dashboard). Rules may only reference the
             fact lines in the system prompt; each rule needs n, text, tool, args, when_true, when_false, basis."""
+            if coach._doctrine_saved is not None:
+                return {"status": "success", "content": [{"text": f"Draft version {coach._doctrine_saved} is already "
+                                                                  "saved. Do not call write_doctrine again."}]}
             coach._doctrine_attempts += 1
             if coach._doctrine_attempts > MAX_DOCTRINE_ATTEMPTS:
                 return {"status": "error", "content": [{"text": "STOP: too many invalid attempts. Do not retry."}]}

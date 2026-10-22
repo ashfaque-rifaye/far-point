@@ -254,13 +254,14 @@ class DoctrineStore:
 
     def approve(self, version: int) -> Doctrine:
         with self._lock:
-            if self._draft is not None and self._draft.version == version and version > self._active.version:
+            pending = self._draft is not None and self._draft.version > self._active.version
+            if pending and self._draft.version == version:
                 self._active = self._draft.model_copy(update={"approved": True})
                 self._draft = None
                 self._save()
                 return self._active
-            if version == self._active.version:
-                return self._active
+            if version == self._active.version and not pending:
+                return self._active  # already active, nothing newer waiting: idempotent
             raise StaleVersion(f"version {version} is not the current draft "
                                f"(draft={self._draft.version if self._draft else None}, active={self._active.version})")
 

@@ -124,7 +124,9 @@ async def check_ws(seconds: float, report: dict, live: bool) -> bool:
             if name == "approve_doctrine":
                 args = {"version": doctrine["data"]["version"] if doctrine else 1}
             if name == "start_calibration" and live:
-                expect = {"toast"}
+                # Live calibration would overwrite the real baseline with a guessed distance.
+                replies[name] = {"reply": "skipped", "detail": "live: needs a person at a measured distance"}
+                continue
             await ws.send(json.dumps({"v": 1, "type": "cmd", "name": name, "args": args, "t": int(time.time() * 1000)}))
             got = None
             deadline = time.time() + (60 if name in ("set_eye_description", "request_report", "draft_exam_email",
@@ -154,6 +156,7 @@ async def check_ws(seconds: float, report: dict, live: bool) -> bool:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--live", action="store_true")
+    ap.add_argument("--actuate", action="store_true", help="live: let the loop change zoom/brightness/theme")
     ap.add_argument("--seconds", type=float, default=30.0)
     ap.add_argument("--out", type=Path)
     a = ap.parse_args(argv)
@@ -161,10 +164,22 @@ def main(argv=None) -> int:
     log_path = runtime / "logs" / f"e2e-ui-check-{datetime.now():%Y%m%d-%H%M%S}.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     args = [sys.executable, "-m", "farpoint.app"]
-    args += ["--mode", "live"] if a.live else ["--mode", "replay", "--fake-decider", "--no-bedrock", "--loop-replay"]
-    report: dict = {"mode": "live" if a.live else "replay (FAKE Decider, Bedrock off, dry-run)", "log": str(log_path)}
+    if a.live:
+        args += ["--mode", "live"] + ([] if a.actuate else ["--dry-run"])
+    else:
+        args += ["--mode", "replay", "--fake-decider", "--no-bedrock", "--loop-replay"]
+    mode = ("live (real camera, Decider, Bedrock if creds; " + ("REAL actuators)" if a.actuate else "dry-run actuators)")
+            if a.live else "replay (FAKE Decider, Bedrock off, dry-run)")
+    report: dict = {"mode": mode, "log": str(log_path)}
+    # The backend under test gets its own runtime dir, so the check never leaves drafts, stats or
+    # moments in the real profile. It still reads the real calibration and face model.
+    env = dict(os.environ)
+    env["FARPOINT_RUNTIME"] = str(runtime / "e2e-check")
+    env.setdefault("FARPOINT_CALIBRATION", str(runtime / "calibration.local.json"))
+    env.setdefault("FARPOINT_FACE_MODEL", str(runtime / "models" / "face_landmarker.task"))
+    report["runtime"] = env["FARPOINT_RUNTIME"]
     with log_path.open("w", encoding="utf-8") as log:
-        proc = subprocess.Popen(args, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
+        proc = subprocess.Popen(args, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, env=env,
                                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
         ok = False
         try:

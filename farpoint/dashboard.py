@@ -67,7 +67,9 @@ def create_app(runtime, manage_lifecycle: bool = True, web_dist: Path | None = N
                 raw = await websocket.receive_text()
                 # Commands can block (calibration waits on the camera thread): run off the loop.
                 await asyncio.to_thread(runtime.handle_raw, raw)
-        except WebSocketDisconnect:
+        except (WebSocketDisconnect, RuntimeError):
+            # RuntimeError covers Starlette's WebSocketDisconnected when the server closes the
+            # socket during shutdown while we wait in receive_text().
             pass
         finally:
             if sender is not None:
