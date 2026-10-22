@@ -16,6 +16,9 @@ FIELDS = (
 )
 SAVE_EVERY_S = 60.0
 LATENCY_WINDOW = 500
+# Amazon Nova Lite on-demand list price (us-east-1), used only for the spend estimate in the usage log.
+NOVA_LITE_USD_PER_1K_IN = 0.00006
+NOVA_LITE_USD_PER_1K_OUT = 0.00024
 
 
 def _pct(xs: list[float], q: float) -> float:
@@ -87,11 +90,21 @@ class StatsStore:
             del self._lat[:-LATENCY_WINDOW]
             self._c["decisions"] += 1
 
-    def record_bedrock(self, calls: int, tokens: int) -> None:
+    def record_bedrock(self, calls: int, tokens: int, who: str = "", model: str = "",
+                       input_tokens: int | None = None, output_tokens: int | None = None) -> None:
+        """Count Bedrock usage and append it to <profile>/bedrock-usage.jsonl (tokens only)."""
         with self._lock:
             self._rollover()
             self._c["bedrock_calls"] += calls
             self._c["bedrock_tokens"] += tokens
+            inp = input_tokens if input_tokens is not None else tokens
+            out = output_tokens if output_tokens is not None else 0
+            row = {"t": round(self.clock(), 1), "who": who, "model": model, "calls": calls,
+                   "input_tokens": inp, "output_tokens": out,
+                   "est_usd": round(inp / 1000 * NOVA_LITE_USD_PER_1K_IN + out / 1000 * NOVA_LITE_USD_PER_1K_OUT, 6)}
+            self.dir.parent.mkdir(parents=True, exist_ok=True)
+            with (self.dir.parent / "bedrock-usage.jsonl").open("a", encoding="utf-8") as f:
+                f.write(json.dumps(row) + "\n")
 
     def update_from_tracker(self, view: dict) -> None:
         """Per-day perception counters owned by the SignalTracker."""
