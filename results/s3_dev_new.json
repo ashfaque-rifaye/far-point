@@ -1,0 +1,1953 @@
+{
+  "summary": {
+    "tag": "dev_new",
+    "seed": 3,
+    "render": "new",
+    "escalate": false,
+    "n_states": 72,
+    "n_questions_per_request": 9,
+    "end_to_end_agreement": 0.8472222222222222,
+    "end_to_end_agreement_multi_trigger": 0.7857142857142857,
+    "n_multi_trigger": 14,
+    "per_rule": {
+      "ask_user": {
+        "accuracy": 1.0,
+        "tp": 8,
+        "tn": 64,
+        "fp": 0,
+        "fn": 0,
+        "unsure": 0
+      },
+      "glasses_reminder": {
+        "accuracy": 1.0,
+        "tp": 8,
+        "tn": 64,
+        "fp": 0,
+        "fn": 0,
+        "unsure": 0
+      },
+      "enlarge_text": {
+        "accuracy": 1.0,
+        "tp": 8,
+        "tn": 64,
+        "fp": 0,
+        "fn": 0,
+        "unsure": 0
+      },
+      "dark_mode": {
+        "accuracy": 1.0,
+        "tp": 8,
+        "tn": 64,
+        "fp": 0,
+        "fn": 0,
+        "unsure": 6
+      },
+      "dim_screen": {
+        "accuracy": 0.9861111111111112,
+        "tp": 8,
+        "tn": 63,
+        "fp": 1,
+        "fn": 0,
+        "unsure": 5
+      },
+      "brighten_screen": {
+        "accuracy": 1.0,
+        "tp": 8,
+        "tn": 64,
+        "fp": 0,
+        "fn": 0,
+        "unsure": 0
+      },
+      "far_look_break": {
+        "accuracy": 1.0,
+        "tp": 20,
+        "tn": 52,
+        "fp": 0,
+        "fn": 0,
+        "unsure": 0
+      },
+      "reduce_text": {
+        "accuracy": 1.0,
+        "tp": 10,
+        "tn": 62,
+        "fp": 0,
+        "fn": 0,
+        "unsure": 0
+      }
+    },
+    "per_rule_mean_accuracy": 0.9982638888888888,
+    "interrupt_ok_accuracy": 0.9027777777777778,
+    "escalation_rate": 0.019097222222222224,
+    "states_with_unsure_above_choice": 11,
+    "confusion": {
+      "brighten_screen": {
+        "brighten_screen": 3,
+        "none": 5
+      },
+      "glasses_reminder": {
+        "glasses_reminder": 8
+      },
+      "none": {
+        "none": 8
+      },
+      "dark_mode": {
+        "dark_mode": 8
+      },
+      "dim_screen": {
+        "none": 6,
+        "dim_screen": 2
+      },
+      "reduce_text": {
+        "reduce_text": 8
+      },
+      "far_look_break": {
+        "far_look_break": 8
+      },
+      "enlarge_text": {
+        "enlarge_text": 8
+      },
+      "ask_user": {
+        "ask_user": 8
+      }
+    },
+    "client_ms": {
+      "p50": 450.56700002169237,
+      "p90": 479.9741299939342,
+      "max": 519.9951999820769
+    },
+    "server_ms": {
+      "p50": 446.815
+    },
+    "mean_input_tokens": 1101.5,
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "used_mib": 5087,
+      "total_mib": 8188,
+      "util_pct": 27
+    },
+    "pass_end_to_end": false,
+    "pass_latency": true
+  },
+  "rows": [
+    {
+      "id": "s3-000",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "p": {
+        "ask_user": 0.0411,
+        "glasses_reminder": 0.0295,
+        "enlarge_text": 0.0454,
+        "dark_mode": 0.1204,
+        "dim_screen": 0.2635,
+        "brighten_screen": 0.9511,
+        "far_look_break": 0.05,
+        "reduce_text": 0.2972
+      },
+      "interrupt_ok_p": 0.2424,
+      "interrupt_ok_label": false,
+      "choice": "brighten_screen",
+      "policy_reason": "rule 6 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 519.9951999820769,
+      "server_ms": 503.06,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-001",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "p": {
+        "ask_user": 0.044,
+        "glasses_reminder": 0.9488,
+        "enlarge_text": 0.0437,
+        "dark_mode": 0.0958,
+        "dim_screen": 0.197,
+        "brighten_screen": 0.1707,
+        "far_look_break": 0.0418,
+        "reduce_text": 0.303
+      },
+      "interrupt_ok_p": 0.4226,
+      "interrupt_ok_label": false,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 451.4478000346571,
+      "server_ms": 448.18,
+      "input_tokens": 1093
+    },
+    {
+      "id": "s3-002",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0328,
+        "glasses_reminder": 0.028,
+        "enlarge_text": 0.0317,
+        "dark_mode": 0.0725,
+        "dim_screen": 0.193,
+        "brighten_screen": 0.1613,
+        "far_look_break": 0.0385,
+        "reduce_text": 0.2844
+      },
+      "interrupt_ok_p": 0.9268,
+      "interrupt_ok_label": true,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 453.9155000820756,
+      "server_ms": 450.5,
+      "input_tokens": 1088
+    },
+    {
+      "id": "s3-003",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.034,
+        "glasses_reminder": 0.0295,
+        "enlarge_text": 0.037,
+        "dark_mode": 0.0672,
+        "dim_screen": 0.4011,
+        "brighten_screen": 0.9579,
+        "far_look_break": 0.9694,
+        "reduce_text": 0.2552
+      },
+      "interrupt_ok_p": 0.9324,
+      "interrupt_ok_label": true,
+      "choice": "none",
+      "policy_reason": "rule 5 unsure (p=0.40) and escalation unavailable: fail quiet",
+      "unsure": [
+        5
+      ],
+      "client_ms": 421.77200003061444,
+      "server_ms": 418.26,
+      "input_tokens": 1094
+    },
+    {
+      "id": "s3-004",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "p": {
+        "ask_user": 0.037,
+        "glasses_reminder": 0.033,
+        "enlarge_text": 0.0404,
+        "dark_mode": 0.9482,
+        "dim_screen": 0.3453,
+        "brighten_screen": 0.1657,
+        "far_look_break": 0.0392,
+        "reduce_text": 0.302
+      },
+      "interrupt_ok_p": 0.3999,
+      "interrupt_ok_label": false,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 445.0361999915913,
+      "server_ms": 442.06,
+      "input_tokens": 1097
+    },
+    {
+      "id": "s3-005",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0385,
+        "glasses_reminder": 0.0357,
+        "enlarge_text": 0.0455,
+        "dark_mode": 0.3851,
+        "dim_screen": 0.9455,
+        "brighten_screen": 0.1396,
+        "far_look_break": 0.9745,
+        "reduce_text": 0.2775
+      },
+      "interrupt_ok_p": 0.4858,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 4 unsure (p=0.39) and escalation unavailable: fail quiet",
+      "unsure": [
+        4
+      ],
+      "client_ms": 449.0920000243932,
+      "server_ms": 446.31,
+      "input_tokens": 1113
+    },
+    {
+      "id": "s3-006",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "p": {
+        "ask_user": 0.0388,
+        "glasses_reminder": 0.0331,
+        "enlarge_text": 0.0406,
+        "dark_mode": 0.9468,
+        "dim_screen": 0.3436,
+        "brighten_screen": 0.1954,
+        "far_look_break": 0.0388,
+        "reduce_text": 0.3058
+      },
+      "interrupt_ok_p": 0.9217,
+      "interrupt_ok_label": true,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 436.3225999986753,
+      "server_ms": 433.25,
+      "input_tokens": 1107
+    },
+    {
+      "id": "s3-007",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0379,
+        "glasses_reminder": 0.0277,
+        "enlarge_text": 0.0459,
+        "dark_mode": 0.0767,
+        "dim_screen": 0.2236,
+        "brighten_screen": 0.1723,
+        "far_look_break": 0.0457,
+        "reduce_text": 0.9009
+      },
+      "interrupt_ok_p": 0.4238,
+      "interrupt_ok_label": false,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 446.5830000117421,
+      "server_ms": 443.16,
+      "input_tokens": 1115
+    },
+    {
+      "id": "s3-008",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0386,
+        "glasses_reminder": 0.0255,
+        "enlarge_text": 0.039,
+        "dark_mode": 0.0749,
+        "dim_screen": 0.224,
+        "brighten_screen": 0.1707,
+        "far_look_break": 0.9711,
+        "reduce_text": 0.2838
+      },
+      "interrupt_ok_p": 0.9339,
+      "interrupt_ok_label": true,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 429.7580999555066,
+      "server_ms": 426.29,
+      "input_tokens": 1097
+    },
+    {
+      "id": "s3-009",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0386,
+        "glasses_reminder": 0.0287,
+        "enlarge_text": 0.0422,
+        "dark_mode": 0.9466,
+        "dim_screen": 0.3138,
+        "brighten_screen": 0.2243,
+        "far_look_break": 0.9719,
+        "reduce_text": 0.2932
+      },
+      "interrupt_ok_p": 0.4085,
+      "interrupt_ok_label": false,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 460.5059999739751,
+      "server_ms": 457.0,
+      "input_tokens": 1097
+    },
+    {
+      "id": "s3-010",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "p": {
+        "ask_user": 0.0388,
+        "glasses_reminder": 0.0351,
+        "enlarge_text": 0.0438,
+        "dark_mode": 0.3538,
+        "dim_screen": 0.9446,
+        "brighten_screen": 0.1476,
+        "far_look_break": 0.0493,
+        "reduce_text": 0.2668
+      },
+      "interrupt_ok_p": 0.4921,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 4 unsure (p=0.35) and escalation unavailable: fail quiet",
+      "unsure": [
+        4
+      ],
+      "client_ms": 475.15840001869947,
+      "server_ms": 446.28,
+      "input_tokens": 1114
+    },
+    {
+      "id": "s3-011",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "p": {
+        "ask_user": 0.0379,
+        "glasses_reminder": 0.0362,
+        "enlarge_text": 0.0431,
+        "dark_mode": 0.2617,
+        "dim_screen": 0.9452,
+        "brighten_screen": 0.1511,
+        "far_look_break": 0.0452,
+        "reduce_text": 0.2848
+      },
+      "interrupt_ok_p": 0.9165,
+      "interrupt_ok_label": true,
+      "choice": "dim_screen",
+      "policy_reason": "rule 5 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 450.0622000778094,
+      "server_ms": 446.38,
+      "input_tokens": 1108
+    },
+    {
+      "id": "s3-012",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0373,
+        "glasses_reminder": 0.0283,
+        "enlarge_text": 0.0447,
+        "dark_mode": 0.0809,
+        "dim_screen": 0.265,
+        "brighten_screen": 0.1553,
+        "far_look_break": 0.0483,
+        "reduce_text": 0.9014
+      },
+      "interrupt_ok_p": 0.4328,
+      "interrupt_ok_label": false,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 440.219399984926,
+      "server_ms": 437.38,
+      "input_tokens": 1112
+    },
+    {
+      "id": "s3-013",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "p": {
+        "ask_user": 0.0318,
+        "glasses_reminder": 0.0285,
+        "enlarge_text": 0.0361,
+        "dark_mode": 0.133,
+        "dim_screen": 0.3311,
+        "brighten_screen": 0.9568,
+        "far_look_break": 0.0452,
+        "reduce_text": 0.2512
+      },
+      "interrupt_ok_p": 0.6067,
+      "interrupt_ok_label": false,
+      "choice": "brighten_screen",
+      "policy_reason": "rule 6 fires (p=0.96)",
+      "unsure": [],
+      "client_ms": 459.3654000200331,
+      "server_ms": 455.79,
+      "input_tokens": 1097
+    },
+    {
+      "id": "s3-014",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "p": {
+        "ask_user": 0.0402,
+        "glasses_reminder": 0.0281,
+        "enlarge_text": 0.041,
+        "dark_mode": 0.362,
+        "dim_screen": 0.9462,
+        "brighten_screen": 0.1353,
+        "far_look_break": 0.0507,
+        "reduce_text": 0.2836
+      },
+      "interrupt_ok_p": 0.479,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 4 unsure (p=0.36) and escalation unavailable: fail quiet",
+      "unsure": [
+        4
+      ],
+      "client_ms": 478.21580001618713,
+      "server_ms": 475.03,
+      "input_tokens": 1112
+    },
+    {
+      "id": "s3-015",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0326,
+        "glasses_reminder": 0.0306,
+        "enlarge_text": 0.0372,
+        "dark_mode": 0.0868,
+        "dim_screen": 0.2103,
+        "brighten_screen": 0.1781,
+        "far_look_break": 0.9748,
+        "reduce_text": 0.9231
+      },
+      "interrupt_ok_p": 0.3234,
+      "interrupt_ok_label": false,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 424.0797000238672,
+      "server_ms": 421.01,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-016",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "p": {
+        "ask_user": 0.0326,
+        "glasses_reminder": 0.0276,
+        "enlarge_text": 0.9353,
+        "dark_mode": 0.0998,
+        "dim_screen": 0.1961,
+        "brighten_screen": 0.1881,
+        "far_look_break": 0.0365,
+        "reduce_text": 0.1934
+      },
+      "interrupt_ok_p": 0.933,
+      "interrupt_ok_label": true,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.94)",
+      "unsure": [],
+      "client_ms": 459.5448999898508,
+      "server_ms": 456.15,
+      "input_tokens": 1090
+    },
+    {
+      "id": "s3-017",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0396,
+        "glasses_reminder": 0.0347,
+        "enlarge_text": 0.0489,
+        "dark_mode": 0.0585,
+        "dim_screen": 0.2365,
+        "brighten_screen": 0.1752,
+        "far_look_break": 0.0535,
+        "reduce_text": 0.9035
+      },
+      "interrupt_ok_p": 0.3109,
+      "interrupt_ok_label": false,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 466.0204000538215,
+      "server_ms": 462.48,
+      "input_tokens": 1119
+    },
+    {
+      "id": "s3-018",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "p": {
+        "ask_user": 0.0414,
+        "glasses_reminder": 0.0287,
+        "enlarge_text": 0.0432,
+        "dark_mode": 0.3377,
+        "dim_screen": 0.9464,
+        "brighten_screen": 0.1399,
+        "far_look_break": 0.0463,
+        "reduce_text": 0.2944
+      },
+      "interrupt_ok_p": 0.9077,
+      "interrupt_ok_label": true,
+      "choice": "dim_screen",
+      "policy_reason": "rule 5 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 445.35709999036044,
+      "server_ms": 441.83,
+      "input_tokens": 1108
+    },
+    {
+      "id": "s3-019",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "p": {
+        "ask_user": 0.0387,
+        "glasses_reminder": 0.0331,
+        "enlarge_text": 0.0451,
+        "dark_mode": 0.0864,
+        "dim_screen": 0.3748,
+        "brighten_screen": 0.9495,
+        "far_look_break": 0.0406,
+        "reduce_text": 0.2898
+      },
+      "interrupt_ok_p": 0.9444,
+      "interrupt_ok_label": true,
+      "choice": "none",
+      "policy_reason": "rule 5 unsure (p=0.37) and escalation unavailable: fail quiet",
+      "unsure": [
+        5
+      ],
+      "client_ms": 488.40269993525,
+      "server_ms": 469.03,
+      "input_tokens": 1105
+    },
+    {
+      "id": "s3-020",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "p": {
+        "ask_user": 0.0395,
+        "glasses_reminder": 0.0352,
+        "enlarge_text": 0.0454,
+        "dark_mode": 0.0894,
+        "dim_screen": 0.4734,
+        "brighten_screen": 0.9507,
+        "far_look_break": 0.0439,
+        "reduce_text": 0.2915
+      },
+      "interrupt_ok_p": 0.2566,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 5 unsure (p=0.47) and escalation unavailable: fail quiet",
+      "unsure": [
+        5
+      ],
+      "client_ms": 480.16949999146163,
+      "server_ms": 477.17,
+      "input_tokens": 1104
+    },
+    {
+      "id": "s3-021",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "p": {
+        "ask_user": 0.0446,
+        "glasses_reminder": 0.0287,
+        "enlarge_text": 0.9461,
+        "dark_mode": 0.1086,
+        "dim_screen": 0.2583,
+        "brighten_screen": 0.205,
+        "far_look_break": 0.0398,
+        "reduce_text": 0.2633
+      },
+      "interrupt_ok_p": 0.9209,
+      "interrupt_ok_label": true,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 443.02170001901686,
+      "server_ms": 439.52,
+      "input_tokens": 1102
+    },
+    {
+      "id": "s3-022",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0384,
+        "glasses_reminder": 0.0359,
+        "enlarge_text": 0.0462,
+        "dark_mode": 0.1114,
+        "dim_screen": 0.2962,
+        "brighten_screen": 0.953,
+        "far_look_break": 0.975,
+        "reduce_text": 0.2951
+      },
+      "interrupt_ok_p": 0.3728,
+      "interrupt_ok_label": false,
+      "choice": "brighten_screen",
+      "policy_reason": "rule 6 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 484.41979999188334,
+      "server_ms": 464.52,
+      "input_tokens": 1102
+    },
+    {
+      "id": "s3-023",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "p": {
+        "ask_user": 0.0438,
+        "glasses_reminder": 0.947,
+        "enlarge_text": 0.0437,
+        "dark_mode": 0.1151,
+        "dim_screen": 0.2159,
+        "brighten_screen": 0.199,
+        "far_look_break": 0.04,
+        "reduce_text": 0.3058
+      },
+      "interrupt_ok_p": 0.9392,
+      "interrupt_ok_label": true,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 472.3283000057563,
+      "server_ms": 468.98,
+      "input_tokens": 1096
+    },
+    {
+      "id": "s3-024",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "p": {
+        "ask_user": 0.0336,
+        "glasses_reminder": 0.028,
+        "enlarge_text": 0.0356,
+        "dark_mode": 0.3712,
+        "dim_screen": 0.945,
+        "brighten_screen": 0.1642,
+        "far_look_break": 0.0371,
+        "reduce_text": 0.2161
+      },
+      "interrupt_ok_p": 0.9508,
+      "interrupt_ok_label": true,
+      "choice": "none",
+      "policy_reason": "rule 4 unsure (p=0.37) and escalation unavailable: fail quiet",
+      "unsure": [
+        4
+      ],
+      "client_ms": 481.3435999676585,
+      "server_ms": 477.68,
+      "input_tokens": 1087
+    },
+    {
+      "id": "s3-025",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0384,
+        "glasses_reminder": 0.0345,
+        "enlarge_text": 0.0419,
+        "dark_mode": 0.9499,
+        "dim_screen": 0.3421,
+        "brighten_screen": 0.2288,
+        "far_look_break": 0.9731,
+        "reduce_text": 0.3197
+      },
+      "interrupt_ok_p": 0.922,
+      "interrupt_ok_label": true,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 465.4573000734672,
+      "server_ms": 461.99,
+      "input_tokens": 1107
+    },
+    {
+      "id": "s3-026",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "p": {
+        "ask_user": 0.0331,
+        "glasses_reminder": 0.0291,
+        "enlarge_text": 0.033,
+        "dark_mode": 0.9437,
+        "dim_screen": 0.2855,
+        "brighten_screen": 0.2075,
+        "far_look_break": 0.0354,
+        "reduce_text": 0.2942
+      },
+      "interrupt_ok_p": 0.932,
+      "interrupt_ok_label": true,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.94)",
+      "unsure": [],
+      "client_ms": 451.4402999775484,
+      "server_ms": 447.7,
+      "input_tokens": 1092
+    },
+    {
+      "id": "s3-027",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0333,
+        "glasses_reminder": 0.0263,
+        "enlarge_text": 0.0302,
+        "dark_mode": 0.0725,
+        "dim_screen": 0.1689,
+        "brighten_screen": 0.1553,
+        "far_look_break": 0.0346,
+        "reduce_text": 0.231
+      },
+      "interrupt_ok_p": 0.9314,
+      "interrupt_ok_label": true,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 467.89880003780127,
+      "server_ms": 464.21,
+      "input_tokens": 1088
+    },
+    {
+      "id": "s3-028",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "p": {
+        "ask_user": 0.0394,
+        "glasses_reminder": 0.0276,
+        "enlarge_text": 0.0384,
+        "dark_mode": 0.9452,
+        "dim_screen": 0.2489,
+        "brighten_screen": 0.2418,
+        "far_look_break": 0.0389,
+        "reduce_text": 0.3283
+      },
+      "interrupt_ok_p": 0.4662,
+      "interrupt_ok_label": false,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 448.74120003078133,
+      "server_ms": 445.31,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-029",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0464,
+        "glasses_reminder": 0.0387,
+        "enlarge_text": 0.9477,
+        "dark_mode": 0.09,
+        "dim_screen": 0.2871,
+        "brighten_screen": 0.2022,
+        "far_look_break": 0.9717,
+        "reduce_text": 0.2573
+      },
+      "interrupt_ok_p": 0.9342,
+      "interrupt_ok_label": true,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 435.9501999570057,
+      "server_ms": 432.21,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-030",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "p": {
+        "ask_user": 0.9264,
+        "glasses_reminder": 0.0419,
+        "enlarge_text": 0.0405,
+        "dark_mode": 0.0661,
+        "dim_screen": 0.1831,
+        "brighten_screen": 0.1707,
+        "far_look_break": 0.0362,
+        "reduce_text": 0.268
+      },
+      "interrupt_ok_p": 0.5423,
+      "interrupt_ok_label": false,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.93)",
+      "unsure": [],
+      "client_ms": 424.37600006815046,
+      "server_ms": 420.92,
+      "input_tokens": 1088
+    },
+    {
+      "id": "s3-031",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "p": {
+        "ask_user": 0.9176,
+        "glasses_reminder": 0.0493,
+        "enlarge_text": 0.0472,
+        "dark_mode": 0.0573,
+        "dim_screen": 0.2027,
+        "brighten_screen": 0.183,
+        "far_look_break": 0.0444,
+        "reduce_text": 0.2572
+      },
+      "interrupt_ok_p": 0.3954,
+      "interrupt_ok_label": false,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.92)",
+      "unsure": [],
+      "client_ms": 439.8313999408856,
+      "server_ms": 436.83,
+      "input_tokens": 1097
+    },
+    {
+      "id": "s3-032",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0392,
+        "glasses_reminder": 0.0268,
+        "enlarge_text": 0.0384,
+        "dark_mode": 0.0832,
+        "dim_screen": 0.2352,
+        "brighten_screen": 0.1753,
+        "far_look_break": 0.0469,
+        "reduce_text": 0.2948
+      },
+      "interrupt_ok_p": 0.903,
+      "interrupt_ok_label": true,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 440.91900007333606,
+      "server_ms": 437.75,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-033",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "p": {
+        "ask_user": 0.042,
+        "glasses_reminder": 0.9492,
+        "enlarge_text": 0.0399,
+        "dark_mode": 0.061,
+        "dim_screen": 0.2105,
+        "brighten_screen": 0.1916,
+        "far_look_break": 0.0419,
+        "reduce_text": 0.3337
+      },
+      "interrupt_ok_p": 0.4711,
+      "interrupt_ok_label": false,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 453.0432999599725,
+      "server_ms": 449.55,
+      "input_tokens": 1101
+    },
+    {
+      "id": "s3-034",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0374,
+        "glasses_reminder": 0.0327,
+        "enlarge_text": 0.0386,
+        "dark_mode": 0.0734,
+        "dim_screen": 0.2606,
+        "brighten_screen": 0.1609,
+        "far_look_break": 0.0504,
+        "reduce_text": 0.2841
+      },
+      "interrupt_ok_p": 0.5259,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 463.51999999023974,
+      "server_ms": 459.79,
+      "input_tokens": 1104
+    },
+    {
+      "id": "s3-035",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0461,
+        "glasses_reminder": 0.9499,
+        "enlarge_text": 0.0436,
+        "dark_mode": 0.0751,
+        "dim_screen": 0.2631,
+        "brighten_screen": 0.173,
+        "far_look_break": 0.973,
+        "reduce_text": 0.3255
+      },
+      "interrupt_ok_p": 0.4501,
+      "interrupt_ok_label": false,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 426.0905999690294,
+      "server_ms": 422.65,
+      "input_tokens": 1100
+    },
+    {
+      "id": "s3-036",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "p": {
+        "ask_user": 0.0334,
+        "glasses_reminder": 0.0273,
+        "enlarge_text": 0.0325,
+        "dark_mode": 0.9409,
+        "dim_screen": 0.2904,
+        "brighten_screen": 0.1826,
+        "far_look_break": 0.0329,
+        "reduce_text": 0.2714
+      },
+      "interrupt_ok_p": 0.9338,
+      "interrupt_ok_label": true,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.94)",
+      "unsure": [],
+      "client_ms": 483.51890000049025,
+      "server_ms": 480.14,
+      "input_tokens": 1091
+    },
+    {
+      "id": "s3-037",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "p": {
+        "ask_user": 0.0448,
+        "glasses_reminder": 0.9468,
+        "enlarge_text": 0.0427,
+        "dark_mode": 0.0675,
+        "dim_screen": 0.2109,
+        "brighten_screen": 0.2113,
+        "far_look_break": 0.048,
+        "reduce_text": 0.3167
+      },
+      "interrupt_ok_p": 0.9173,
+      "interrupt_ok_label": true,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 477.4703000439331,
+      "server_ms": 473.75,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-038",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.9026,
+        "glasses_reminder": 0.0377,
+        "enlarge_text": 0.0485,
+        "dark_mode": 0.0663,
+        "dim_screen": 0.2489,
+        "brighten_screen": 0.1624,
+        "far_look_break": 0.9712,
+        "reduce_text": 0.2918
+      },
+      "interrupt_ok_p": 0.4011,
+      "interrupt_ok_label": false,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 444.8106000199914,
+      "server_ms": 441.28,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-039",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0391,
+        "glasses_reminder": 0.0273,
+        "enlarge_text": 0.0402,
+        "dark_mode": 0.073,
+        "dim_screen": 0.2112,
+        "brighten_screen": 0.1908,
+        "far_look_break": 0.9706,
+        "reduce_text": 0.2953
+      },
+      "interrupt_ok_p": 0.4124,
+      "interrupt_ok_label": false,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 440.1086999569088,
+      "server_ms": 436.5,
+      "input_tokens": 1094
+    },
+    {
+      "id": "s3-040",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0369,
+        "glasses_reminder": 0.0317,
+        "enlarge_text": 0.037,
+        "dark_mode": 0.0535,
+        "dim_screen": 0.2089,
+        "brighten_screen": 0.1458,
+        "far_look_break": 0.0375,
+        "reduce_text": 0.3031
+      },
+      "interrupt_ok_p": 0.4655,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 438.3017000509426,
+      "server_ms": 434.58,
+      "input_tokens": 1099
+    },
+    {
+      "id": "s3-041",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "p": {
+        "ask_user": 0.0438,
+        "glasses_reminder": 0.9462,
+        "enlarge_text": 0.0401,
+        "dark_mode": 0.0855,
+        "dim_screen": 0.215,
+        "brighten_screen": 0.2068,
+        "far_look_break": 0.0423,
+        "reduce_text": 0.3238
+      },
+      "interrupt_ok_p": 0.9105,
+      "interrupt_ok_label": true,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 468.8039000611752,
+      "server_ms": 465.66,
+      "input_tokens": 1102
+    },
+    {
+      "id": "s3-042",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.041,
+        "glasses_reminder": 0.0267,
+        "enlarge_text": 0.0373,
+        "dark_mode": 0.0775,
+        "dim_screen": 0.2434,
+        "brighten_screen": 0.1593,
+        "far_look_break": 0.9698,
+        "reduce_text": 0.3069
+      },
+      "interrupt_ok_p": 0.9155,
+      "interrupt_ok_label": true,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 461.2764000194147,
+      "server_ms": 458.17,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-043",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0372,
+        "glasses_reminder": 0.0335,
+        "enlarge_text": 0.0481,
+        "dark_mode": 0.0484,
+        "dim_screen": 0.2013,
+        "brighten_screen": 0.1808,
+        "far_look_break": 0.0568,
+        "reduce_text": 0.9021
+      },
+      "interrupt_ok_p": 0.9252,
+      "interrupt_ok_label": true,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 446.27690000925213,
+      "server_ms": 442.69,
+      "input_tokens": 1125
+    },
+    {
+      "id": "s3-044",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "p": {
+        "ask_user": 0.9281,
+        "glasses_reminder": 0.0444,
+        "enlarge_text": 0.0403,
+        "dark_mode": 0.1185,
+        "dim_screen": 0.2584,
+        "brighten_screen": 0.1504,
+        "far_look_break": 0.0388,
+        "reduce_text": 0.2487
+      },
+      "interrupt_ok_p": 0.9322,
+      "interrupt_ok_label": true,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.93)",
+      "unsure": [],
+      "client_ms": 443.2515000225976,
+      "server_ms": 440.09,
+      "input_tokens": 1086
+    },
+    {
+      "id": "s3-045",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0398,
+        "glasses_reminder": 0.0347,
+        "enlarge_text": 0.9341,
+        "dark_mode": 0.0581,
+        "dim_screen": 0.2608,
+        "brighten_screen": 0.1877,
+        "far_look_break": 0.9716,
+        "reduce_text": 0.2501
+      },
+      "interrupt_ok_p": 0.9512,
+      "interrupt_ok_label": true,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.93)",
+      "unsure": [],
+      "client_ms": 435.9872000059113,
+      "server_ms": 432.47,
+      "input_tokens": 1099
+    },
+    {
+      "id": "s3-046",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "p": {
+        "ask_user": 0.9218,
+        "glasses_reminder": 0.0503,
+        "enlarge_text": 0.0488,
+        "dark_mode": 0.0608,
+        "dim_screen": 0.2461,
+        "brighten_screen": 0.185,
+        "far_look_break": 0.0457,
+        "reduce_text": 0.2697
+      },
+      "interrupt_ok_p": 0.9246,
+      "interrupt_ok_label": true,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.92)",
+      "unsure": [],
+      "client_ms": 446.9487000023946,
+      "server_ms": 443.5,
+      "input_tokens": 1108
+    },
+    {
+      "id": "s3-047",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0331,
+        "glasses_reminder": 0.0295,
+        "enlarge_text": 0.036,
+        "dark_mode": 0.4241,
+        "dim_screen": 0.9495,
+        "brighten_screen": 0.1701,
+        "far_look_break": 0.9728,
+        "reduce_text": 0.2578
+      },
+      "interrupt_ok_p": 0.5027,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 4 unsure (p=0.42) and escalation unavailable: fail quiet",
+      "unsure": [
+        4
+      ],
+      "client_ms": 434.16129995603114,
+      "server_ms": 430.84,
+      "input_tokens": 1091
+    },
+    {
+      "id": "s3-048",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "p": {
+        "ask_user": 0.9067,
+        "glasses_reminder": 0.0386,
+        "enlarge_text": 0.0472,
+        "dark_mode": 0.1038,
+        "dim_screen": 0.3035,
+        "brighten_screen": 0.1709,
+        "far_look_break": 0.0453,
+        "reduce_text": 0.262
+      },
+      "interrupt_ok_p": 0.2382,
+      "interrupt_ok_label": false,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.91)",
+      "unsure": [],
+      "client_ms": 451.07179996557534,
+      "server_ms": 447.45,
+      "input_tokens": 1096
+    },
+    {
+      "id": "s3-049",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0402,
+        "glasses_reminder": 0.0271,
+        "enlarge_text": 0.0401,
+        "dark_mode": 0.0832,
+        "dim_screen": 0.2197,
+        "brighten_screen": 0.1997,
+        "far_look_break": 0.971,
+        "reduce_text": 0.2911
+      },
+      "interrupt_ok_p": 0.2596,
+      "interrupt_ok_label": false,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 425.4016999620944,
+      "server_ms": 421.57,
+      "input_tokens": 1096
+    },
+    {
+      "id": "s3-050",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "p": {
+        "ask_user": 0.0395,
+        "glasses_reminder": 0.0283,
+        "enlarge_text": 0.0416,
+        "dark_mode": 0.4256,
+        "dim_screen": 0.9457,
+        "brighten_screen": 0.1318,
+        "far_look_break": 0.0436,
+        "reduce_text": 0.2849
+      },
+      "interrupt_ok_p": 0.3922,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 4 unsure (p=0.43) and escalation unavailable: fail quiet",
+      "unsure": [
+        4
+      ],
+      "client_ms": 462.1430999832228,
+      "server_ms": 458.78,
+      "input_tokens": 1100
+    },
+    {
+      "id": "s3-051",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "p": {
+        "ask_user": 0.0417,
+        "glasses_reminder": 0.034,
+        "enlarge_text": 0.9442,
+        "dark_mode": 0.0932,
+        "dim_screen": 0.322,
+        "brighten_screen": 0.185,
+        "far_look_break": 0.0465,
+        "reduce_text": 0.2555
+      },
+      "interrupt_ok_p": 0.9205,
+      "interrupt_ok_label": true,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.94)",
+      "unsure": [],
+      "client_ms": 443.36909998673946,
+      "server_ms": 439.92,
+      "input_tokens": 1102
+    },
+    {
+      "id": "s3-052",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "p": {
+        "ask_user": 0.032,
+        "glasses_reminder": 0.0294,
+        "enlarge_text": 0.035,
+        "dark_mode": 0.0664,
+        "dim_screen": 0.355,
+        "brighten_screen": 0.9569,
+        "far_look_break": 0.0477,
+        "reduce_text": 0.262
+      },
+      "interrupt_ok_p": 0.5979,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 5 unsure (p=0.35) and escalation unavailable: fail quiet",
+      "unsure": [
+        5
+      ],
+      "client_ms": 438.13289992976934,
+      "server_ms": 435.03,
+      "input_tokens": 1099
+    },
+    {
+      "id": "s3-053",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "p": {
+        "ask_user": 0.0443,
+        "glasses_reminder": 0.9491,
+        "enlarge_text": 0.0426,
+        "dark_mode": 0.1242,
+        "dim_screen": 0.2636,
+        "brighten_screen": 0.165,
+        "far_look_break": 0.0438,
+        "reduce_text": 0.3099
+      },
+      "interrupt_ok_p": 0.4146,
+      "interrupt_ok_label": false,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 449.8431000392884,
+      "server_ms": 447.25,
+      "input_tokens": 1091
+    },
+    {
+      "id": "s3-054",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "p": {
+        "ask_user": 0.0327,
+        "glasses_reminder": 0.0298,
+        "enlarge_text": 0.0363,
+        "dark_mode": 0.0647,
+        "dim_screen": 0.5514,
+        "brighten_screen": 0.9542,
+        "far_look_break": 0.0389,
+        "reduce_text": 0.2888
+      },
+      "interrupt_ok_p": 0.3208,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "rule 5 unsure (p=0.55) and escalation unavailable: fail quiet",
+      "unsure": [
+        5
+      ],
+      "client_ms": 461.4475999260321,
+      "server_ms": 457.64,
+      "input_tokens": 1086
+    },
+    {
+      "id": "s3-055",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0343,
+        "glasses_reminder": 0.0271,
+        "enlarge_text": 0.0305,
+        "dark_mode": 0.0723,
+        "dim_screen": 0.1947,
+        "brighten_screen": 0.1466,
+        "far_look_break": 0.0347,
+        "reduce_text": 0.2687
+      },
+      "interrupt_ok_p": 0.3615,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 447.9594000149518,
+      "server_ms": 444.61,
+      "input_tokens": 1082
+    },
+    {
+      "id": "s3-056",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "p": {
+        "ask_user": 0.0382,
+        "glasses_reminder": 0.0331,
+        "enlarge_text": 0.9414,
+        "dark_mode": 0.0912,
+        "dim_screen": 0.2849,
+        "brighten_screen": 0.2017,
+        "far_look_break": 0.0389,
+        "reduce_text": 0.2455
+      },
+      "interrupt_ok_p": 0.4172,
+      "interrupt_ok_label": false,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.94)",
+      "unsure": [],
+      "client_ms": 423.01629995927215,
+      "server_ms": 419.56,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-057",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0393,
+        "glasses_reminder": 0.0372,
+        "enlarge_text": 0.0516,
+        "dark_mode": 0.0489,
+        "dim_screen": 0.2436,
+        "brighten_screen": 0.1601,
+        "far_look_break": 0.9738,
+        "reduce_text": 0.9195
+      },
+      "interrupt_ok_p": 0.9107,
+      "interrupt_ok_label": true,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 459.20689997728914,
+      "server_ms": 455.88,
+      "input_tokens": 1126
+    },
+    {
+      "id": "s3-058",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "p": {
+        "ask_user": 0.0442,
+        "glasses_reminder": 0.029,
+        "enlarge_text": 0.9445,
+        "dark_mode": 0.1135,
+        "dim_screen": 0.2433,
+        "brighten_screen": 0.2271,
+        "far_look_break": 0.043,
+        "reduce_text": 0.263
+      },
+      "interrupt_ok_p": 0.9181,
+      "interrupt_ok_label": true,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.94)",
+      "unsure": [],
+      "client_ms": 447.08800001535565,
+      "server_ms": 443.58,
+      "input_tokens": 1101
+    },
+    {
+      "id": "s3-059",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0385,
+        "glasses_reminder": 0.0322,
+        "enlarge_text": 0.0403,
+        "dark_mode": 0.0662,
+        "dim_screen": 0.2308,
+        "brighten_screen": 0.1728,
+        "far_look_break": 0.9714,
+        "reduce_text": 0.2911
+      },
+      "interrupt_ok_p": 0.948,
+      "interrupt_ok_label": true,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 443.20159999188036,
+      "server_ms": 439.72,
+      "input_tokens": 1097
+    },
+    {
+      "id": "s3-060",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "p": {
+        "ask_user": 0.0373,
+        "glasses_reminder": 0.0322,
+        "enlarge_text": 0.0384,
+        "dark_mode": 0.9494,
+        "dim_screen": 0.3311,
+        "brighten_screen": 0.1777,
+        "far_look_break": 0.0425,
+        "reduce_text": 0.3018
+      },
+      "interrupt_ok_p": 0.4021,
+      "interrupt_ok_label": false,
+      "choice": "dark_mode",
+      "policy_reason": "rule 4 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 437.3634000075981,
+      "server_ms": 434.32,
+      "input_tokens": 1099
+    },
+    {
+      "id": "s3-061",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "p": {
+        "ask_user": 0.041,
+        "glasses_reminder": 0.0353,
+        "enlarge_text": 0.9444,
+        "dark_mode": 0.0826,
+        "dim_screen": 0.2723,
+        "brighten_screen": 0.1861,
+        "far_look_break": 0.0431,
+        "reduce_text": 0.2399
+      },
+      "interrupt_ok_p": 0.9197,
+      "interrupt_ok_label": true,
+      "choice": "enlarge_text",
+      "policy_reason": "rule 3 fires (p=0.94)",
+      "unsure": [],
+      "client_ms": 477.90099994745106,
+      "server_ms": 474.79,
+      "input_tokens": 1107
+    },
+    {
+      "id": "s3-062",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0388,
+        "glasses_reminder": 0.0331,
+        "enlarge_text": 0.0486,
+        "dark_mode": 0.0484,
+        "dim_screen": 0.2011,
+        "brighten_screen": 0.1608,
+        "far_look_break": 0.0419,
+        "reduce_text": 0.901
+      },
+      "interrupt_ok_p": 0.9436,
+      "interrupt_ok_label": true,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 448.34489992354065,
+      "server_ms": 445.11,
+      "input_tokens": 1118
+    },
+    {
+      "id": "s3-063",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.9019,
+        "glasses_reminder": 0.0386,
+        "enlarge_text": 0.0504,
+        "dark_mode": 0.0861,
+        "dim_screen": 0.2355,
+        "brighten_screen": 0.1801,
+        "far_look_break": 0.9706,
+        "reduce_text": 0.2852
+      },
+      "interrupt_ok_p": 0.4169,
+      "interrupt_ok_label": false,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 444.5727999554947,
+      "server_ms": 440.92,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-064",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0336,
+        "glasses_reminder": 0.0291,
+        "enlarge_text": 0.0374,
+        "dark_mode": 0.0779,
+        "dim_screen": 0.1876,
+        "brighten_screen": 0.1724,
+        "far_look_break": 0.0404,
+        "reduce_text": 0.9143
+      },
+      "interrupt_ok_p": 0.3536,
+      "interrupt_ok_label": false,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.91)",
+      "unsure": [],
+      "client_ms": 477.2707999218255,
+      "server_ms": 473.48,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-065",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0388,
+        "glasses_reminder": 0.0265,
+        "enlarge_text": 0.0373,
+        "dark_mode": 0.0761,
+        "dim_screen": 0.2011,
+        "brighten_screen": 0.1683,
+        "far_look_break": 0.0431,
+        "reduce_text": 0.2953
+      },
+      "interrupt_ok_p": 0.5178,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 458.7662999983877,
+      "server_ms": 455.66,
+      "input_tokens": 1105
+    },
+    {
+      "id": "s3-066",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "p": {
+        "ask_user": 0.9231,
+        "glasses_reminder": 0.0483,
+        "enlarge_text": 0.0473,
+        "dark_mode": 0.0838,
+        "dim_screen": 0.2743,
+        "brighten_screen": 0.1718,
+        "far_look_break": 0.0412,
+        "reduce_text": 0.2708
+      },
+      "interrupt_ok_p": 0.931,
+      "interrupt_ok_label": true,
+      "choice": "ask_user",
+      "policy_reason": "rule 1 fires (p=0.92)",
+      "unsure": [],
+      "client_ms": 455.34179999958724,
+      "server_ms": 451.79,
+      "input_tokens": 1103
+    },
+    {
+      "id": "s3-067",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0371,
+        "glasses_reminder": 0.0332,
+        "enlarge_text": 0.0484,
+        "dark_mode": 0.0619,
+        "dim_screen": 0.204,
+        "brighten_screen": 0.1597,
+        "far_look_break": 0.0461,
+        "reduce_text": 0.901
+      },
+      "interrupt_ok_p": 0.9283,
+      "interrupt_ok_label": true,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.90)",
+      "unsure": [],
+      "client_ms": 480.71229993365705,
+      "server_ms": 456.42,
+      "input_tokens": 1126
+    },
+    {
+      "id": "s3-068",
+      "label": "none",
+      "triggers": [],
+      "p": {
+        "ask_user": 0.0375,
+        "glasses_reminder": 0.0321,
+        "enlarge_text": 0.0366,
+        "dark_mode": 0.0591,
+        "dim_screen": 0.1925,
+        "brighten_screen": 0.1696,
+        "far_look_break": 0.0409,
+        "reduce_text": 0.2813
+      },
+      "interrupt_ok_p": 0.5323,
+      "interrupt_ok_label": false,
+      "choice": "none",
+      "policy_reason": "no rule applies",
+      "unsure": [],
+      "client_ms": 490.1552000083029,
+      "server_ms": 468.5,
+      "input_tokens": 1107
+    },
+    {
+      "id": "s3-069",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0392,
+        "glasses_reminder": 0.0268,
+        "enlarge_text": 0.0409,
+        "dark_mode": 0.0955,
+        "dim_screen": 0.2281,
+        "brighten_screen": 0.1945,
+        "far_look_break": 0.9717,
+        "reduce_text": 0.2872
+      },
+      "interrupt_ok_p": 0.4797,
+      "interrupt_ok_label": false,
+      "choice": "far_look_break",
+      "policy_reason": "rule 7 fires (p=0.97)",
+      "unsure": [],
+      "client_ms": 472.5886000087485,
+      "server_ms": 469.38,
+      "input_tokens": 1107
+    },
+    {
+      "id": "s3-070",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "p": {
+        "ask_user": 0.0477,
+        "glasses_reminder": 0.9465,
+        "enlarge_text": 0.0455,
+        "dark_mode": 0.1242,
+        "dim_screen": 0.3154,
+        "brighten_screen": 0.1954,
+        "far_look_break": 0.9725,
+        "reduce_text": 0.3272
+      },
+      "interrupt_ok_p": 0.2687,
+      "interrupt_ok_label": false,
+      "choice": "glasses_reminder",
+      "policy_reason": "rule 2 fires (p=0.95)",
+      "unsure": [],
+      "client_ms": 466.1963999969885,
+      "server_ms": 462.78,
+      "input_tokens": 1093
+    },
+    {
+      "id": "s3-071",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "p": {
+        "ask_user": 0.0314,
+        "glasses_reminder": 0.0281,
+        "enlarge_text": 0.0373,
+        "dark_mode": 0.0916,
+        "dim_screen": 0.2172,
+        "brighten_screen": 0.1429,
+        "far_look_break": 0.0416,
+        "reduce_text": 0.9116
+      },
+      "interrupt_ok_p": 0.9302,
+      "interrupt_ok_label": true,
+      "choice": "reduce_text",
+      "policy_reason": "rule 8 fires (p=0.91)",
+      "unsure": [],
+      "client_ms": 454.5843000523746,
+      "server_ms": 451.22,
+      "input_tokens": 1105
+    }
+  ]
+}

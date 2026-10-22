@@ -26,7 +26,7 @@ FACT_LINE_GUIDE = """\
 - "Text zoom: Far Point zoom +N in APP (category); zoom control available" | "zoom control not available for this app"
 - "Relaxed reading: N min ..., Far Point zoom +N": ends with "text can go back one step" | "no change needed"
 - "Squint despite zoom ...": ends with "yes" | "no"
-- "Activity: ...": idle | between tasks | just switched windows | typing in a burst | in a video call | watching a (fullscreen) video
+- "Activity: ...": idle | between tasks | just switched windows | typing in a burst | in a video call | watching a (fullscreen) video; ends with "a good moment to interrupt" | "not a good moment to interrupt"
 - "Local time: HH:MM (morning|afternoon|evening|night)" (night is 21:00-05:00)
 - "Profile (user's own words): ..." (only when the user described their eyes)"""
 
@@ -210,7 +210,13 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
     else:
         lines.append("- Squint despite zoom (ask after 60 s of squinting at Far Point zoom +2 or more): no.")
 
-    lines.append(f"- Activity: {f.activity}.")
+    # Code classified the activity (meeting, fullscreen video, typing burst, idle...). Its verdict
+    # goes on the line: in a probe with the full rendered state, the bare S1 wording left a typing
+    # burst at p 0.58 and a video call at 0.55 (both would interrupt); with the verdict they were
+    # 0.43 and 0.25, and idle / between tasks / just switched stayed at 0.94-0.97.
+    verdict = {True: ": a good moment to interrupt", False: ": not a good moment to interrupt"}.get(
+        f.interrupt_ok_hint, "")
+    lines.append(f"- Activity: {f.activity}{verdict}.")
     if f.local_time:
         lines.append(f"- Local time: {f.local_time} ({part_of_day(f.local_time)}).")
     if prof.conditions:
