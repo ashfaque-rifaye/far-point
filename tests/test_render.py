@@ -33,6 +33,13 @@ def test_distance_lines():
     assert "no face visible" in render_state(base(face=False, distance_cm=None), d)
 
 
+def test_local_time_line():
+    d = default_doctrine()
+    assert "- Local time: 22:40 (night)." in render_state(base(local_time="22:40"), d)
+    assert "- Local time: 09:05 (morning)." in render_state(base(local_time="09:05"), d)
+    assert "Local time" not in render_state(base(), d)
+
+
 def test_relaxed_reading_line():
     d = default_doctrine()
     assert "Far Point zoom +1: text can go back one step." in render_state(base(zoom_step=1, relaxed_min_now=11), d)

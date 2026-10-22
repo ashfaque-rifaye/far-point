@@ -59,13 +59,21 @@ Default thresholds come from the Clouclip pilot (children's cohort): under 30 cm
 DOCTRINE_TASK = """The user described their eyes in their own words:
 \"\"\"{text}\"\"\"
 
-Call write_doctrine exactly once with:
-- profile: {{"glasses_for_screen": "yes"|"no"|"unknown", "conditions": [short phrases the user used]}}
-- limits: only the knobs you want to change from the defaults (may be empty)
-- rules: 4 to 9 rules, highest priority first. Each rule: {{"n", "text", "tool", "args", "when_true",
-  "when_false", "basis"}}. "basis" quotes the part of the user's description the rule comes from, or says
-  "Default doctrine". when_true / when_false must quote the fact lines above.
-Then reply with one short sentence. Do not give medical advice."""
+Personalise Far Point's default rulebook (JSON below) for this user:
+- Keep the default rules that make sense for this user. Copy them exactly, including when_true / when_false.
+- Add at most 3 new rules for what the user described. Each must quote one fact line's verdict phrase.
+- Put numbers only in limits (for example a lower bout_min for more frequent breaks). Never put numbers in
+  rule text. Only include the limits you change.
+- profile.glasses_for_screen: "yes" only if the user says they wear glasses for screen work, "no" if they
+  say they do not, else "unknown". profile.conditions: short phrases copied from the user's words.
+- basis: quote the user's words that motivated the rule, or "Default doctrine".
+- No duplicate rules. ask_user stays last.
+
+Default rulebook:
+{defaults}
+
+Call write_doctrine exactly once with profile, limits and rules (highest priority first). Then reply with one
+short sentence. Do not give medical advice."""
 
 REPORT_TASK = """Write a short report for {period} for the user. Call get_today_stats (and summarize_period
 with days=7 for a week). Use only the numbers the tools return: minutes closer than 30 cm, longest near-work
@@ -92,9 +100,35 @@ def make_agent(system_prompt: str = SYSTEM_PROMPT, model=None, tools=None, inter
                  callback_handler=None, name="farpoint-coach")
 
 
+MAX_RULES = 9  # 9 rule nouls + interrupt_ok keeps one Decider request under ~0.5 s here
+
+
 def red_flags(text: str) -> list[str]:
     t = text.lower()
     return [k for k in RED_FLAGS if k in t]
+
+
+def tidy_rules(rules: list[DoctrineRule]) -> list[DoctrineRule]:
+    """Code-side cleanup of model output: drop duplicates, keep ask_user last, cap the count."""
+    seen, out = set(), []
+    for r in sorted(rules, key=lambda r: r.n):
+        key = (r.tool, " ".join(r.when_true.lower().split()))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(r)
+    ordered = [r for r in out if r.tool != "ask_user"] + [r for r in out if r.tool == "ask_user"]
+    if len(ordered) > MAX_RULES:
+        asks = [r for r in ordered if r.tool == "ask_user"][:1]
+        ordered = [r for r in ordered if r.tool != "ask_user"][: MAX_RULES - len(asks)] + asks
+    return [r.model_copy(update={"n": i}) for i, r in enumerate(ordered, 1)]
+
+
+def default_rules_json() -> str:
+    from .doctrine import default_doctrine
+    keep = ("n", "text", "tool", "args", "when_true", "when_false", "basis")
+    return json.dumps([{k: v for k, v in r.model_dump().items() if k in keep}
+                       for r in default_doctrine().rules], indent=1)
 
 
 def strip_html(md: str) -> str:
@@ -212,6 +246,7 @@ class Coach:
                     raise ValueError("rules must not be empty")
             except (ValidationError, ValueError, TypeError) as e:
                 return {"status": "error", "content": [{"text": f"Invalid rulebook, fix and call write_doctrine again: {e}"}]}
+            parsed = tidy_rules(parsed)
             d = coach.store.save_draft(coach._source_text, prof, lim, parsed)
             coach._doctrine_saved = d.version
             coach.bus.publish("doctrine", d.to_contract())
@@ -232,7 +267,7 @@ class Coach:
             ms = [{"t": m["t"], "note": m["note"]} for m in coach.moments.get(list(moment_ids or []))]
             data = {"id": pid, "rule_text": rule_text, "reason": reason, "moments": ms, "status": "pending"}
             coach.proposals[pid] = {"data": data, "rule": rule}
-            coach.bus.publish("proposal", data)
+            coach.bus.publish("proposal", dict(data))
             return {"status": "success", "content": [{"text": f"Proposal {pid} sent for human approval."}]}
 
         @tool
@@ -241,7 +276,7 @@ class Coach:
             eid = f"e_{next(coach._e_ids):06d}"
             data = {"id": eid, "subject": subject[:200], "body": body[:4000], "status": "draft", "to": None}
             coach.drafts[eid] = data
-            coach.bus.publish("email_draft", data)
+            coach.bus.publish("email_draft", dict(data))  # a copy: the draft's status changes later
             return {"status": "success", "content": [{"text": f"Draft {eid} saved."}]}
 
         @tool
@@ -282,7 +317,7 @@ class Coach:
         self._source_text = text.strip()[:2000]
         self._doctrine_attempts = 0
         self._doctrine_saved = None
-        self._run_agent(DOCTRINE_TASK.format(text=self._source_text))
+        self._run_agent(DOCTRINE_TASK.format(text=self._source_text, defaults=default_rules_json()))
         if self._doctrine_saved is None:
             self.bus.toast("warning", "Could not build a valid rulebook from that description. The current rules stay.")
         return self._doctrine_saved

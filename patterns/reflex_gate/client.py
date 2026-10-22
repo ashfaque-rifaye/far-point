@@ -50,16 +50,16 @@ class DeciderHttpClient:
             out.setdefault("client_ms", round((time.perf_counter() - t0) * 1000, 1))
         return out
 
-    def health(self, timeout: float = 2.0) -> bool:
-        try:
-            with urllib.request.urlopen(self.health_url, timeout=timeout) as resp:
-                return json.loads(resp.read()).get("status") == "ok"
-        except (OSError, ValueError, urllib.error.URLError):
-            return False
+    def health(self, timeout: float = 5.0) -> bool:
+        info = self.health_info(timeout)
+        return bool(info) and info.get("status") == "ok"
 
-    def health_info(self, timeout: float = 2.0) -> dict | None:
-        try:
-            with urllib.request.urlopen(self.health_url, timeout=timeout) as resp:
-                return json.loads(resp.read())
-        except (OSError, ValueError, urllib.error.URLError):
-            return None
+    def health_info(self, timeout: float = 5.0, retries: int = 1) -> dict | None:
+        for attempt in range(retries + 1):
+            try:
+                with urllib.request.urlopen(self.health_url, timeout=timeout) as resp:
+                    return json.loads(resp.read())
+            except (OSError, ValueError, urllib.error.URLError):
+                if attempt < retries:
+                    time.sleep(0.5)
+        return None

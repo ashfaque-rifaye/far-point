@@ -27,6 +27,7 @@ FACT_LINE_GUIDE = """\
 - "Relaxed reading: N min ..., Far Point zoom +N": ends with "text can go back one step" | "no change needed"
 - "Squint despite zoom ...": ends with "yes" | "no"
 - "Activity: ...": idle | between tasks | just switched windows | typing in a burst | in a video call | watching a (fullscreen) video
+- "Local time: HH:MM (morning|afternoon|evening|night)" (night is 21:00-05:00)
 - "Profile (user's own words): ..." (only when the user described their eyes)"""
 
 
@@ -55,6 +56,7 @@ class Facts:
     interrupt_ok_hint: bool | None = None
     glasses_on: bool | None = None
     glasses_prescribed: str = "unknown"  # yes | no | unknown (from the doctrine profile)
+    local_time: str = ""  # "HH:MM", set by the loop from its clock
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -78,6 +80,17 @@ def relaxed_long_enough(f: Facts, L: Limits) -> bool:
 
 def squint_despite_zoom(f: Facts) -> bool:
     return f.squinting and f.squinting_s > 60 and f.zoom_step >= 2
+
+
+def part_of_day(hhmm: str) -> str:
+    h = int(hhmm.split(":")[0])
+    if 5 <= h < 12:
+        return "morning"
+    if 12 <= h < 18:
+        return "afternoon"
+    if 18 <= h < 21:
+        return "evening"
+    return "night"
 
 
 def glasses_reminder_due(f: Facts) -> bool:
@@ -198,6 +211,8 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
         lines.append("- Squint despite zoom (ask after 60 s of squinting at Far Point zoom +2 or more): no.")
 
     lines.append(f"- Activity: {f.activity}.")
+    if f.local_time:
+        lines.append(f"- Local time: {f.local_time} ({part_of_day(f.local_time)}).")
     if prof.conditions:
         lines.append(f"- Profile (user's own words): {'; '.join(prof.conditions)}.")
     return "\n".join(lines)

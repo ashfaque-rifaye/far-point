@@ -95,6 +95,7 @@ class ReflexLoop:
         f.theme = st["theme"]
         f.brightness_pct = st["brightness_pct"]
         f.glasses_prescribed = self.store.active.profile.glasses_for_screen
+        f.local_time = time.strftime("%H:%M", time.localtime(self.clock()))
         return f
 
     def feasible(self, rule: DoctrineRule, f: Facts, now: float) -> tuple[bool, str]:
