@@ -1,0 +1,15 @@
+# torch: install first from https://download.pytorch.org/whl/cu128 (torch==2.11.0+cu128)
+strands-decider[vision] @ git+https://github.com/strands-labs/strands-decider@d942e5515db750f80a51032629ec312455a87976
+transformers==5.20.2
+strands-agents==1.62.0
+mediapipe==1.1.1
+boto3==1.43.117
+fastapi==0.159.1
+uvicorn==0.54.0
+pytest==9.1.1
+opencv-python==5.0.0.93
+# Fast Gated DeltaNet kernels for Qwen3.5 on native Windows (Phase 1 spike: ~860 -> ~490 ms p50 with High priority)
+triton-windows==3.7.1.post27; sys_platform == "win32"
+flash-linear-attention==0.5.2
+fla-core==0.5.2
+einops==0.8.2

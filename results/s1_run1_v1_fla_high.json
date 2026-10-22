@@ -1,0 +1,1600 @@
+{
+  "summary": {
+    "tag": "run1_v1_fla_high",
+    "seed": 1,
+    "questions": "v1",
+    "config": "native Windows, triton-windows 3.7.1 + flash-linear-attention 0.5.2, causal_conv1d torch fallback, text mode, server process priority High",
+    "n_states": 72,
+    "n_questions_per_request": 3,
+    "next_action_agreement": 0.6805555555555556,
+    "next_action_agreement_multi_trigger": 0.0,
+    "n_multi_trigger": 14,
+    "strain_accuracy": 0.4166666666666667,
+    "interrupt_ok_accuracy": 0.7638888888888888,
+    "per_label_agreement": {
+      "glasses_reminder": 0.75,
+      "dark_mode": 0.125,
+      "brighten_screen": 0.75,
+      "dim_screen": 0.75,
+      "ask_user": 0.75,
+      "reduce_text": 1.0,
+      "none": 0.625,
+      "far_look_break": 0.75,
+      "enlarge_text": 0.625
+    },
+    "confusion": {
+      "glasses_reminder": {
+        "far_look_break": 2,
+        "glasses_reminder": 6
+      },
+      "dark_mode": {
+        "dark_mode": 1,
+        "glasses_reminder": 1,
+        "far_look_break": 3,
+        "none": 2,
+        "reduce_text": 1
+      },
+      "brighten_screen": {
+        "brighten_screen": 6,
+        "far_look_break": 2
+      },
+      "dim_screen": {
+        "dim_screen": 6,
+        "far_look_break": 2
+      },
+      "ask_user": {
+        "ask_user": 6,
+        "far_look_break": 2
+      },
+      "reduce_text": {
+        "reduce_text": 8
+      },
+      "none": {
+        "none": 5,
+        "reduce_text": 2,
+        "glasses_reminder": 1
+      },
+      "far_look_break": {
+        "far_look_break": 6,
+        "reduce_text": 2
+      },
+      "enlarge_text": {
+        "enlarge_text": 5,
+        "far_look_break": 2,
+        "glasses_reminder": 1
+      }
+    },
+    "client_ms": {
+      "p50": 472.6140000275336,
+      "p90": 498.81179007934406,
+      "min": 441.23100000433624,
+      "max": 566.7085000313818
+    },
+    "server_ms": {
+      "p50": 468.505,
+      "p90": 489.46700000000004
+    },
+    "mean_input_tokens": 958.9722222222222,
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "used_mib": 6322,
+      "total_mib": 8188,
+      "util_pct": 45
+    },
+    "pass_agreement": false,
+    "pass_latency": true,
+    "pass": false
+  },
+  "rows": [
+    {
+      "id": "s1-000",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.5381,
+        "strain": "mild",
+        "strain_score": 0.9159,
+        "interrupt_ok_p": 0.4657
+      },
+      "client_ms": 476.46220005117357,
+      "server_ms": 473.05,
+      "input_tokens": 953
+    },
+    {
+      "id": "s1-001",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "dark_mode",
+        "next_action_conf": 0.1862,
+        "strain": "mild",
+        "strain_score": 0.6061,
+        "interrupt_ok_p": 0.5689
+      },
+      "client_ms": 467.5368999596685,
+      "server_ms": 463.86,
+      "input_tokens": 948
+    },
+    {
+      "id": "s1-002",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.2324,
+        "strain": "mild",
+        "strain_score": 0.6679,
+        "interrupt_ok_p": 0.4135
+      },
+      "client_ms": 483.5993000306189,
+      "server_ms": 480.08,
+      "input_tokens": 958
+    },
+    {
+      "id": "s1-003",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.7231,
+        "strain": "mild",
+        "strain_score": 0.67,
+        "interrupt_ok_p": 0.328
+      },
+      "client_ms": 481.0925000347197,
+      "server_ms": 476.88,
+      "input_tokens": 956
+    },
+    {
+      "id": "s1-004",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.7065,
+        "strain": "mild",
+        "strain_score": 0.5647,
+        "interrupt_ok_p": 0.4351
+      },
+      "client_ms": 497.4952000193298,
+      "server_ms": 476.73,
+      "input_tokens": 956
+    },
+    {
+      "id": "s1-005",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.7527,
+        "strain": "mild",
+        "strain_score": 1.0388,
+        "interrupt_ok_p": 0.335
+      },
+      "client_ms": 466.74800000619143,
+      "server_ms": 463.06,
+      "input_tokens": 955
+    },
+    {
+      "id": "s1-006",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4616,
+        "strain": "mild",
+        "strain_score": 1.2815,
+        "interrupt_ok_p": 0.5412
+      },
+      "client_ms": 472.2512000007555,
+      "server_ms": 468.04,
+      "input_tokens": 957
+    },
+    {
+      "id": "s1-007",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.6761,
+        "strain": "mild",
+        "strain_score": 0.5521,
+        "interrupt_ok_p": 0.3259
+      },
+      "client_ms": 444.74380009341985,
+      "server_ms": 440.66,
+      "input_tokens": 959
+    },
+    {
+      "id": "s1-008",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.8579,
+        "strain": "mild",
+        "strain_score": 0.7733,
+        "interrupt_ok_p": 0.3981
+      },
+      "client_ms": 484.402299975045,
+      "server_ms": 480.71,
+      "input_tokens": 959
+    },
+    {
+      "id": "s1-009",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.746,
+        "strain": "mild",
+        "strain_score": 1.1383,
+        "interrupt_ok_p": 0.4953
+      },
+      "client_ms": 460.2264000568539,
+      "server_ms": 456.62,
+      "input_tokens": 960
+    },
+    {
+      "id": "s1-010",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.1858,
+        "strain": "mild",
+        "strain_score": 0.5546,
+        "interrupt_ok_p": 0.8893
+      },
+      "client_ms": 475.17669992521405,
+      "server_ms": 471.35,
+      "input_tokens": 962
+    },
+    {
+      "id": "s1-011",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.1253,
+        "strain": "mild",
+        "strain_score": 0.7837,
+        "interrupt_ok_p": 0.3454
+      },
+      "client_ms": 459.3347000190988,
+      "server_ms": 455.77,
+      "input_tokens": 955
+    },
+    {
+      "id": "s1-012",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7372,
+        "strain": "mild",
+        "strain_score": 0.7104,
+        "interrupt_ok_p": 0.8924
+      },
+      "client_ms": 483.69570006616414,
+      "server_ms": 479.91,
+      "input_tokens": 960
+    },
+    {
+      "id": "s1-013",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.744,
+        "strain": "mild",
+        "strain_score": 0.8998,
+        "interrupt_ok_p": 0.4902
+      },
+      "client_ms": 456.62169996649027,
+      "server_ms": 452.76,
+      "input_tokens": 969
+    },
+    {
+      "id": "s1-014",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.4993,
+        "strain": "mild",
+        "strain_score": 0.5216,
+        "interrupt_ok_p": 0.5707
+      },
+      "client_ms": 463.6552999727428,
+      "server_ms": 460.08,
+      "input_tokens": 950
+    },
+    {
+      "id": "s1-015",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4621,
+        "strain": "mild",
+        "strain_score": 0.7683,
+        "interrupt_ok_p": 0.8587
+      },
+      "client_ms": 466.79460001178086,
+      "server_ms": 463.19,
+      "input_tokens": 962
+    },
+    {
+      "id": "s1-016",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7986,
+        "strain": "mild",
+        "strain_score": 0.7746,
+        "interrupt_ok_p": 0.5311
+      },
+      "client_ms": 453.45640007872134,
+      "server_ms": 450.09,
+      "input_tokens": 969
+    },
+    {
+      "id": "s1-017",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6661,
+        "strain": "mild",
+        "strain_score": 0.8729,
+        "interrupt_ok_p": 0.3045
+      },
+      "client_ms": 491.14199995528907,
+      "server_ms": 487.69,
+      "input_tokens": 957
+    },
+    {
+      "id": "s1-018",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.351,
+        "strain": "mild",
+        "strain_score": 0.5329,
+        "interrupt_ok_p": 0.8938
+      },
+      "client_ms": 459.90859996527433,
+      "server_ms": 455.65,
+      "input_tokens": 944
+    },
+    {
+      "id": "s1-019",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.3481,
+        "strain": "mild",
+        "strain_score": 1.0954,
+        "interrupt_ok_p": 0.8876
+      },
+      "client_ms": 493.5379000380635,
+      "server_ms": 489.48,
+      "input_tokens": 966
+    },
+    {
+      "id": "s1-020",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.87,
+        "strain": "mild",
+        "strain_score": 0.7431,
+        "interrupt_ok_p": 0.8619
+      },
+      "client_ms": 469.2313999403268,
+      "server_ms": 465.53,
+      "input_tokens": 971
+    },
+    {
+      "id": "s1-021",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.8704,
+        "strain": "mild",
+        "strain_score": 0.638,
+        "interrupt_ok_p": 0.5203
+      },
+      "client_ms": 469.1396999405697,
+      "server_ms": 465.08,
+      "input_tokens": 967
+    },
+    {
+      "id": "s1-022",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.1798,
+        "strain": "mild",
+        "strain_score": 0.578,
+        "interrupt_ok_p": 0.8996
+      },
+      "client_ms": 480.1486999494955,
+      "server_ms": 476.4,
+      "input_tokens": 963
+    },
+    {
+      "id": "s1-023",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.8083,
+        "strain": "mild",
+        "strain_score": 1.0931,
+        "interrupt_ok_p": 0.8694
+      },
+      "client_ms": 503.58040002174675,
+      "server_ms": 500.0,
+      "input_tokens": 951
+    },
+    {
+      "id": "s1-024",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.6284,
+        "strain": "mild",
+        "strain_score": 1.0177,
+        "interrupt_ok_p": 0.5748
+      },
+      "client_ms": 475.24030006024987,
+      "server_ms": 470.88,
+      "input_tokens": 947
+    },
+    {
+      "id": "s1-025",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7167,
+        "strain": "mild",
+        "strain_score": 1.0978,
+        "interrupt_ok_p": 0.4337
+      },
+      "client_ms": 497.9206999996677,
+      "server_ms": 493.84,
+      "input_tokens": 962
+    },
+    {
+      "id": "s1-026",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7613,
+        "strain": "mild",
+        "strain_score": 0.7869,
+        "interrupt_ok_p": 0.5183
+      },
+      "client_ms": 566.7085000313818,
+      "server_ms": 541.05,
+      "input_tokens": 969
+    },
+    {
+      "id": "s1-027",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.8843,
+        "strain": "mild",
+        "strain_score": 0.6145,
+        "interrupt_ok_p": 0.8968
+      },
+      "client_ms": 509.1913000214845,
+      "server_ms": 505.64,
+      "input_tokens": 960
+    },
+    {
+      "id": "s1-028",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.1225,
+        "strain": "mild",
+        "strain_score": 0.7556,
+        "interrupt_ok_p": 0.8338
+      },
+      "client_ms": 475.33439996186644,
+      "server_ms": 470.96,
+      "input_tokens": 961
+    },
+    {
+      "id": "s1-029",
+      "label": {
+        "next_action": "none",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.1755,
+        "strain": "mild",
+        "strain_score": 0.7565,
+        "interrupt_ok_p": 0.8402
+      },
+      "client_ms": 466.6625999379903,
+      "server_ms": 463.04,
+      "input_tokens": 956
+    },
+    {
+      "id": "s1-030",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.2005,
+        "strain": "mild",
+        "strain_score": 0.5601,
+        "interrupt_ok_p": 0.5474
+      },
+      "client_ms": 475.59889999683946,
+      "server_ms": 472.02,
+      "input_tokens": 964
+    },
+    {
+      "id": "s1-031",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7365,
+        "strain": "mild",
+        "strain_score": 1.1506,
+        "interrupt_ok_p": 0.5669
+      },
+      "client_ms": 472.97680005431175,
+      "server_ms": 469.24,
+      "input_tokens": 947
+    },
+    {
+      "id": "s1-032",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.8866,
+        "strain": "mild",
+        "strain_score": 0.6049,
+        "interrupt_ok_p": 0.8954
+      },
+      "client_ms": 463.0656000226736,
+      "server_ms": 459.26,
+      "input_tokens": 963
+    },
+    {
+      "id": "s1-033",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.8598,
+        "strain": "mild",
+        "strain_score": 1.1173,
+        "interrupt_ok_p": 0.3838
+      },
+      "client_ms": 490.4672000557184,
+      "server_ms": 486.58,
+      "input_tokens": 943
+    },
+    {
+      "id": "s1-034",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3487,
+        "strain": "mild",
+        "strain_score": 0.8272,
+        "interrupt_ok_p": 0.5156
+      },
+      "client_ms": 446.3753999443725,
+      "server_ms": 442.8,
+      "input_tokens": 964
+    },
+    {
+      "id": "s1-035",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.6002,
+        "strain": "mild",
+        "strain_score": 0.8719,
+        "interrupt_ok_p": 0.4942
+      },
+      "client_ms": 451.5194999985397,
+      "server_ms": 447.26,
+      "input_tokens": 973
+    },
+    {
+      "id": "s1-036",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7728,
+        "strain": "mild",
+        "strain_score": 0.8008,
+        "interrupt_ok_p": 0.5211
+      },
+      "client_ms": 457.1417999686673,
+      "server_ms": 453.45,
+      "input_tokens": 969
+    },
+    {
+      "id": "s1-037",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3344,
+        "strain": "mild",
+        "strain_score": 0.6604,
+        "interrupt_ok_p": 0.4728
+      },
+      "client_ms": 454.10870003979653,
+      "server_ms": 450.11,
+      "input_tokens": 969
+    },
+    {
+      "id": "s1-038",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.7204,
+        "strain": "mild",
+        "strain_score": 0.8239,
+        "interrupt_ok_p": 0.5365
+      },
+      "client_ms": 478.4927999135107,
+      "server_ms": 474.9,
+      "input_tokens": 960
+    },
+    {
+      "id": "s1-039",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.8858,
+        "strain": "mild",
+        "strain_score": 0.6154,
+        "interrupt_ok_p": 0.8959
+      },
+      "client_ms": 452.5505000492558,
+      "server_ms": 448.83,
+      "input_tokens": 960
+    },
+    {
+      "id": "s1-040",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.7812,
+        "strain": "mild",
+        "strain_score": 1.0129,
+        "interrupt_ok_p": 0.9045
+      },
+      "client_ms": 473.12049998436123,
+      "server_ms": 468.97,
+      "input_tokens": 963
+    },
+    {
+      "id": "s1-041",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.2132,
+        "strain": "mild",
+        "strain_score": 1.0842,
+        "interrupt_ok_p": 0.9064
+      },
+      "client_ms": 467.79370005242527,
+      "server_ms": 448.38,
+      "input_tokens": 972
+    },
+    {
+      "id": "s1-042",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.2098,
+        "strain": "mild",
+        "strain_score": 1.0422,
+        "interrupt_ok_p": 0.9131
+      },
+      "client_ms": 502.8080999618396,
+      "server_ms": 499.08,
+      "input_tokens": 974
+    },
+    {
+      "id": "s1-043",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7885,
+        "strain": "mild",
+        "strain_score": 0.7745,
+        "interrupt_ok_p": 0.9014
+      },
+      "client_ms": 453.65809998475015,
+      "server_ms": 449.43,
+      "input_tokens": 950
+    },
+    {
+      "id": "s1-044",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.6631,
+        "strain": "mild",
+        "strain_score": 0.5456,
+        "interrupt_ok_p": 0.324
+      },
+      "client_ms": 475.6076999474317,
+      "server_ms": 472.0,
+      "input_tokens": 958
+    },
+    {
+      "id": "s1-045",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.3659,
+        "strain": "mild",
+        "strain_score": 1.1627,
+        "interrupt_ok_p": 0.4445
+      },
+      "client_ms": 441.23100000433624,
+      "server_ms": 437.62,
+      "input_tokens": 941
+    },
+    {
+      "id": "s1-046",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.5494,
+        "strain": "mild",
+        "strain_score": 0.9602,
+        "interrupt_ok_p": 0.8778
+      },
+      "client_ms": 498.910800088197,
+      "server_ms": 484.23,
+      "input_tokens": 936
+    },
+    {
+      "id": "s1-047",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.7081,
+        "strain": "mild",
+        "strain_score": 0.6295,
+        "interrupt_ok_p": 0.4972
+      },
+      "client_ms": 474.7405999805778,
+      "server_ms": 471.43,
+      "input_tokens": 966
+    },
+    {
+      "id": "s1-048",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3098,
+        "strain": "mild",
+        "strain_score": 0.8349,
+        "interrupt_ok_p": 0.3534
+      },
+      "client_ms": 486.3394000567496,
+      "server_ms": 482.51,
+      "input_tokens": 940
+    },
+    {
+      "id": "s1-049",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.6121,
+        "strain": "mild",
+        "strain_score": 0.5676,
+        "interrupt_ok_p": 0.561
+      },
+      "client_ms": 449.2171999299899,
+      "server_ms": 445.43,
+      "input_tokens": 959
+    },
+    {
+      "id": "s1-050",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.7462,
+        "strain": "mild",
+        "strain_score": 0.6273,
+        "interrupt_ok_p": 0.4101
+      },
+      "client_ms": 456.25859999563545,
+      "server_ms": 452.48,
+      "input_tokens": 954
+    },
+    {
+      "id": "s1-051",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4135,
+        "strain": "mild",
+        "strain_score": 1.0045,
+        "interrupt_ok_p": 0.5383
+      },
+      "client_ms": 452.80819991603494,
+      "server_ms": 449.34,
+      "input_tokens": 959
+    },
+    {
+      "id": "s1-052",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.1917,
+        "strain": "mild",
+        "strain_score": 0.6191,
+        "interrupt_ok_p": 0.887
+      },
+      "client_ms": 454.4989999849349,
+      "server_ms": 450.93,
+      "input_tokens": 969
+    },
+    {
+      "id": "s1-053",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.7028,
+        "strain": "mild",
+        "strain_score": 0.6078,
+        "interrupt_ok_p": 0.4537
+      },
+      "client_ms": 480.5737999267876,
+      "server_ms": 476.77,
+      "input_tokens": 953
+    },
+    {
+      "id": "s1-054",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.8774,
+        "strain": "mild",
+        "strain_score": 0.5971,
+        "interrupt_ok_p": 0.896
+      },
+      "client_ms": 462.39510003942996,
+      "server_ms": 458.59,
+      "input_tokens": 961
+    },
+    {
+      "id": "s1-055",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.7247,
+        "strain": "mild",
+        "strain_score": 0.6576,
+        "interrupt_ok_p": 0.4984
+      },
+      "client_ms": 503.71940003242344,
+      "server_ms": 476.37,
+      "input_tokens": 966
+    },
+    {
+      "id": "s1-056",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.1426,
+        "strain": "mild",
+        "strain_score": 0.5657,
+        "interrupt_ok_p": 0.9009
+      },
+      "client_ms": 482.67589998431504,
+      "server_ms": 478.85,
+      "input_tokens": 963
+    },
+    {
+      "id": "s1-057",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.2008,
+        "strain": "mild",
+        "strain_score": 0.5896,
+        "interrupt_ok_p": 0.4844
+      },
+      "client_ms": 500.92720007523894,
+      "server_ms": 497.31,
+      "input_tokens": 968
+    },
+    {
+      "id": "s1-058",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.805,
+        "strain": "mild",
+        "strain_score": 0.5868,
+        "interrupt_ok_p": 0.8769
+      },
+      "client_ms": 487.7481999574229,
+      "server_ms": 483.81,
+      "input_tokens": 938
+    },
+    {
+      "id": "s1-059",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.5755,
+        "strain": "mild",
+        "strain_score": 0.7879,
+        "interrupt_ok_p": 0.9142
+      },
+      "client_ms": 523.5939000267535,
+      "server_ms": 515.24,
+      "input_tokens": 971
+    },
+    {
+      "id": "s1-060",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.1654,
+        "strain": "mild",
+        "strain_score": 0.5604,
+        "interrupt_ok_p": 0.851
+      },
+      "client_ms": 452.0591999171302,
+      "server_ms": 448.71,
+      "input_tokens": 966
+    },
+    {
+      "id": "s1-061",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.1858,
+        "strain": "mild",
+        "strain_score": 0.5704,
+        "interrupt_ok_p": 0.4972
+      },
+      "client_ms": 468.9428999554366,
+      "server_ms": 465.78,
+      "input_tokens": 964
+    },
+    {
+      "id": "s1-062",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7039,
+        "strain": "mild",
+        "strain_score": 0.8511,
+        "interrupt_ok_p": 0.5786
+      },
+      "client_ms": 457.9365999670699,
+      "server_ms": 453.85,
+      "input_tokens": 942
+    },
+    {
+      "id": "s1-063",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.3921,
+        "strain": "mild",
+        "strain_score": 0.9782,
+        "interrupt_ok_p": 0.8857
+      },
+      "client_ms": 490.2858000714332,
+      "server_ms": 486.65,
+      "input_tokens": 961
+    },
+    {
+      "id": "s1-064",
+      "label": {
+        "next_action": "none",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.1781,
+        "strain": "mild",
+        "strain_score": 0.7368,
+        "interrupt_ok_p": 0.894
+      },
+      "client_ms": 467.21290005370975,
+      "server_ms": 462.9,
+      "input_tokens": 962
+    },
+    {
+      "id": "s1-065",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.6258,
+        "strain": "mild",
+        "strain_score": 0.5566,
+        "interrupt_ok_p": 0.522
+      },
+      "client_ms": 478.2795999199152,
+      "server_ms": 474.74,
+      "input_tokens": 970
+    },
+    {
+      "id": "s1-066",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.863,
+        "strain": "mild",
+        "strain_score": 0.6174,
+        "interrupt_ok_p": 0.3739
+      },
+      "client_ms": 493.3425000635907,
+      "server_ms": 489.35,
+      "input_tokens": 944
+    },
+    {
+      "id": "s1-067",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6394,
+        "strain": "mild",
+        "strain_score": 0.8565,
+        "interrupt_ok_p": 0.8766
+      },
+      "client_ms": 490.95210002269596,
+      "server_ms": 471.46,
+      "input_tokens": 967
+    },
+    {
+      "id": "s1-068",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.4025,
+        "strain": "mild",
+        "strain_score": 0.601,
+        "interrupt_ok_p": 0.8775
+      },
+      "client_ms": 452.1067999303341,
+      "server_ms": 448.32,
+      "input_tokens": 961
+    },
+    {
+      "id": "s1-069",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4755,
+        "strain": "mild",
+        "strain_score": 1.2145,
+        "interrupt_ok_p": 0.9046
+      },
+      "client_ms": 468.82169996388257,
+      "server_ms": 465.32,
+      "input_tokens": 967
+    },
+    {
+      "id": "s1-070",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7899,
+        "strain": "mild",
+        "strain_score": 0.7302,
+        "interrupt_ok_p": 0.5648
+      },
+      "client_ms": 463.2168000098318,
+      "server_ms": 459.76,
+      "input_tokens": 944
+    },
+    {
+      "id": "s1-071",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.8149,
+        "strain": "mild",
+        "strain_score": 1.1284,
+        "interrupt_ok_p": 0.473
+      },
+      "client_ms": 470.78650002367795,
+      "server_ms": 467.08,
+      "input_tokens": 963
+    }
+  ]
+}

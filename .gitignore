@@ -1,0 +1,45 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+credentials
+credentials.*
+.aws/
+*secret*
+calibration.local.json
+
+# Personal / raw data
+data/raw/
+data/frames/
+recordings/
+*.mp4
+*.mov
+*.wav
+
+# Model caches
+.cache/
+hf/
+huggingface/
+models/
+*.safetensors
+*.bin
+*.task
+
+# Workflow-internal notes
+.agents/
+
+# Camera frames (never commit)
+s2-frames/
+frames/
+
+# Local logs (may contain personal data)
+logs/
+*.log

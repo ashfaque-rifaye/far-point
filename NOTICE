@@ -1,0 +1,17 @@
+Far Point
+Copyright 2026 Far Point contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product uses or depends on the following third-party components:
+
+- Strands Decider (https://github.com/strands-labs/strands-decider)
+  and the StrandsAgents/strands-decider-2B-qwen3.5-v1-2610 model weights.
+  Licensed under the Apache License, Version 2.0.
+
+- Qwen3.5 base model (Qwen/Qwen3.5-2B-Base), Alibaba Qwen team.
+  Licensed under the Apache License, Version 2.0.
+
+- MediaPipe (https://github.com/google-ai-edge/mediapipe), Google LLC,
+  including the Face Landmarker model.
+  Licensed under the Apache License, Version 2.0.

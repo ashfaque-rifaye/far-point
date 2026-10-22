@@ -1,0 +1,20 @@
+{
+  "n": 40,
+  "client_s": {
+    "p50": 0.5083066499792039,
+    "p90": 0.544463569985237,
+    "max": 0.5674534999998286
+  },
+  "peak_gpu_used_mib": 6560,
+  "vram_limit_mib": 7577,
+  "baseline_no_decider_mib": 1827,
+  "vision_server_footprint_mib": 4733,
+  "pass_latency": true,
+  "pass_vram": true,
+  "unlabeled_answer_means": {
+    "glasses_on": 0.189395,
+    "rubbing_eyes": 0.1562025,
+    "looking_far_away": 0.5600025
+  },
+  "note": "live frames held in memory only; none written to disk"
+}

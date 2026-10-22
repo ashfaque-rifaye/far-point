@@ -1,0 +1,494 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://far-point.local/contract.schema.json",
+  "title": "Far Point UI <-> backend WebSocket contract (protocol v1)",
+  "description": "Transport: one WebSocket at ws://127.0.0.1:8765/ws (override with ?ws= or VITE_WS_URL). Server->client frames match #/$defs/ServerEvent; client->server frames match #/$defs/ClientCommand. Unknown fields are allowed everywhere (forward compatibility). Mirrors web/src/contract.ts and docs/ui-contract.md.",
+  "oneOf": [{ "$ref": "#/$defs/ServerEvent" }, { "$ref": "#/$defs/ClientCommand" }],
+
+  "$defs": {
+    "EpochMs": { "type": "number", "minimum": 0, "description": "Epoch milliseconds." },
+    "Prob": { "type": "number", "minimum": 0, "maximum": 1 },
+    "ProbMap": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/Prob" },
+      "description": "option -> probability; values should sum to ~1."
+    },
+    "NonNeg": { "type": "number", "minimum": 0 },
+    "NonNegOrNull": { "type": ["number", "null"], "minimum": 0 },
+
+    "Envelope": {
+      "type": "object",
+      "required": ["v", "type", "t", "data"],
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "type": "string" },
+        "t": { "$ref": "#/$defs/EpochMs" },
+        "data": { "type": "object" }
+      }
+    },
+
+    "ServerEvent": {
+      "description": "Any server->client event. Discriminated on `type`.",
+      "allOf": [{ "$ref": "#/$defs/Envelope" }],
+      "oneOf": [
+        { "$ref": "#/$defs/HelloEvent" },
+        { "$ref": "#/$defs/SignalsEvent" },
+        { "$ref": "#/$defs/DecisionEvent" },
+        { "$ref": "#/$defs/ActionEvent" },
+        { "$ref": "#/$defs/VerificationEvent" },
+        { "$ref": "#/$defs/BreakEvent" },
+        { "$ref": "#/$defs/DoctrineEvent" },
+        { "$ref": "#/$defs/ProposalEvent" },
+        { "$ref": "#/$defs/StatsEvent" },
+        { "$ref": "#/$defs/ReportEvent" },
+        { "$ref": "#/$defs/EmailDraftEvent" },
+        { "$ref": "#/$defs/ConfirmRequestEvent" },
+        { "$ref": "#/$defs/ToastEvent" }
+      ]
+    },
+
+    "HelloEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "hello" }, "data": { "$ref": "#/$defs/HelloData" } }
+    },
+    "SignalsEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "signals" }, "data": { "$ref": "#/$defs/SignalsData" } }
+    },
+    "DecisionEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "decision" }, "data": { "$ref": "#/$defs/DecisionData" } }
+    },
+    "ActionEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "action" }, "data": { "$ref": "#/$defs/ActionData" } }
+    },
+    "VerificationEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "verification" }, "data": { "$ref": "#/$defs/VerificationData" } }
+    },
+    "BreakEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "break" }, "data": { "$ref": "#/$defs/BreakData" } }
+    },
+    "DoctrineEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "doctrine" }, "data": { "$ref": "#/$defs/DoctrineData" } }
+    },
+    "ProposalEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "proposal" }, "data": { "$ref": "#/$defs/ProposalData" } }
+    },
+    "StatsEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "stats" }, "data": { "$ref": "#/$defs/StatsData" } }
+    },
+    "ReportEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "report" }, "data": { "$ref": "#/$defs/ReportData" } }
+    },
+    "EmailDraftEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "email_draft" }, "data": { "$ref": "#/$defs/EmailDraftData" } }
+    },
+    "ConfirmRequestEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "confirm_request" }, "data": { "$ref": "#/$defs/ConfirmRequestData" } }
+    },
+    "ToastEvent": {
+      "type": "object",
+      "required": ["type", "data"],
+      "properties": { "type": { "const": "toast" }, "data": { "$ref": "#/$defs/ToastData" } }
+    },
+
+    "HelloData": {
+      "type": "object",
+      "description": "Sent once on connect and again whenever any status changes.",
+      "required": ["mode", "app_version", "profile_name", "decider", "bedrock", "camera"],
+      "properties": {
+        "mode": { "enum": ["live", "replay"] },
+        "app_version": { "type": "string" },
+        "profile_name": { "type": "string" },
+        "decider": {
+          "type": "object",
+          "required": ["status", "model", "device", "vision"],
+          "properties": {
+            "status": { "enum": ["ready", "loading", "down"] },
+            "model": { "type": "string" },
+            "device": { "type": "string", "description": "e.g. cuda, cpu, npu" },
+            "vision": { "type": "boolean" }
+          }
+        },
+        "bedrock": {
+          "type": "object",
+          "required": ["status", "model"],
+          "properties": {
+            "status": { "enum": ["ready", "loading", "down", "off"], "description": "'off' is an EXTENSION: no credentials or disabled." },
+            "model": { "type": ["string", "null"] }
+          }
+        },
+        "camera": {
+          "type": "object",
+          "required": ["status"],
+          "properties": { "status": { "enum": ["on", "off", "paused", "error"] } }
+        }
+      }
+    },
+
+    "AppContext": {
+      "type": "object",
+      "required": ["name", "category", "zoom_step"],
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "enum": ["browser", "editor", "office", "pdf", "video", "meeting", "other"] },
+        "zoom_step": { "type": "integer", "description": "Steps applied by Far Point vs user default; 0 = untouched." }
+      }
+    },
+
+    "SignalsData": {
+      "type": "object",
+      "description": "Perception summary at 5-10 Hz.",
+      "required": [
+        "face", "distance_cm", "distance_band", "squint", "squinting", "blink_per_min",
+        "looking_at_screen", "ambient", "glasses_on", "bout_s", "under30_today_s", "app"
+      ],
+      "properties": {
+        "face": { "type": "boolean" },
+        "distance_cm": { "$ref": "#/$defs/NonNegOrNull" },
+        "distance_band": { "enum": ["too_close", "close", "healthy", "far", null] },
+        "squint": { "type": "number", "minimum": 0, "description": "Eye-opening ratio vs baseline; 1.0 = baseline, lower = more squint." },
+        "squinting": { "type": "boolean" },
+        "blink_per_min": { "$ref": "#/$defs/NonNeg" },
+        "looking_at_screen": { "type": ["boolean", "null"] },
+        "ambient": { "enum": ["dark", "dim", "normal", "bright"] },
+        "glasses_on": { "type": ["boolean", "null"] },
+        "bout_s": { "$ref": "#/$defs/NonNeg" },
+        "under30_today_s": { "$ref": "#/$defs/NonNeg" },
+        "app": { "$ref": "#/$defs/AppContext" }
+      }
+    },
+
+    "DecisionData": {
+      "type": "object",
+      "description": "One decider pass, every 2-3 s.",
+      "required": ["id", "latency_ms", "source", "state_text", "answers", "policy"],
+      "properties": {
+        "id": { "type": "string" },
+        "latency_ms": { "$ref": "#/$defs/NonNeg" },
+        "source": { "enum": ["decider", "fallback"] },
+        "state_text": { "type": "string" },
+        "answers": {
+          "type": "object",
+          "required": ["next_action", "strain", "interrupt_ok"],
+          "properties": {
+            "next_action": {
+              "type": "object",
+              "required": ["choice", "confidence", "probs"],
+              "properties": {
+                "choice": { "type": "string", "description": "A tool name or 'none'." },
+                "confidence": { "$ref": "#/$defs/Prob" },
+                "probs": { "$ref": "#/$defs/ProbMap" }
+              }
+            },
+            "strain": {
+              "type": "object",
+              "required": ["level", "expected", "probs"],
+              "properties": {
+                "level": { "enum": ["relaxed", "mild", "strong"] },
+                "expected": { "type": "number", "minimum": 0, "maximum": 2, "description": "0 relaxed, 1 mild, 2 strong; probability-weighted." },
+                "probs": { "$ref": "#/$defs/ProbMap" }
+              }
+            },
+            "interrupt_ok": {
+              "type": "object",
+              "required": ["p"],
+              "properties": { "p": { "$ref": "#/$defs/Prob" } }
+            },
+            "vision": {
+              "type": "object",
+              "description": "Only present when hello.decider.vision is true.",
+              "required": ["glasses_on", "rubbing_eyes", "looking_far", "video_call"],
+              "properties": {
+                "glasses_on": { "$ref": "#/$defs/Prob" },
+                "rubbing_eyes": { "$ref": "#/$defs/Prob" },
+                "looking_far": { "$ref": "#/$defs/Prob" },
+                "video_call": { "$ref": "#/$defs/Prob" }
+              }
+            }
+          }
+        },
+        "policy": { "enum": ["act", "quiet", "ask"] },
+        "rule_ref": { "type": "string" }
+      }
+    },
+
+    "Tool": {
+      "enum": [
+        "enlarge_text", "reduce_text", "dim_screen", "brighten_screen", "dark_mode",
+        "far_look_break", "glasses_reminder", "ask_user", "reset"
+      ]
+    },
+
+    "ActionData": {
+      "type": "object",
+      "required": ["id", "decision_id", "tool", "args", "gate", "status", "message"],
+      "properties": {
+        "id": { "type": "string" },
+        "decision_id": { "type": "string" },
+        "tool": { "$ref": "#/$defs/Tool" },
+        "args": { "type": "object" },
+        "gate": {
+          "type": "object",
+          "required": ["name", "verdict", "p"],
+          "properties": {
+            "name": { "enum": ["InterruptGate", "Confirm", null] },
+            "verdict": { "enum": ["proceed", "deny", "defer", "pending", null] },
+            "p": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+          }
+        },
+        "status": { "enum": ["done", "denied", "deferred", "pending_confirm", "failed"] },
+        "message": { "type": "string" }
+      }
+    },
+
+    "Measure": {
+      "type": "object",
+      "required": ["distance_cm", "squint"],
+      "properties": {
+        "distance_cm": { "$ref": "#/$defs/NonNegOrNull" },
+        "squint": { "$ref": "#/$defs/NonNegOrNull" }
+      }
+    },
+
+    "VerificationData": {
+      "type": "object",
+      "required": ["action_id", "outcome", "before", "after", "window_s"],
+      "properties": {
+        "action_id": { "type": "string" },
+        "outcome": { "enum": ["worked", "no_change", "worse", "n/a"] },
+        "before": { "$ref": "#/$defs/Measure" },
+        "after": { "$ref": "#/$defs/Measure" },
+        "window_s": { "$ref": "#/$defs/NonNeg" }
+      }
+    },
+
+    "BreakData": {
+      "type": "object",
+      "required": ["id", "phase", "target_s", "looking_away_s", "streak"],
+      "properties": {
+        "id": { "type": "string" },
+        "phase": { "enum": ["offered", "started", "tick", "verified", "skipped", "abandoned"] },
+        "target_s": { "$ref": "#/$defs/NonNeg" },
+        "looking_away_s": { "$ref": "#/$defs/NonNeg" },
+        "streak": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "DoctrineRule": {
+      "type": "object",
+      "required": ["n", "text", "origin", "status", "basis"],
+      "properties": {
+        "n": { "type": "integer", "minimum": 1 },
+        "text": { "type": "string" },
+        "origin": { "enum": ["bedrock", "user", "proposal", "default"] },
+        "status": { "enum": ["active", "pending", "rejected"] },
+        "basis": { "type": "string" }
+      }
+    },
+
+    "DoctrineData": {
+      "type": "object",
+      "required": ["version", "source_text", "approved", "rules"],
+      "properties": {
+        "version": { "type": "integer", "minimum": 0 },
+        "source_text": { "type": "string" },
+        "approved": { "type": "boolean" },
+        "rules": { "type": "array", "items": { "$ref": "#/$defs/DoctrineRule" } }
+      }
+    },
+
+    "ProposalData": {
+      "type": "object",
+      "required": ["id", "rule_text", "reason", "moments", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "rule_text": { "type": "string" },
+        "reason": { "type": "string" },
+        "moments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["t", "note"],
+            "properties": { "t": { "$ref": "#/$defs/EpochMs" }, "note": { "type": "string" } }
+          }
+        },
+        "status": { "enum": ["pending", "approved", "rejected"] }
+      }
+    },
+
+    "StatsData": {
+      "type": "object",
+      "required": [
+        "day", "under30_min", "longest_bout_min", "breaks_offered", "breaks_verified", "streak",
+        "squint_episodes", "glasses_off_min", "adaptations", "adaptations_worked", "decisions",
+        "decider_p50_ms", "decider_p95_ms", "face_images_uploaded", "bedrock_calls", "bedrock_tokens"
+      ],
+      "properties": {
+        "day": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "under30_min": { "$ref": "#/$defs/NonNeg" },
+        "longest_bout_min": { "$ref": "#/$defs/NonNeg" },
+        "breaks_offered": { "$ref": "#/$defs/NonNeg" },
+        "breaks_verified": { "$ref": "#/$defs/NonNeg" },
+        "streak": { "$ref": "#/$defs/NonNeg" },
+        "squint_episodes": { "$ref": "#/$defs/NonNeg" },
+        "glasses_off_min": { "$ref": "#/$defs/NonNeg" },
+        "adaptations": { "$ref": "#/$defs/NonNeg" },
+        "adaptations_worked": { "$ref": "#/$defs/NonNeg" },
+        "decisions": { "$ref": "#/$defs/NonNeg" },
+        "decider_p50_ms": { "$ref": "#/$defs/NonNeg" },
+        "decider_p95_ms": { "$ref": "#/$defs/NonNeg" },
+        "face_images_uploaded": { "$ref": "#/$defs/NonNeg", "description": "Always 0 in normal use." },
+        "bedrock_calls": { "$ref": "#/$defs/NonNeg" },
+        "bedrock_tokens": { "$ref": "#/$defs/NonNeg" }
+      }
+    },
+
+    "ReportData": {
+      "type": "object",
+      "required": ["id", "period", "markdown", "model", "generated_at"],
+      "properties": {
+        "id": { "type": "string" },
+        "period": { "enum": ["today", "week"] },
+        "markdown": { "type": "string" },
+        "model": { "type": "string" },
+        "generated_at": { "$ref": "#/$defs/EpochMs" }
+      }
+    },
+
+    "EmailDraftData": {
+      "type": "object",
+      "required": ["id", "subject", "body", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "subject": { "type": "string" },
+        "body": { "type": "string" },
+        "status": { "enum": ["draft", "pending_confirm", "opened"] },
+        "to": { "type": ["string", "null"], "description": "EXTENSION: recipient if known." }
+      }
+    },
+
+    "ConfirmRequestData": {
+      "type": "object",
+      "required": ["request_id", "title", "detail"],
+      "properties": {
+        "request_id": { "type": "string" },
+        "title": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    },
+
+    "ToastData": {
+      "type": "object",
+      "required": ["level", "text"],
+      "properties": {
+        "level": { "enum": ["info", "success", "warning"] },
+        "text": { "type": "string" }
+      }
+    },
+
+    "CommandBase": {
+      "type": "object",
+      "required": ["v", "type", "name", "args"],
+      "properties": {
+        "v": { "const": 1 },
+        "type": { "const": "cmd" },
+        "name": { "type": "string" },
+        "args": { "type": "object" },
+        "t": { "$ref": "#/$defs/EpochMs", "description": "EXTENSION: optional client send time." }
+      }
+    },
+
+    "ClientCommand": {
+      "description": "Any client->server command. Discriminated on `name`.",
+      "allOf": [{ "$ref": "#/$defs/CommandBase" }],
+      "oneOf": [
+        {
+          "properties": {
+            "name": { "const": "set_eye_description" },
+            "args": { "type": "object", "required": ["text"], "properties": { "text": { "type": "string" } } }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "approve_doctrine" },
+            "args": { "type": "object", "required": ["version"], "properties": { "version": { "type": "integer", "minimum": 0 } } }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "approve_proposal" },
+            "args": { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "reject_proposal" },
+            "args": { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "start_calibration" },
+            "args": { "type": "object", "required": ["distance_cm"], "properties": { "distance_cm": { "type": "number", "exclusiveMinimum": 0 } } }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "request_report" },
+            "args": { "type": "object", "required": ["period"], "properties": { "period": { "enum": ["today", "week"] } } }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "draft_exam_email" },
+            "args": { "type": "object" }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "confirm" },
+            "args": {
+              "type": "object",
+              "required": ["request_id", "approve"],
+              "properties": { "request_id": { "type": "string" }, "approve": { "type": "boolean" } }
+            }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "pause_camera" },
+            "args": { "type": "object", "required": ["paused"], "properties": { "paused": { "type": "boolean" } } }
+          }
+        },
+        {
+          "properties": {
+            "name": { "const": "skip_break" },
+            "args": { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1595 @@
+{
+  "summary": {
+    "tag": "run2_v2_fla_high",
+    "seed": 2,
+    "questions": "v2",
+    "config": "native Windows, triton-windows 3.7.1 + flash-linear-attention 0.5.2, causal_conv1d torch fallback, text mode, server process priority High",
+    "n_states": 72,
+    "n_questions_per_request": 3,
+    "next_action_agreement": 0.6805555555555556,
+    "next_action_agreement_multi_trigger": 0.35714285714285715,
+    "n_multi_trigger": 14,
+    "strain_accuracy": 0.4444444444444444,
+    "interrupt_ok_accuracy": 1.0,
+    "per_label_agreement": {
+      "enlarge_text": 0.625,
+      "far_look_break": 1.0,
+      "ask_user": 0.875,
+      "dim_screen": 1.0,
+      "dark_mode": 0.0,
+      "reduce_text": 0.125,
+      "glasses_reminder": 0.75,
+      "brighten_screen": 0.75,
+      "none": 1.0
+    },
+    "confusion": {
+      "enlarge_text": {
+        "far_look_break": 3,
+        "enlarge_text": 5
+      },
+      "far_look_break": {
+        "far_look_break": 8
+      },
+      "ask_user": {
+        "ask_user": 7,
+        "far_look_break": 1
+      },
+      "dim_screen": {
+        "dim_screen": 8
+      },
+      "dark_mode": {
+        "far_look_break": 2,
+        "none": 5,
+        "dim_screen": 1
+      },
+      "reduce_text": {
+        "far_look_break": 3,
+        "none": 4,
+        "reduce_text": 1
+      },
+      "glasses_reminder": {
+        "glasses_reminder": 6,
+        "far_look_break": 2
+      },
+      "brighten_screen": {
+        "brighten_screen": 6,
+        "far_look_break": 2
+      },
+      "none": {
+        "none": 8
+      }
+    },
+    "client_ms": {
+      "p50": 489.76279998896644,
+      "p90": 513.9474299387075,
+      "min": 469.9413999915123,
+      "max": 535.0790000520647
+    },
+    "server_ms": {
+      "p50": 483.75,
+      "p90": 508.173
+    },
+    "mean_input_tokens": 984.1666666666666,
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "used_mib": 6322,
+      "total_mib": 8188,
+      "util_pct": 53
+    },
+    "pass_agreement": false,
+    "pass_latency": true,
+    "pass": false
+  },
+  "rows": [
+    {
+      "id": "s2-000",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.656,
+        "strain": "mild",
+        "strain_score": 1.2933,
+        "interrupt_ok_p": 0.9287
+      },
+      "client_ms": 476.665599970147,
+      "server_ms": 473.59,
+      "input_tokens": 996
+    },
+    {
+      "id": "s2-001",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6602,
+        "strain": "mild",
+        "strain_score": 0.6871,
+        "interrupt_ok_p": 0.9298
+      },
+      "client_ms": 499.92390000261366,
+      "server_ms": 486.03,
+      "input_tokens": 990
+    },
+    {
+      "id": "s2-002",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4506,
+        "strain": "mild",
+        "strain_score": 1.0348,
+        "interrupt_ok_p": 0.919
+      },
+      "client_ms": 504.9985999939963,
+      "server_ms": 478.71,
+      "input_tokens": 999
+    },
+    {
+      "id": "s2-003",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.3844,
+        "strain": "mild",
+        "strain_score": 1.2237,
+        "interrupt_ok_p": 0.3736
+      },
+      "client_ms": 496.8508000019938,
+      "server_ms": 493.07,
+      "input_tokens": 961
+    },
+    {
+      "id": "s2-004",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.507,
+        "strain": "mild",
+        "strain_score": 0.7201,
+        "interrupt_ok_p": 0.1974
+      },
+      "client_ms": 479.86079996917397,
+      "server_ms": 476.07,
+      "input_tokens": 986
+    },
+    {
+      "id": "s2-005",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4083,
+        "strain": "mild",
+        "strain_score": 0.9027,
+        "interrupt_ok_p": 0.9324
+      },
+      "client_ms": 510.1440000580624,
+      "server_ms": 506.04,
+      "input_tokens": 966
+    },
+    {
+      "id": "s2-006",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.7096,
+        "strain": "mild",
+        "strain_score": 0.8445,
+        "interrupt_ok_p": 0.9269
+      },
+      "client_ms": 499.29169996175915,
+      "server_ms": 495.28,
+      "input_tokens": 994
+    },
+    {
+      "id": "s2-007",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.3698,
+        "strain": "mild",
+        "strain_score": 0.7101,
+        "interrupt_ok_p": 0.2542
+      },
+      "client_ms": 505.29120001010597,
+      "server_ms": 501.48,
+      "input_tokens": 984
+    },
+    {
+      "id": "s2-008",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.2211,
+        "strain": "mild",
+        "strain_score": 0.699,
+        "interrupt_ok_p": 0.4209
+      },
+      "client_ms": 504.89089998882264,
+      "server_ms": 480.05,
+      "input_tokens": 967
+    },
+    {
+      "id": "s2-009",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.26,
+        "strain": "mild",
+        "strain_score": 0.5293,
+        "interrupt_ok_p": 0.9257
+      },
+      "client_ms": 520.4736999003217,
+      "server_ms": 516.77,
+      "input_tokens": 997
+    },
+    {
+      "id": "s2-010",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.3966,
+        "strain": "relaxed",
+        "strain_score": 0.4725,
+        "interrupt_ok_p": 0.9328
+      },
+      "client_ms": 481.2258000019938,
+      "server_ms": 477.8,
+      "input_tokens": 974
+    },
+    {
+      "id": "s2-011",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.6497,
+        "strain": "mild",
+        "strain_score": 0.6749,
+        "interrupt_ok_p": 0.9103
+      },
+      "client_ms": 499.7145999222994,
+      "server_ms": 495.95,
+      "input_tokens": 993
+    },
+    {
+      "id": "s2-012",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.2782,
+        "strain": "mild",
+        "strain_score": 0.6797,
+        "interrupt_ok_p": 0.9265
+      },
+      "client_ms": 493.23630006983876,
+      "server_ms": 473.03,
+      "input_tokens": 992
+    },
+    {
+      "id": "s2-013",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.4906,
+        "strain": "mild",
+        "strain_score": 0.5328,
+        "interrupt_ok_p": 0.915
+      },
+      "client_ms": 497.7021000813693,
+      "server_ms": 493.88,
+      "input_tokens": 983
+    },
+    {
+      "id": "s2-014",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.4924,
+        "strain": "mild",
+        "strain_score": 0.5046,
+        "interrupt_ok_p": 0.271
+      },
+      "client_ms": 495.0577000854537,
+      "server_ms": 490.98,
+      "input_tokens": 988
+    },
+    {
+      "id": "s2-015",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3492,
+        "strain": "mild",
+        "strain_score": 0.5172,
+        "interrupt_ok_p": 0.9004
+      },
+      "client_ms": 519.322199979797,
+      "server_ms": 515.37,
+      "input_tokens": 997
+    },
+    {
+      "id": "s2-016",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.5008,
+        "strain": "mild",
+        "strain_score": 0.501,
+        "interrupt_ok_p": 0.372
+      },
+      "client_ms": 522.7198000065982,
+      "server_ms": 519.28,
+      "input_tokens": 999
+    },
+    {
+      "id": "s2-017",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.6756,
+        "strain": "mild",
+        "strain_score": 0.509,
+        "interrupt_ok_p": 0.2937
+      },
+      "client_ms": 501.6879999311641,
+      "server_ms": 497.72,
+      "input_tokens": 967
+    },
+    {
+      "id": "s2-018",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6938,
+        "strain": "mild",
+        "strain_score": 0.628,
+        "interrupt_ok_p": 0.3951
+      },
+      "client_ms": 476.6395000042394,
+      "server_ms": 472.87,
+      "input_tokens": 993
+    },
+    {
+      "id": "s2-019",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6981,
+        "strain": "mild",
+        "strain_score": 0.6851,
+        "interrupt_ok_p": 0.8963
+      },
+      "client_ms": 515.4514999594539,
+      "server_ms": 511.91,
+      "input_tokens": 994
+    },
+    {
+      "id": "s2-020",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4976,
+        "strain": "mild",
+        "strain_score": 0.7549,
+        "interrupt_ok_p": 0.9075
+      },
+      "client_ms": 481.22820002026856,
+      "server_ms": 477.42,
+      "input_tokens": 989
+    },
+    {
+      "id": "s2-021",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.4075,
+        "strain": "mild",
+        "strain_score": 1.1962,
+        "interrupt_ok_p": 0.3398
+      },
+      "client_ms": 503.70090000797063,
+      "server_ms": 499.75,
+      "input_tokens": 994
+    },
+    {
+      "id": "s2-022",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4933,
+        "strain": "mild",
+        "strain_score": 1.1824,
+        "interrupt_ok_p": 0.9241
+      },
+      "client_ms": 471.15790005773306,
+      "server_ms": 467.03,
+      "input_tokens": 987
+    },
+    {
+      "id": "s2-023",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.6247,
+        "strain": "mild",
+        "strain_score": 1.1642,
+        "interrupt_ok_p": 0.9198
+      },
+      "client_ms": 489.6902999607846,
+      "server_ms": 486.31,
+      "input_tokens": 987
+    },
+    {
+      "id": "s2-024",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.2292,
+        "strain": "mild",
+        "strain_score": 0.5361,
+        "interrupt_ok_p": 0.4316
+      },
+      "client_ms": 497.09870002698153,
+      "server_ms": 493.35,
+      "input_tokens": 994
+    },
+    {
+      "id": "s2-025",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.5517,
+        "strain": "mild",
+        "strain_score": 0.5368,
+        "interrupt_ok_p": 0.9143
+      },
+      "client_ms": 490.3098000213504,
+      "server_ms": 486.45,
+      "input_tokens": 990
+    },
+    {
+      "id": "s2-026",
+      "label": {
+        "next_action": "none",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.4742,
+        "strain": "mild",
+        "strain_score": 0.6549,
+        "interrupt_ok_p": 0.4277
+      },
+      "client_ms": 483.1694000167772,
+      "server_ms": 479.37,
+      "input_tokens": 992
+    },
+    {
+      "id": "s2-027",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.5213,
+        "strain": "mild",
+        "strain_score": 1.2371,
+        "interrupt_ok_p": 0.4612
+      },
+      "client_ms": 485.57589994743466,
+      "server_ms": 481.8,
+      "input_tokens": 979
+    },
+    {
+      "id": "s2-028",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6756,
+        "strain": "mild",
+        "strain_score": 0.9068,
+        "interrupt_ok_p": 0.8983
+      },
+      "client_ms": 484.067999990657,
+      "server_ms": 480.05,
+      "input_tokens": 990
+    },
+    {
+      "id": "s2-029",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3106,
+        "strain": "mild",
+        "strain_score": 0.5219,
+        "interrupt_ok_p": 0.9006
+      },
+      "client_ms": 497.117199935019,
+      "server_ms": 493.01,
+      "input_tokens": 997
+    },
+    {
+      "id": "s2-030",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.4917,
+        "strain": "relaxed",
+        "strain_score": 0.4826,
+        "interrupt_ok_p": 0.932
+      },
+      "client_ms": 482.7937000663951,
+      "server_ms": 478.96,
+      "input_tokens": 976
+    },
+    {
+      "id": "s2-031",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.5831,
+        "strain": "mild",
+        "strain_score": 1.2133,
+        "interrupt_ok_p": 0.383
+      },
+      "client_ms": 493.35949996020645,
+      "server_ms": 489.77,
+      "input_tokens": 1000
+    },
+    {
+      "id": "s2-032",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.6474,
+        "strain": "mild",
+        "strain_score": 0.5066,
+        "interrupt_ok_p": 0.3878
+      },
+      "client_ms": 489.5148000214249,
+      "server_ms": 485.79,
+      "input_tokens": 965
+    },
+    {
+      "id": "s2-033",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.3297,
+        "strain": "mild",
+        "strain_score": 0.7955,
+        "interrupt_ok_p": 0.378
+      },
+      "client_ms": 485.85639998782426,
+      "server_ms": 482.15,
+      "input_tokens": 982
+    },
+    {
+      "id": "s2-034",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.3989,
+        "strain": "mild",
+        "strain_score": 1.2348,
+        "interrupt_ok_p": 0.9067
+      },
+      "client_ms": 479.02059997431934,
+      "server_ms": 475.21,
+      "input_tokens": 998
+    },
+    {
+      "id": "s2-035",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.5893,
+        "strain": "mild",
+        "strain_score": 0.7171,
+        "interrupt_ok_p": 0.3476
+      },
+      "client_ms": 500.8613000391051,
+      "server_ms": 497.13,
+      "input_tokens": 995
+    },
+    {
+      "id": "s2-036",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.5005,
+        "strain": "relaxed",
+        "strain_score": 0.4893,
+        "interrupt_ok_p": 0.423
+      },
+      "client_ms": 477.244499954395,
+      "server_ms": 473.73,
+      "input_tokens": 962
+    },
+    {
+      "id": "s2-037",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3657,
+        "strain": "mild",
+        "strain_score": 0.5019,
+        "interrupt_ok_p": 0.927
+      },
+      "client_ms": 481.0740000102669,
+      "server_ms": 476.78,
+      "input_tokens": 971
+    },
+    {
+      "id": "s2-038",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.2119,
+        "strain": "mild",
+        "strain_score": 0.539,
+        "interrupt_ok_p": 0.2527
+      },
+      "client_ms": 477.287600049749,
+      "server_ms": 473.48,
+      "input_tokens": 990
+    },
+    {
+      "id": "s2-039",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3795,
+        "strain": "mild",
+        "strain_score": 0.5118,
+        "interrupt_ok_p": 0.3642
+      },
+      "client_ms": 489.83530001714826,
+      "server_ms": 486.18,
+      "input_tokens": 969
+    },
+    {
+      "id": "s2-040",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.4423,
+        "strain": "mild",
+        "strain_score": 0.699,
+        "interrupt_ok_p": 0.8937
+      },
+      "client_ms": 500.7789999945089,
+      "server_ms": 497.42,
+      "input_tokens": 989
+    },
+    {
+      "id": "s2-041",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.2875,
+        "strain": "mild",
+        "strain_score": 1.0444,
+        "interrupt_ok_p": 0.9132
+      },
+      "client_ms": 479.6996000222862,
+      "server_ms": 476.44,
+      "input_tokens": 970
+    },
+    {
+      "id": "s2-042",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6416,
+        "strain": "mild",
+        "strain_score": 0.5945,
+        "interrupt_ok_p": 0.9331
+      },
+      "client_ms": 499.28170000202954,
+      "server_ms": 472.72,
+      "input_tokens": 969
+    },
+    {
+      "id": "s2-043",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6965,
+        "strain": "mild",
+        "strain_score": 0.664,
+        "interrupt_ok_p": 0.216
+      },
+      "client_ms": 535.0790000520647,
+      "server_ms": 531.4,
+      "input_tokens": 988
+    },
+    {
+      "id": "s2-044",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.2479,
+        "strain": "mild",
+        "strain_score": 0.562,
+        "interrupt_ok_p": 0.4074
+      },
+      "client_ms": 519.4803000194952,
+      "server_ms": 515.46,
+      "input_tokens": 986
+    },
+    {
+      "id": "s2-045",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.642,
+        "strain": "mild",
+        "strain_score": 0.6595,
+        "interrupt_ok_p": 0.936
+      },
+      "client_ms": 485.57609994895756,
+      "server_ms": 481.95,
+      "input_tokens": 981
+    },
+    {
+      "id": "s2-046",
+      "label": {
+        "next_action": "dark_mode",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dark_mode"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.3831,
+        "strain": "relaxed",
+        "strain_score": 0.4939,
+        "interrupt_ok_p": 0.9307
+      },
+      "client_ms": 480.85190006531775,
+      "server_ms": 477.27,
+      "input_tokens": 972
+    },
+    {
+      "id": "s2-047",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.5962,
+        "strain": "mild",
+        "strain_score": 1.1317,
+        "interrupt_ok_p": 0.3647
+      },
+      "client_ms": 474.9984999652952,
+      "server_ms": 471.57,
+      "input_tokens": 992
+    },
+    {
+      "id": "s2-048",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.4231,
+        "strain": "mild",
+        "strain_score": 1.1311,
+        "interrupt_ok_p": 0.9332
+      },
+      "client_ms": 498.04700003005564,
+      "server_ms": 494.28,
+      "input_tokens": 977
+    },
+    {
+      "id": "s2-049",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.5924,
+        "strain": "mild",
+        "strain_score": 1.2178,
+        "interrupt_ok_p": 0.3582
+      },
+      "client_ms": 484.79610006324947,
+      "server_ms": 481.12,
+      "input_tokens": 996
+    },
+    {
+      "id": "s2-050",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.6572,
+        "strain": "mild",
+        "strain_score": 0.6571,
+        "interrupt_ok_p": 0.4809
+      },
+      "client_ms": 487.21749999094754,
+      "server_ms": 484.18,
+      "input_tokens": 971
+    },
+    {
+      "id": "s2-051",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.5635,
+        "strain": "relaxed",
+        "strain_score": 0.4952,
+        "interrupt_ok_p": 0.4508
+      },
+      "client_ms": 475.6548999575898,
+      "server_ms": 472.01,
+      "input_tokens": 990
+    },
+    {
+      "id": "s2-052",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4155,
+        "strain": "mild",
+        "strain_score": 0.9939,
+        "interrupt_ok_p": 0.3939
+      },
+      "client_ms": 486.0181000549346,
+      "server_ms": 482.24,
+      "input_tokens": 993
+    },
+    {
+      "id": "s2-053",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.6269,
+        "strain": "mild",
+        "strain_score": 0.5533,
+        "interrupt_ok_p": 0.3957
+      },
+      "client_ms": 485.2264999644831,
+      "server_ms": 481.84,
+      "input_tokens": 995
+    },
+    {
+      "id": "s2-054",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.6376,
+        "strain": "mild",
+        "strain_score": 0.5124,
+        "interrupt_ok_p": 0.9327
+      },
+      "client_ms": 487.51040000934154,
+      "server_ms": 483.62,
+      "input_tokens": 973
+    },
+    {
+      "id": "s2-055",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.5867,
+        "strain": "mild",
+        "strain_score": 0.5402,
+        "interrupt_ok_p": 0.4748
+      },
+      "client_ms": 475.5455000558868,
+      "server_ms": 471.8,
+      "input_tokens": 990
+    },
+    {
+      "id": "s2-056",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.4526,
+        "strain": "mild",
+        "strain_score": 0.548,
+        "interrupt_ok_p": 0.3566
+      },
+      "client_ms": 502.25469993893057,
+      "server_ms": 498.87,
+      "input_tokens": 987
+    },
+    {
+      "id": "s2-057",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.4281,
+        "strain": "mild",
+        "strain_score": 0.7134,
+        "interrupt_ok_p": 0.3834
+      },
+      "client_ms": 503.3030998893082,
+      "server_ms": 499.54,
+      "input_tokens": 998
+    },
+    {
+      "id": "s2-058",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.2326,
+        "strain": "mild",
+        "strain_score": 0.5169,
+        "interrupt_ok_p": 0.9298
+      },
+      "client_ms": 486.89289996400476,
+      "server_ms": 483.38,
+      "input_tokens": 973
+    },
+    {
+      "id": "s2-059",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.5707,
+        "strain": "relaxed",
+        "strain_score": 0.4801,
+        "interrupt_ok_p": 0.927
+      },
+      "client_ms": 469.9413999915123,
+      "server_ms": 466.14,
+      "input_tokens": 969
+    },
+    {
+      "id": "s2-060",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.466,
+        "strain": "mild",
+        "strain_score": 0.5009,
+        "interrupt_ok_p": 0.8964
+      },
+      "client_ms": 483.22359996382147,
+      "server_ms": 479.68,
+      "input_tokens": 995
+    },
+    {
+      "id": "s2-061",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.3333,
+        "strain": "mild",
+        "strain_score": 1.0642,
+        "interrupt_ok_p": 0.2909
+      },
+      "client_ms": 487.61670000385493,
+      "server_ms": 483.88,
+      "input_tokens": 964
+    },
+    {
+      "id": "s2-062",
+      "label": {
+        "next_action": "ask_user",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "ask_user"
+      ],
+      "pred": {
+        "next_action": "ask_user",
+        "next_action_conf": 0.3666,
+        "strain": "mild",
+        "strain_score": 1.0632,
+        "interrupt_ok_p": 0.3742
+      },
+      "client_ms": 512.6885999925435,
+      "server_ms": 508.41,
+      "input_tokens": 962
+    },
+    {
+      "id": "s2-063",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.5768,
+        "strain": "mild",
+        "strain_score": 0.5222,
+        "interrupt_ok_p": 0.9122
+      },
+      "client_ms": 479.673899943009,
+      "server_ms": 475.63,
+      "input_tokens": 993
+    },
+    {
+      "id": "s2-064",
+      "label": {
+        "next_action": "far_look_break",
+        "strain": "strong",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "far_look_break",
+        "next_action_conf": 0.6465,
+        "strain": "mild",
+        "strain_score": 0.8231,
+        "interrupt_ok_p": 0.4884
+      },
+      "client_ms": 509.18819999787956,
+      "server_ms": 505.54,
+      "input_tokens": 972
+    },
+    {
+      "id": "s2-065",
+      "label": {
+        "next_action": "brighten_screen",
+        "strain": "mild",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "brighten_screen"
+      ],
+      "pred": {
+        "next_action": "brighten_screen",
+        "next_action_conf": 0.3978,
+        "strain": "mild",
+        "strain_score": 0.7547,
+        "interrupt_ok_p": 0.3563
+      },
+      "client_ms": 505.91099995654076,
+      "server_ms": 502.28,
+      "input_tokens": 986
+    },
+    {
+      "id": "s2-066",
+      "label": {
+        "next_action": "reduce_text",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "reduce_text"
+      ],
+      "pred": {
+        "next_action": "reduce_text",
+        "next_action_conf": 0.2329,
+        "strain": "mild",
+        "strain_score": 0.5043,
+        "interrupt_ok_p": 0.9359
+      },
+      "client_ms": 518.6219000024721,
+      "server_ms": 515.17,
+      "input_tokens": 982
+    },
+    {
+      "id": "s2-067",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "relaxed",
+        "interrupt_ok": false
+      },
+      "triggers": [
+        "dim_screen"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.6511,
+        "strain": "mild",
+        "strain_score": 0.5223,
+        "interrupt_ok_p": 0.2292
+      },
+      "client_ms": 477.2942999843508,
+      "server_ms": 473.86,
+      "input_tokens": 986
+    },
+    {
+      "id": "s2-068",
+      "label": {
+        "next_action": "glasses_reminder",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "pred": {
+        "next_action": "glasses_reminder",
+        "next_action_conf": 0.5686,
+        "strain": "mild",
+        "strain_score": 0.5364,
+        "interrupt_ok_p": 0.8951
+      },
+      "client_ms": 506.0710000107065,
+      "server_ms": 502.11,
+      "input_tokens": 994
+    },
+    {
+      "id": "s2-069",
+      "label": {
+        "next_action": "enlarge_text",
+        "strain": "mild",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "enlarge_text"
+      ],
+      "pred": {
+        "next_action": "enlarge_text",
+        "next_action_conf": 0.5231,
+        "strain": "mild",
+        "strain_score": 1.1415,
+        "interrupt_ok_p": 0.9347
+      },
+      "client_ms": 478.8818000815809,
+      "server_ms": 475.43,
+      "input_tokens": 981
+    },
+    {
+      "id": "s2-070",
+      "label": {
+        "next_action": "none",
+        "strain": "relaxed",
+        "interrupt_ok": true
+      },
+      "triggers": [],
+      "pred": {
+        "next_action": "none",
+        "next_action_conf": 0.5895,
+        "strain": "mild",
+        "strain_score": 0.5152,
+        "interrupt_ok_p": 0.9121
+      },
+      "client_ms": 514.0872999327257,
+      "server_ms": 493.63,
+      "input_tokens": 986
+    },
+    {
+      "id": "s2-071",
+      "label": {
+        "next_action": "dim_screen",
+        "strain": "strong",
+        "interrupt_ok": true
+      },
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "pred": {
+        "next_action": "dim_screen",
+        "next_action_conf": 0.49,
+        "strain": "mild",
+        "strain_score": 0.9027,
+        "interrupt_ok_p": 0.9107
+      },
+      "client_ms": 478.90390001703054,
+      "server_ms": 475.34,
+      "input_tokens": 973
+    }
+  ]
+}
