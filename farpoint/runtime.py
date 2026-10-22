@@ -32,6 +32,7 @@ from .sources import LiveSource, ReplayClock, ReplaySource, TraceRecorder
 from .stats import StatsStore
 from .tools import ToolContext
 from .verify import Verifier
+from .vision import resolve_vision
 
 log = logging.getLogger("farpoint.runtime")
 
@@ -129,6 +130,15 @@ class Runtime:
         self.decider_device = "cpu" if isinstance(self.decider, FakeDecider) else "cuda"
         self.decider_status = "loading"
 
+        # Vision mode: forced by --vision/--no-vision, else automatic (S2 passed AND the server
+        # runs with --vision). Decided once at startup; replay never sends images.
+        if s.mode == "replay" or s.events is not None:
+            s.vision, self.vision_reason = bool(s.vision), "replay: no camera frames"
+        else:
+            info = self.decider.health_info() if hasattr(self.decider, "health_info") else None
+            s.vision, self.vision_reason = resolve_vision(s.vision, info)
+        log.info("vision mode: %s", self.vision_reason)
+
         has_creds = bedrock_credentials() if bedrock_available is None else bedrock_available
         self.bedrock_status = "off" if (s.no_bedrock or not has_creds) else "ready"
         bedrock_on = self.bedrock_status != "off"
@@ -141,19 +151,20 @@ class Runtime:
             self.escalator = escalator
         elif bedrock_on:
             self.escalator = NovaEscalator(model_id=s.coach_model, region=s.region, stats=self.stats,
-                                           moments=self.moments, clock=self.clock)
+                                           moments=self.moments, clock=self.clock, on_result=self._bedrock_result)
         else:
             self.escalator = None
         self.coach = Coach(self.bus, self.store, self.stats, self.moments, self.broker,
                            model_factory=coach_model_factory, enabled=bedrock_on or coach_model_factory is not None,
-                           startfile=startfile, clock=self.clock, model_id=s.coach_model)
+                           startfile=startfile, clock=self.clock, model_id=s.coach_model,
+                           on_bedrock=self._bedrock_result)
         self.loop = ReflexLoop(tracker=self.tracker, doctrine_store=self.store, decider=self.decider, agent=self.agent,
                                interrupt_gate=self.gate, verifier=self.verifier, prefs=self.prefs,
                                moments=self.moments, stats=self.stats, bus=self.bus, actuators=self.actuators,
                                breaks=self.breaks, tool_ctx=self.tool_ctx, thresholds=s.thresholds,
                                escalator=self.escalator, clock=self.clock, period_s=s.period_s,
                                decider_timeout_s=s.decider_timeout_s, vision=s.vision,
-                               image_provider=self._images if s.vision else None)
+                               image_provider=self._webcam_frame if s.vision else None)
 
         self.trace_recorder = None
         if s.events is not None:
@@ -193,10 +204,19 @@ class Runtime:
         hint = self.loop.current_facts.interrupt_ok_hint
         return True if hint is None else bool(hint)
 
-    def _images(self) -> list[str]:
-        from .context import capture_thumbnail
-        frame = self.source.latest_frame_b64() if hasattr(self.source, "latest_frame_b64") else None
-        return [frame, capture_thumbnail()] if frame else []
+    def _webcam_frame(self) -> str | None:
+        """Vision mode only: the newest webcam frame (base64 JPEG, in memory) for the LOCAL Decider."""
+        fn = getattr(self.source, "latest_frame_b64", None)
+        return fn() if fn else None
+
+    def _bedrock_result(self, ok: bool) -> None:
+        """Coach / escalator report each Bedrock call; `hello.bedrock.status` follows."""
+        if self.bedrock_status == "off":
+            return
+        new = "ready" if ok else "down"
+        if new != self.bedrock_status:
+            self.bedrock_status = new
+            self.send_hello()
 
     # ---- hello / status ---------------------------------------------------------------------
     def camera_status(self) -> str:
@@ -249,7 +269,8 @@ class Runtime:
             self.loop.on_time(t)
         if t - self._last_sig >= SIGNALS_EVERY_S:
             self._last_sig = t
-            self.bus.publish("signals", self.tracker.signals_payload(zoom_step=self.actuators.zoom.zoom_step()))
+            self.bus.publish("signals", self.tracker.signals_payload(zoom_step=self.actuators.zoom.zoom_step(),
+                                                                     glasses_on=self.loop.vision_glasses_on(t)))
         if t - self._last_stats >= STATS_EVERY_S:
             self._last_stats = t
             self.publish_stats()

@@ -21,27 +21,13 @@ from .act import ZOOM_CAP_DOWN, ZOOM_CAP_UP
 from .agent import INTERRUPTIVE, call_tool
 from .doctrine import DEFAULT_ARGS, DoctrineRule
 from .facts import Facts, render_state, strain
+from .vision import CONTRACT_KEYS, FRESH_S, S2_STATE, tri, vision_questions
 
 log = logging.getLogger("farpoint.loop")
 
 COOLDOWN_S = 60.0
 BREAK_COOLDOWN_S = 600.0
 RETRY_BACKOFF_S = 30.0
-
-VISION_QUESTIONS = {
-    "glasses_on": {"type": "noul", "instructions": "Is the person in the image wearing glasses on their face?",
-                   "criteria": {"true": "eyeglass frames or lenses are visible on the face, in front of the eyes",
-                                "false": "no glasses on the face; glasses held in a hand or absent count as false"}},
-    "looking_far": {"type": "noul", "instructions": "Is the person looking far away from the screen?",
-                    "criteria": {"true": "head and gaze turned away from the screen toward a distant point",
-                                 "false": "the person is looking at the screen or the camera"}},
-    "rubbing_eyes": {"type": "noul", "instructions": "Is the person rubbing or touching their eyes?",
-                     "criteria": {"true": "a hand or fingers touch or cover one or both eyes",
-                                  "false": "hands are away from the eyes"}},
-    "video_call": {"type": "noul", "instructions": "Does the screen show a video call with other people's video tiles?",
-                   "criteria": {"true": "a meeting window with participant video or avatars is visible",
-                                "false": "no video call is visible on the screen"}},
-}
 
 
 class ReflexLoop:
@@ -67,7 +53,8 @@ class ReflexLoop:
         self.period_s = period_s
         self.decider_timeout_s = decider_timeout_s
         self.vision = vision
-        self.image_provider = image_provider
+        self.image_provider = image_provider  # vision mode: () -> base64 JPEG of the latest webcam frame
+        self.last_vision: dict | None = None
         self.paused = False
         self.current_facts = Facts()
         self.current_state_text = ""
@@ -96,8 +83,41 @@ class ReflexLoop:
         f.theme = st["theme"]
         f.brightness_pct = st["brightness_pct"]
         f.glasses_prescribed = self.store.active.profile.glasses_for_screen
-        f.local_time = time.strftime("%H:%M", time.localtime(self.clock()))
+        now = self.clock()
+        f.local_time = time.strftime("%H:%M", time.localtime(now))
+        f.vision = bool(self.vision)
+        f.glasses_on = self.vision_glasses_on(now)
         return f
+
+    # ---- vision mode (off unless S2 passed; see farpoint/vision.py) ---------------------
+    def vision_glasses_on(self, now: float | None = None) -> bool | None:
+        lv = self.last_vision
+        now = self.clock() if now is None else now
+        if not self.vision or lv is None or now - lv["t"] > FRESH_S:
+            return None
+        return tri(lv["p"]["glasses_on"], self.thresholds.fire_p, self.thresholds.clear_p)
+
+    def _vision_pass(self, now: float) -> dict | None:
+        """One image request: the S2-measured state, questions and a single webcam frame, to
+        the LOCAL Decider. It runs before the text request so this tick's state can use it."""
+        if not self.vision or self.image_provider is None:
+            return None
+        frame = self.image_provider()
+        if not frame:
+            return None
+        t0 = time.perf_counter()
+        try:
+            resp = self.decider.ask(S2_STATE, vision_questions(), images=[frame], timeout=self.decider_timeout_s)
+        except Exception as e:  # noqa: BLE001 - the text decision still runs
+            log.warning("vision request failed: %s: %s", type(e).__name__, e)
+            return None
+        answers = resp.get("answers", {})
+        probs = {CONTRACT_KEYS[k]: round(float((answers.get(k) or {}).get("noul", 0.0)), 4) for k in CONTRACT_KEYS}
+        latency = float(resp.get("latency_ms") or (time.perf_counter() - t0) * 1000)
+        self.last_vision = {"t": now, "p": probs, "latency_ms": latency}
+        self.tracker.set_vision(now, probs["looking_far"],
+                                tri(probs["glasses_on"], self.thresholds.fire_p, self.thresholds.clear_p))
+        return self.last_vision
 
     def feasible(self, rule: DoctrineRule, f: Facts, now: float) -> tuple[bool, str]:
         tool = rule.tool
@@ -145,6 +165,7 @@ class ReflexLoop:
         now = self.clock()
         doctrine = self.store.active
         self.tracker.set_limits(doctrine.limits)
+        vis = self._vision_pass(now)
         f = self.measure()
         state_text = render_state(f, doctrine)
         self.current_facts, self.current_state_text = f, state_text
@@ -156,19 +177,14 @@ class ReflexLoop:
                 candidates.append(r)
             else:
                 skipped.append({"n": r.n, "tool": r.tool, "why": why})
-        questions = build_questions(candidates)
-        images = None
-        if self.vision and self.image_provider is not None:
-            images = [img for img in self.image_provider() if img]
-            if images:
-                questions.update(VISION_QUESTIONS)
+        questions = build_questions(candidates)  # text only: images go in the separate vision request
         decision_id = f"d_{next(self._d_ids):06d}"
         st = strain(f, doctrine.limits)
         strain_out = {"level": st["level"], "expected": st["expected"], "probs": st["probs"]}
 
         t0 = time.perf_counter()
         try:
-            resp = self.decider.ask(state_text, questions, images=images, timeout=self.decider_timeout_s)
+            resp = self.decider.ask(state_text, questions, timeout=self.decider_timeout_s)
             answers = resp["answers"]
         except Exception as e:  # noqa: BLE001 - Decider down/slow: fail quiet
             latency = (time.perf_counter() - t0) * 1000
@@ -179,6 +195,9 @@ class ReflexLoop:
                 "policy": "quiet",
                 "reason": f"Decider unavailable ({type(e).__name__}): fail quiet, no action",
             }
+            if vis is not None:
+                decision["answers"]["vision"] = dict(vis["p"])
+                decision["vision_latency_ms"] = round(vis["latency_ms"], 1)
             self.bus.publish("decision", decision)
             self.decisions += 1
             return decision
@@ -211,9 +230,9 @@ class ReflexLoop:
             "reason": sel.reason,
             "skipped": skipped,
         }
-        if images:
-            decision["answers"]["vision"] = {k: round(float((answers.get(k) or {}).get("noul", 0.0)), 4)
-                                             for k in VISION_QUESTIONS}
+        if vis is not None:
+            decision["answers"]["vision"] = dict(vis["p"])
+            decision["vision_latency_ms"] = round(vis["latency_ms"], 1)
         if sel.rule_n is not None:
             decision["rule_ref"] = f"rule {sel.rule_n}"
         if sel.escalation is not None and self.escalator is not None:

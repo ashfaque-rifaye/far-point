@@ -141,7 +141,8 @@ def _text_of(result) -> str:
 
 class Coach:
     def __init__(self, bus, doctrine_store, stats, moments, broker, model_factory=None, enabled: bool = True,
-                 startfile=None, clock=time.time, model_id: str = COACH_MODEL):
+                 startfile=None, clock=time.time, model_id: str = COACH_MODEL, on_bedrock=None):
+        self.on_bedrock = on_bedrock  # called with True/False after every Bedrock call (hello status)
         self.bus = bus
         self.store = doctrine_store
         self.stats = stats
@@ -164,6 +165,8 @@ class Coach:
         self._doctrine_saved = None
         self._last_review = clock()
         self._last_trend_email: float | None = None
+        self._next_check = clock()  # on_time does real work at most once a minute
+        self._last_trend_check: float | None = None
         self.gate = ConfirmGate({
             "adopt_doctrine": lambda a: f"Adopt rulebook version {a.get('version')}? Far Point follows it from the next decision.",
             "open_exam_email": lambda a: "Open the eye-exam email draft in your mail app? Nothing is sent until you press Send yourself.",
@@ -181,7 +184,14 @@ class Coach:
 
     def _run_agent(self, prompt: str):
         agent = make_agent(model=self._model(), tools=self.tools, interventions=[self.gate])
-        result = agent(prompt)
+        try:
+            result = agent(prompt)
+        except Exception:
+            if self.on_bedrock is not None:
+                self.on_bedrock(False)
+            raise
+        if self.on_bedrock is not None:
+            self.on_bedrock(True)
         usage = result.metrics.accumulated_usage or {}
         self.stats.record_bedrock(max(1, result.metrics.cycle_count), int(usage.get("totalTokens", 0)), who="coach",
                                   model=self.model_id, input_tokens=int(usage.get("inputTokens", 0)),
@@ -421,13 +431,17 @@ class Coach:
         return False
 
     def on_time(self, t: float) -> None:
-        """Called from the pulse thread; schedules work on the coach executor."""
-        if not self.enabled:
+        """Called from the pulse thread (~10 Hz); checks at most once a minute and schedules work
+        on the coach executor."""
+        if not self.enabled or t < self._next_check:
             return
+        self._next_check = t + 60.0
         if t - self._last_review >= REVIEW_EVERY_S and len(self.moments.unreviewed()) >= REVIEW_MIN_MOMENTS:
             self._last_review = t
             self.submit(self.review_moments)
-        if (self._last_trend_email is None or t - self._last_trend_email >= 7 * 86400) and int(t) % 3600 < 2:
+        email_due = self._last_trend_email is None or t - self._last_trend_email >= 7 * 86400
+        if email_due and (self._last_trend_check is None or t - self._last_trend_check >= 3600):
+            self._last_trend_check = t
             if self.trend_up():
                 self._last_trend_email = t
                 self.submit(self.draft_exam)

@@ -165,7 +165,8 @@ def window_exists(hwnd: int) -> bool:
 
 
 def capture_thumbnail(max_px: int = 448) -> str:
-    """Screen thumbnail as base64 JPEG, kept in memory. ONLY used when vision is on."""
+    """Screen thumbnail as base64 JPEG, kept in memory. Not called by the loop: vision mode sends
+    only the webcam frame that spike S2 measured, never the screen."""
     import base64
     import io
 

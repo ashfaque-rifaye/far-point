@@ -13,6 +13,7 @@ from .facts import (
     break_due,
     brightening_needed,
     dimming_needed,
+    glasses_reminder_due,
     relaxed_long_enough,
     squint_despite_zoom,
     too_close,
@@ -22,7 +23,7 @@ Predicate = Callable[[Facts, Limits], bool]
 
 PREDICATES: dict[str, Predicate] = {
     "enlarge_text": lambda f, L: too_close(f, L) and f.zoom_available,
-    "glasses_reminder": lambda f, L: f.glasses_prescribed == "yes" and f.glasses_off_signs,
+    "glasses_reminder": lambda f, L: glasses_reminder_due(f),
     "dark_mode": lambda f, L: f.room == "dark" and f.theme == "light",
     # Dark room + bright screen. With a light theme, rule 3 (dark mode) outranks this rule, so
     # in practice it dims once the theme is already dark (or the theme cannot be changed).

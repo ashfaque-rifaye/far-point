@@ -66,6 +66,18 @@ def test_store_draft_approve_and_stale(runtime_dir):
     assert again.approve(3).version == 3
 
 
+def test_update_profile_keeps_rules_and_pending_draft_approvable(runtime_dir):
+    store = DoctrineStore(runtime_dir / "profile")
+    draft = store.save_draft("myopia", Profile(), Limits(), [rule(1)])
+    d = store.update_profile(glasses_for_screen="yes")
+    assert d.approved and d.profile.glasses_for_screen == "yes" and len(d.rules) == 8
+    assert store.current_draft.version > d.version > draft.version
+    assert store.current_draft.profile.glasses_for_screen == "yes"
+    assert store.approve(store.current_draft.version).profile.glasses_for_screen == "yes"
+    with pytest.raises(ValueError):
+        store.update_profile(glasses_for_screen="maybe")
+
+
 def test_add_rule_goes_above_ask_user(runtime_dir):
     store = DoctrineStore(runtime_dir / "profile")
     d = store.add_rule(rule(99, "enlarge_text", origin="proposal", text="When reading PDFs after 21:00, enlarge."))

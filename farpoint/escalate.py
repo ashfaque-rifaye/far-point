@@ -50,7 +50,8 @@ def render_prompt(state_text: str, rules: list[Rule]) -> str:
 class NovaEscalator:
     def __init__(self, model_id: str = DEFAULT_MODEL, region: str | None = None, stats=None, moments=None,
                  min_interval_s: float = 10.0, daily_budget: int = 300, timeout_s: float = 4.0,
-                 model_factory=None, clock=time.time):
+                 model_factory=None, clock=time.time, on_result=None):
+        self.on_result = on_result  # called with True/False after each Bedrock call (hello status)
         self.model_id = model_id
         self.region = region or os.environ.get("AWS_REGION", "us-east-1")
         self.stats = stats
@@ -79,7 +80,14 @@ class NovaEscalator:
         agent = Agent(model=self._model(), system_prompt=SYSTEM_PROMPT, callback_handler=None,
                       structured_output_model=RuleJudgements, name="farpoint-escalator")
         t0 = time.perf_counter()
-        result = agent(prompt)
+        try:
+            result = agent(prompt)
+        except Exception:
+            if self.on_result is not None:
+                self.on_result(False)
+            raise
+        if self.on_result is not None:
+            self.on_result(True)
         latency_ms = (time.perf_counter() - t0) * 1000
         usage = result.metrics.accumulated_usage or {}
         if self.stats is not None:  # counted here so a timed-out call still counts

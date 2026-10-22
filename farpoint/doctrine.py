@@ -265,6 +265,21 @@ class DoctrineStore:
             raise StaleVersion(f"version {version} is not the current draft "
                                f"(draft={self._draft.version if self._draft else None}, active={self._active.version})")
 
+    def update_profile(self, **fields) -> Doctrine:
+        """Record the user's own answers (e.g. glasses_for_screen) on the active doctrine. The
+        rules do not change, so it stays approved. A pending draft gets the same answers and a
+        newer version, so it stays approvable."""
+        with self._lock:
+            prof = Profile(**{**self._active.profile.model_dump(), **fields})
+            self._max_version += 1
+            self._active = self._active.model_copy(update={"version": self._max_version, "profile": prof})
+            if self._draft is not None:
+                dprof = Profile(**{**self._draft.profile.model_dump(), **fields})
+                self._max_version += 1
+                self._draft = self._draft.model_copy(update={"version": self._max_version, "profile": dprof})
+            self._save()
+            return self._active
+
     def add_rule(self, rule: DoctrineRule) -> Doctrine:
         """Add a human-approved rule to the active doctrine. It goes above any ask_user rule."""
         with self._lock:

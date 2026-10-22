@@ -24,7 +24,9 @@ class Settings:
     no_bedrock: bool = False
     dry_run: bool = False
     actuate: bool = False  # replay only: drive the real actuators
-    vision: bool = field(default_factory=lambda: os.environ.get("FARPOINT_VISION") == "1")
+    # None = automatic: on only if results/s2_decision.json records an S2 pass AND the Decider
+    # server runs with --vision (farpoint/vision.py). True/False force it.
+    vision: bool | None = field(default_factory=lambda: {"1": True, "0": False}.get(os.environ.get("FARPOINT_VISION", "")))
     record: bool = False
     host: str = ALLOWED_HOST
     port: int = 8765
@@ -61,7 +63,10 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--no-bedrock", action="store_true", help="disable the Nova coach and escalation")
     ap.add_argument("--dry-run", action="store_true", help="never change zoom, brightness or theme")
     ap.add_argument("--actuate", action="store_true", help="replay: drive the real actuators")
-    ap.add_argument("--vision", action="store_true", help="send camera frames to the LOCAL Decider (default off)")
+    vis = ap.add_mutually_exclusive_group()
+    vis.add_argument("--vision", action="store_true", dest="vision_on",
+                     help="force vision on: one webcam frame per tick to the LOCAL Decider")
+    vis.add_argument("--no-vision", action="store_true", dest="vision_off", help="force text-only")
     ap.add_argument("--record", action="store_true", help="live: record numeric readings and bus events")
     ap.add_argument("--host", default=ALLOWED_HOST, help="must be 127.0.0.1")
     ap.add_argument("--port", type=int, default=8765)
@@ -77,8 +82,10 @@ def parse_args(argv: list[str] | None = None) -> Settings:
     s = Settings(mode=a.mode, trace=a.trace, events=a.events, fake_decider=a.fake_decider, no_bedrock=a.no_bedrock,
                  dry_run=a.dry_run, actuate=a.actuate, record=a.record, host=a.host, port=a.port, speed=a.speed,
                  loop_replay=a.loop_replay, camera_index=a.camera, period_s=a.period)
-    if a.vision:
+    if a.vision_on:
         s.vision = True
+    elif a.vision_off:
+        s.vision = False
     if s.mode == "replay" and s.trace is None and s.events is None:
         s.trace = DEFAULT_TRACE
     return s

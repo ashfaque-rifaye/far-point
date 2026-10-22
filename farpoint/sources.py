@@ -206,7 +206,7 @@ class LiveSource:
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         self._calib_req: dict | None = None
-        self._latest_jpeg: str | None = None
+        self._latest_frame = None  # vision mode only
         self.frames = 0
         self.faces = 0
 
@@ -224,8 +224,16 @@ class LiveSource:
         (self._paused.set if paused else self._paused.clear)()
 
     def latest_frame_b64(self) -> str | None:
-        """Vision mode only: the newest frame as base64 JPEG, in memory."""
-        return self._latest_jpeg if self.keep_frame else None
+        """Vision mode only: the newest frame as base64 JPEG (quality 90, as in spike S2), built in
+        memory on request for the LOCAL Decider. Never written to disk."""
+        frame = self._latest_frame if self.keep_frame else None
+        if frame is None or self.camera_status != "on":
+            return None
+        import base64
+
+        import cv2
+        ok, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
+        return base64.b64encode(buf.tobytes()).decode("ascii") if ok else None
 
     def calibrate(self, distance_cm: float, timeout_s: float = 30.0):
         """Ask the camera thread to collect a baseline at `distance_cm`. Blocks the caller."""
@@ -257,6 +265,7 @@ class LiveSource:
         try:
             while not self._stop.is_set():
                 if self._paused.is_set():
+                    self._latest_frame = None
                     if cap is not None:
                         cap.release()
                         cap = None
@@ -285,12 +294,8 @@ class LiveSource:
                     continue
                 reading = sensor.read(frame, self.calib)
                 luma = frame_luma(frame)
-                if self.keep_frame:
-                    import base64
-
-                    import cv2
-                    okj, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
-                    self._latest_jpeg = base64.b64encode(buf.tobytes()).decode("ascii") if okj else None
+                # Vision mode keeps only the newest frame, in memory; otherwise it is dropped here.
+                self._latest_frame = frame if self.keep_frame else None
                 del frame
                 self.frames += 1
                 if t - last_ctx >= self.CONTEXT_EVERY_S:

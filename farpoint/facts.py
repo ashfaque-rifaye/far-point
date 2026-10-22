@@ -19,7 +19,7 @@ FACT_LINE_GUIDE = """\
 - "Near-work bout: ...": ends with "break is due" | "break not due yet"
 - "Eyes: ...": "squinting for N s (eye opening P% of your baseline)" | "not squinting (...)" | "not measured"
 - "Blink rate: ...": ends with "low" | "normal" | "still measuring"
-- "Glasses: prescribed for screen work: yes|no|unknown; worn: ...; signs consistent with glasses off: yes (...)|no": ends with "reminder due" | "no reminder needed"
+- "Glasses: prescribed for screen work: yes|no|unknown; worn: not checked (text-only mode)|yes (camera)|no (camera)|not sure (camera); signs consistent with glasses off: yes (...)|no": ends with "reminder due" | "no reminder needed"
 - "Room light: dark" | "dim" | "normal indoor light" | "bright" (estimated from camera brightness)
 - "Theme: light, in a dark room: mismatch, dark mode needed" | "Theme: light: no change needed" | "Theme: dark: no change needed"
 - "Screen brightness: N%: dimming needed (...)" | "brightening needed (...)" | "no change needed" | "not adjustable"
@@ -54,9 +54,10 @@ class Facts:
     relaxed_min_now: float = 0.0
     activity: str = "idle (no foreground window information)"
     interrupt_ok_hint: bool | None = None
-    glasses_on: bool | None = None
+    glasses_on: bool | None = None  # vision mode only: the camera's verdict (None = not sure / not checked)
     glasses_prescribed: str = "unknown"  # yes | no | unknown (from the doctrine profile)
     local_time: str = ""  # "HH:MM", set by the loop from its clock
+    vision: bool = False  # True when the local Decider also looks at the webcam frame
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -93,8 +94,14 @@ def part_of_day(hhmm: str) -> str:
     return "night"
 
 
-def glasses_reminder_due(f: Facts) -> bool:
-    return f.glasses_prescribed == "yes" and f.glasses_off_signs
+def glasses_reminder_due(f: Facts, prescribed: str | None = None) -> bool:
+    """Prescribed for screen work AND (seen off by the camera, or, when not seen, the text-mode
+    signs: leaning in and squinting). Seen on means no reminder."""
+    if (prescribed or f.glasses_prescribed) != "yes":
+        return False
+    if f.glasses_on is not None:
+        return f.glasses_on is False
+    return f.glasses_off_signs
 
 
 def text_can_go_back(f: Facts, L: Limits) -> bool:
@@ -165,10 +172,12 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
         lines.append(f"- Blink rate: {_num(f.blink_per_min)} per minute (normal is {_num(L.low_blink_per_min)} "
                      f"or more): " + ("low." if low_blink(f, L) else "normal."))
 
-    if f.glasses_on is None:
+    if not f.vision:
         worn = "worn: not checked (text-only mode)"
+    elif f.glasses_on is None:
+        worn = "worn: not sure (camera)"
     else:
-        worn = "worn: yes" if f.glasses_on else "worn: no"
+        worn = "worn: yes (camera)" if f.glasses_on else "worn: no (camera)"
     if f.usual_distance_cm is None:
         signs = "signs consistent with glasses off: no (usual distance not learned yet)"
     elif f.glasses_off_signs:
@@ -179,8 +188,7 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
         signs = "signs consistent with glasses off: no"
     # The loop copies the doctrine profile into the facts; fall back to the profile here.
     prescribed = prof.glasses_for_screen if f.glasses_prescribed == "unknown" else f.glasses_prescribed
-    due = prescribed == "yes" and f.glasses_off_signs
-    verdict = "reminder due" if due else "no reminder needed"
+    verdict = "reminder due" if glasses_reminder_due(f, prescribed) else "no reminder needed"
     lines.append(f"- Glasses: prescribed for screen work: {prescribed}; {worn}; {signs}: {verdict}.")
 
     lines.append(f"- Room light: {ROOM_WORDS.get(f.room, f.room)} (estimated from camera brightness).")

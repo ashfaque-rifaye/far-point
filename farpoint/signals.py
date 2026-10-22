@@ -25,6 +25,8 @@ UNDER30_CM = 30.0  # contract: "seconds closer than 30 cm today" (fixed, not a k
 FACE_LOST_S = 1.0
 USUAL_WINDOW_S = 30 * 60
 USUAL_MIN_SAMPLES = 30
+VISION_FAR_P = 0.65  # vision mode: P(looking far away) at which the gaze counts as away
+VISION_FRESH_S = 5.0
 
 
 @dataclass
@@ -97,6 +99,8 @@ class SignalTracker:
         self.relaxed_s = 0.0
         self.glasses_off_s = 0.0
         self.context: dict = {}
+        self._vision: tuple[float, float | None] | None = None
+        self._vision_glasses: tuple[float, bool | None] | None = None
 
     # ---- configuration -----------------------------------------------------------
     def set_limits(self, limits: Limits) -> None:
@@ -210,7 +214,7 @@ class SignalTracker:
                 self.relaxed_s += dt
             else:
                 self.relaxed_s = 0.0
-            if self.glasses_off_signs:
+            if self.face and (self._vision_glasses_off() if self._vision_glasses is not None else self.glasses_off_signs):
                 self.glasses_off_s += dt
 
     def _rollover(self, t: float) -> None:
@@ -239,10 +243,24 @@ class SignalTracker:
             return None
         return len(self._blinks) * 60.0 / self._blink_obs_s
 
+    def set_vision(self, t: float, looking_far_p: float | None, glasses_on: bool | None = None) -> None:
+        """Vision mode only: the local Decider's answers for the latest webcam frame."""
+        with self._lock:
+            self._vision = (float(t), looking_far_p)
+            self._vision_glasses = (float(t), glasses_on)
+
+    def _vision_glasses_off(self) -> bool:
+        g = self._vision_glasses
+        return g is not None and g[1] is False and self._t is not None and self._t - g[0] <= VISION_FRESH_S * 2
+
     @property
     def looking_at_screen(self) -> bool | None:
         if not self.face:
             return None
+        v = self._vision
+        if (v is not None and v[1] is not None and v[1] >= VISION_FAR_P and self._t is not None
+                and self._t - v[0] <= VISION_FRESH_S):
+            return False  # the camera image says the gaze is far away, whatever the head angle
         if self.yaw is None or self.pitch is None:
             return True
         return abs(self.yaw) < LOOK_YAW_DEG and abs(self.pitch) < LOOK_PITCH_DEG
