@@ -50,3 +50,53 @@ Recorded after the runs. Details are in `eval/SPIKE_RESULTS.md`.
 - S1: FAIL. next_action agreement was 68.1% on run 1 (v1, seed 1) and 68.1% on the one retune (v2, held-out seed 2), against a target of 85%. Latency PASSES at 490 ms p50 for 3 questions. Getting there took two runtime changes allowed above: the triton-windows + flash-linear-attention kernels and High process priority. Before them it was 860 ms.
 - S2: VRAM fit PASS (peak 6560 MiB of a 7577 MiB limit). Latency PASS (0.51 s p50). Accuracy NOT MEASURED, because nobody was available to pose for labeled frames. Unmeasured counts as not passed.
 - Mode decision: **Decider TEXT-ONLY.** The GPU path works, so the CPU fallback was not needed. Per the S1 rule, the build proceeds with the better question version (v2), and the agreement shortfall is reported as measured.
+
+---
+
+## Phase 2: S3 per-rule nouls
+
+Written 2026-10-23 00:31 IST, before any S3 run. Nothing below has been measured yet. The scripts named here (`eval/s3_rules.py`, `eval/spike_s3.py`) are written after this section is committed, and `git log` shows the order.
+
+### Question
+
+Phase 1 asked the Decider for one 9-way `choice` and got 68.1% agreement on held-out states (seed 2, v2 wording). Phase 2 changes the decision (plan design decisions 1-3): one `noul` per rule ("does rule N apply right now?"), code applies the priority order, and a confidence policy decides. S3 measures that design on the same kind of states, so the two numbers compare like for like.
+
+### Sets
+
+- Dev: seed 3. Held-out: seed 4. Each set is 72 states from `eval/s1_states.py::generate` (8 per label, 9 labels, the same S1 doctrine and profiles).
+- The dev run is optional and only a sanity check. Nothing is tuned on either set.
+
+### Rulebook
+
+The S1 doctrine as 8 rules, in S1 `PRIORITY` order: ask_user, glasses_reminder, enlarge_text, dark_mode, dim_screen, brighten_screen, far_look_break, reduce_text. Each rule has `when_true` / `when_false` criteria. Labels come from `s1_states.triggers()` and `s1_states.label()`, not from the model.
+
+### Renderers
+
+- `new`: the S1 facts rendered the way Far Point's own renderer works after Phase 2 (`farpoint/facts.py`). Code computes every comparison AND every condition a rule combines, and each rule's line ends with one verdict phrase of the form "X needed" / "no X needed" (for example "Theme: light, in a dark room: mismatch, dark mode needed."). The "balanced with the room" line from S1 is gone. Stated plainly: with `new`, the Decider reads verdict phrases that code computed; it does not combine conditions.
+- `old`: the original `s1_states.render` text, unchanged (ablation). It separates the effect of the renderer from the effect of the per-rule decomposition.
+
+### Request
+
+One request per state: the 8 rule nouls plus `interrupt_ok` (the v2 wording, `patterns/reflex_gate/questions.py::INTERRUPT_OK`). Every call goes through the process-wide lock. Same server, text mode, High priority (`scripts/start_decider.ps1`).
+
+### Policy (fixed, no retune)
+
+Thresholds are fixed at fire p >= 0.65, clear p <= 0.35, unsure in between (`patterns/reflex_gate/policy.py::Thresholds`). Walk the rules in priority order. Take the first firing rule unless a higher-priority rule is unsure. Without escalation, an unsure rule above the first firing rule means quiet, scored as `none`. The ask_user cooldown does not apply here, because each state is independent.
+
+### Metrics
+
+- Per-rule noul accuracy: P(true) > 0.5 against the rule's trigger in `triggers()`, for each of the 8 rules over all 72 states.
+- End-to-end tool selection: the policy's choice (or `none`) against `label().next_action`. **Target >= 85% on held-out seed 4**, with the `new` renderer and no escalation. Also reported on the 14 two-trigger states.
+- `interrupt_ok` accuracy (P(true) > 0.5 against the label), reported, not gated.
+- Latency: client wall clock per request, after 5 warm-up requests that are not scored. p50 and p90. **Target p50 <= 1000 ms** for 9 questions.
+- Ablation: the same metrics with the `old` renderer on seed 4.
+- Escalation (run with `--escalate`): escalation rate (share of rule nouls in 0.35-0.65), and gain (end-to-end accuracy with Amazon Nova Lite judging the unsure rules, minus the same run's accuracy without it). Nova Lite gets the same TEXT state, never images. On the escalation run, any Nova failure, rate limit or timeout counts as no verdict, which means quiet.
+
+### Runs, in this order
+
+1. `python eval/spike_s3.py --seed 4 --render new --tag held_new`
+2. `python eval/spike_s3.py --seed 4 --render old --tag held_old`
+3. `python eval/spike_s3.py --seed 4 --render new --escalate --tag held_new_esc`
+4. Optional: `--seed 3 --render new --tag dev_new`
+
+Each run writes `results/s3_<tag>.json`. Results are reported in `eval/S3_RESULTS.md` whatever they are, including misses against the targets.
