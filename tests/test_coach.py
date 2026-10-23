@@ -211,3 +211,10 @@ def test_live_compile_doctrine_with_nova_lite(runtime_dir):
     print("bedrock calls/tokens:", stats.get("bedrock_calls"), stats.get("bedrock_tokens"))
     assert v == 2 and not d.approved and len(d.rules) >= 3
     assert all(errors(e, "ServerEvent") == [] for e in seen)
+
+
+def test_report_preamble_is_stripped():
+    from farpoint.coach import strip_preamble
+    md = "I have the data from the tools. I will now format it.\n\n- Today, 0.3 min closer than 30 cm."
+    assert strip_preamble(md) == "- Today, 0.3 min closer than 30 cm."
+    assert strip_preamble("## Today\n- Here is a line") == "## Today\n- Here is a line"

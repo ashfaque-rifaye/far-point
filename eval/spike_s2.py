@@ -170,10 +170,22 @@ def cmd_capture(a):
     for old in FRAMES_DIR.glob("pose*_*.jpg"):  # a re-run replaces the previous capture
         old.unlink()
     cap = open_camera(a.camera)
+    pv = None
+    if a.preview:  # camera preview with the prompt and countdown drawn on top (display only)
+        from farpoint.preview import Preview
+        pv = Preview("Far Point setup - labeled capture")
+
+    def wait_show(seconds: float, lines, big=None) -> None:
+        end = time.time() + seconds
+        while time.time() < end:
+            ok, f = cap.read()  # also keeps the camera buffer fresh
+            if pv is not None and ok:
+                pv.show(f, lines, big)
+
     labels, per_pose = [], []
     t_start = time.time()
     try:
-        _wait(cap, 1.0)
+        wait_show(1.0, ["Labeled capture: 6 poses, about 1 minute"])
         prev_glasses = None
         for pi, (prompt, lab) in enumerate(POSES):
             prep = PREP_S + (2 if prev_glasses is not None and prev_glasses != lab["glasses_on"] else 0)
@@ -181,9 +193,11 @@ def cmd_capture(a):
             print(f"\n==== Pose {pi + 1} of {len(POSES)} ====")
             print(f"   {prompt.upper()}")
             print("   Get into position. Capture starts at the beep and ends at the double beep.")
+            head = [f"POSE {pi + 1} OF {len(POSES)}: {prompt.upper()}",
+                    "Get into position. Capture starts at the beep, ends at the double beep."]
             for s in range(prep, 0, -1):
                 print(f"\r   starting in {s} s ", end="", flush=True)
-                _wait(cap, 1.0)
+                wait_show(1.0, head, str(s))
             beep(1)
             print("\r   capturing, hold the pose...   ", end="", flush=True)
             lumas, n = [], 0
@@ -192,17 +206,20 @@ def cmd_capture(a):
                 if not ok:
                     continue
                 name = f"pose{pi}_{k}.jpg"
-                cv2.imwrite(str(FRAMES_DIR / name), f)
+                cv2.imwrite(str(FRAMES_DIR / name), f)  # the original frame; the preview is a mirrored copy
                 lumas.append(float(cv2.cvtColor(f, cv2.COLOR_BGR2GRAY).mean()))
                 labels.append({"file": name, **lab})
                 n += 1
-                _wait(cap, 0.4)
+                wait_show(0.4, [head[0], f"CAPTURING {n}/{FRAMES_PER_POSE}: hold the pose"], "HOLD")
             beep(2)
             print("\r   done                          ")
             per_pose.append({"pose": pi, "prompt": prompt, "labels": lab, "frames": n,
                              "mean_luma": round(statistics.mean(lumas), 1) if lumas else None})
+        wait_show(1.0, ["Capture done. Thank you."], "DONE")
     finally:
         cap.release()
+        if pv is not None:
+            pv.close()
     (FRAMES_DIR / "labels.json").write_text(json.dumps(labels, indent=2))
     dark = [p["pose"] for p in per_pose if p["mean_luma"] is not None and p["mean_luma"] < 40]
     summary = {
@@ -331,6 +348,7 @@ def main():
     ap.add_argument("--glasses-source", choices=["own", "prop"], default="own",
                     help="capture: the user's own glasses, or any pair used as a prop")
     ap.add_argument("--glasses-for-screen", choices=["yes", "no", "unknown"], default="unknown")
+    ap.add_argument("--preview", action="store_true", help="capture: show the camera with the prompt and countdown")
     a = ap.parse_args()
     rc = {"latency": cmd_latency, "capture": cmd_capture, "score": cmd_score, "decide": cmd_decide}[a.mode](a)
     sys.exit(rc or 0)

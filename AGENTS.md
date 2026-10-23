@@ -1,11 +1,9 @@
 # Notes for agents working in this repo
 
-Two workstreams are building Far Point at the same time. Read this before touching the dashboard.
+## Layout
 
-## Ownership
-
-- `web/` holds the dashboard front end (Vite + React + TypeScript) and has its own workstream. Do not edit `web/` or build a second dashboard UI (no `farpoint/dashboard/static/index.html` or similar).
-- Everything else (the Python package `farpoint/`, `patterns/`, `eval/`, `results/`, `scripts/`, `tests/` and the other docs) belongs to the core workstream.
+- `web/` holds the dashboard front end (Vite + React + TypeScript). It is the only UI: do not build a second one (no `farpoint/dashboard/static/index.html` or similar). Rebuild `web/dist` after changing `web/src` (`npm run build`, npm cache on `E:\farpoint-runtime\npm-cache`) and commit it, because the backend serves it.
+- The Python package `farpoint/`, `patterns/`, `eval/`, `results/`, `scripts/`, `tests/` hold the agent.
 
 ## How the backend and the UI connect
 

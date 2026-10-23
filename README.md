@@ -1,5 +1,7 @@
 # Far Point
 
+![Far Point dashboard: the drawn eye, the live distance dial and the Decider's per-rule answers](docs/images/dashboard-now-too-close.png)
+
 Far Point watches how you use your eyes at the screen and adapts the screen to you. The webcam measures viewing distance, squint, blinks and head turns on the laptop. Every 2.5 seconds a local Strands Decider 2B checks your personal rulebook against those numbers. Then a Strands Agent changes something reversible, such as text zoom, dark mode, brightness or a camera-verified 20-second far-look break, and checks whether it helped. Amazon Nova on Bedrock writes your rulebook from your own description of your eyes, writes numbers-only reports, proposes new rules for you to approve and drafts an eye-exam email it never sends. Bedrock only ever gets words and numbers, never an image.
 
 Not a medical device. Far Point does not diagnose, treat or prevent any eye condition. Its reports are behavioral observations, not a diagnosis.
@@ -67,7 +69,28 @@ Setup: `uv venv --python 3.12 .venv`, then `uv pip install -r requirements.txt`.
 
 `--fake-decider` replaces the Decider with an oracle over the reference predicates. The dashboard then shows the model as `FAKE oracle (tests/demo)`.
 
-The dashboard UI is built by a separate workstream in `web/` and served from `web/dist`. The backend speaks the contract in [`docs/ui-contract.md`](docs/ui-contract.md), plus the optional fields in [`docs/backend-extensions.md`](docs/backend-extensions.md).
+## Dashboard
+
+The backend serves the dashboard from `web/dist` at http://127.0.0.1:8765/. It speaks one WebSocket contract ([`docs/ui-contract.md`](docs/ui-contract.md), plus the optional fields in [`docs/backend-extensions.md`](docs/backend-extensions.md)).
+
+| Screen | What it shows |
+|---|---|
+| Now | A drawn eye (not a camera image): the lid follows your measured eye opening, the pupil follows room light, and the dial is your viewing distance. Next to it: the Decider's latest answer per rule, the gate verdict, and "Did it help?" (before and after distance) |
+| Reflex log | Every decision with its latency, the rule that fired or why it stayed quiet, and the exact text the Decider read |
+| Day | Minutes closer than 30 cm, longest bout, breaks verified, adaptations that worked, and the distance curve |
+| Rulebook | Your rules in priority order, "describe your eyes" (Nova drafts a rulebook you adopt), and learned rules to approve or reject |
+| Report | Nova's numbers-only report for your optometrist and the exam-email draft, which opens only after you confirm |
+| Setup | Distance calibration, camera pause, system status, the not-a-medical-device note |
+
+Themes: Day, Night, and a high-contrast large-text mode. `?demo=1` plays a scripted demo story in the browser with no backend (it is labelled DEMO on screen). The front end is Vite + React + TypeScript with no UI framework; build it with `cd web; npm ci; npm run build`.
+
+| | |
+|---|---|
+| ![Too close: rule 1 fires](docs/images/dashboard-now-too-close.png) | ![Worked: 26 to 46 cm](docs/images/dashboard-now-worked.png) |
+| ![Camera-verified far-look break](docs/images/dashboard-break.png) | ![Reflex log, night theme](docs/images/dashboard-reflex.png) |
+| ![Day](docs/images/dashboard-day.png) | ![Rulebook, high contrast](docs/images/dashboard-rulebook-contrast.png) |
+
+The screenshots come from the in-browser demo story (`scripts/ui_screenshots.py`), so their numbers are scripted, not measured.
 
 ## Reversibility
 
@@ -91,6 +114,7 @@ Each original is written to `<runtime>/restore.json` before the change. On exit,
 | Path | Purpose |
 |---|---|
 | `farpoint/` | The agent: `sense`, `signals`, `context`, `facts`, `doctrine`, `loop`, `tools`, `agent`, `act`, `breaks`, `verify`, `memory`, `escalate`, `coach`, `bus`, `dashboard`, `runtime`, `app` |
+| `web/` | Dashboard (Vite + React + TypeScript); `web/dist` is committed so the backend can serve it without Node |
 | `patterns/reflex_gate/` | Reusable decision pattern (per-rule nouls, policy, InterruptGate / ConfirmGate, fakes, posture example) |
 | `eval/`, `results/` | Preregistrations, spikes S1-S3 and their raw results |
 | `scripts/` | Decider start, calibration, demo trace, smoke tests, pre-push scan |

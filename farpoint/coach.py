@@ -135,6 +135,21 @@ def strip_html(md: str) -> str:
     return re.sub(r"<[^>]{1,200}>", "", md)
 
 
+_PREAMBLE = re.compile(r"^(I('m| am| have| will|'ll| now| can)|Here('s| is| are)|Sure|Okay|OK|Let me|Now I|Based on the data)\b", re.I)
+
+
+def strip_preamble(md: str) -> str:
+    """Drop the model's own narration ("I have the data... I will now format it") before the report itself."""
+    lines = md.strip().splitlines()
+    while lines and (not lines[0].strip() or _PREAMBLE.match(lines[0].strip())):
+        lines.pop(0)
+    return "\n".join(lines).strip()
+
+
+def _round_floats(row: dict) -> dict:
+    return {k: (round(v, 1) if isinstance(v, float) else v) for k, v in row.items()}
+
+
 def _text_of(result) -> str:
     return " ".join(c.get("text", "") for c in result.get("content", []) if "text" in c)
 
@@ -230,7 +245,7 @@ class Coach:
         def get_today_stats() -> dict:
             """Today's screen-habit counters (numbers only)."""
             s = coach.stats.snapshot()
-            return {k: v for k, v in s.items() if k not in ("decider_p50_ms", "decider_p95_ms")}
+            return _round_floats({k: v for k, v in s.items() if k not in ("decider_p50_ms", "decider_p95_ms")})
 
         @tool
         def summarize_period(days: int = 7) -> dict:
@@ -239,7 +254,7 @@ class Coach:
             rows = coach.stats.period(days)
             keep = ("day", "under30_min", "longest_bout_min", "breaks_offered", "breaks_verified", "squint_episodes",
                     "adaptations", "adaptations_worked", "glasses_off_min")
-            return {"days": [{k: r.get(k) for k in keep} for r in rows]}
+            return {"days": [_round_floats({k: r.get(k) for k in keep}) for r in rows]}
 
         @tool
         def write_doctrine(profile: dict, limits: dict, rules: list[dict]) -> dict:
@@ -353,7 +368,7 @@ class Coach:
         if self._off():
             return None
         result = self._run_agent(REPORT_TASK.format(period="today" if period == "today" else "the last 7 days"))
-        body = strip_html(str(result).strip()) or "No data yet."
+        body = strip_preamble(strip_html(str(result).strip())) or "No data yet."
         data = {"id": f"r_{next(self._r_ids):06d}", "period": period, "markdown": f"{DISCLAIMER}\n\n{body}",
                 "model": self.model_id, "generated_at": int(self.clock() * 1000)}
         self.bus.publish("report", data)
