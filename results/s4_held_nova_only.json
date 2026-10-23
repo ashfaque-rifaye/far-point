@@ -1,0 +1,1397 @@
+{
+  "summary": {
+    "tag": "held_nova_only",
+    "seed": 4,
+    "model": "us.amazon.nova-lite-v1:0",
+    "n_states": 72,
+    "end_to_end_agreement": 1.0,
+    "end_to_end_agreement_multi_trigger": 1.0,
+    "per_rule_accuracy": {
+      "ask_user": 1.0,
+      "glasses_reminder": 1.0,
+      "enlarge_text": 1.0,
+      "dark_mode": 1.0,
+      "dim_screen": 1.0,
+      "brighten_screen": 1.0,
+      "far_look_break": 1.0,
+      "reduce_text": 1.0
+    },
+    "per_rule_mean_accuracy": 1.0,
+    "states_with_missing_verdict": 0,
+    "client_ms": {
+      "p50": 2571.6072500217706,
+      "p90": 3179.1924499557354,
+      "max": 5594.308499945328
+    },
+    "bedrock_tokens_total": 107500,
+    "bedrock_tokens_per_state": 1493.0555555555557
+  },
+  "rows": [
+    {
+      "id": "s4-000",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 2717.5791999325156
+    },
+    {
+      "id": "s4-001",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 2916.29260010086
+    },
+    {
+      "id": "s4-002",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 4697.875099955127
+    },
+    {
+      "id": "s4-003",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": true
+      },
+      "choice": "far_look_break",
+      "client_ms": 3508.60850000754
+    },
+    {
+      "id": "s4-004",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 2375.2350999275222
+    },
+    {
+      "id": "s4-005",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 3276.893000002019
+    },
+    {
+      "id": "s4-006",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 2562.453499995172
+    },
+    {
+      "id": "s4-007",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 2783.8820999022573
+    },
+    {
+      "id": "s4-008",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2385.278800036758
+    },
+    {
+      "id": "s4-009",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 3116.402400075458
+    },
+    {
+      "id": "s4-010",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "far_look_break",
+      "client_ms": 3182.4033999582753
+    },
+    {
+      "id": "s4-011",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "far_look_break",
+      "client_ms": 2259.950099978596
+    },
+    {
+      "id": "s4-012",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 2360.6710000894964
+    },
+    {
+      "id": "s4-013",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": true,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 2260.0926000159234
+    },
+    {
+      "id": "s4-014",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2398.2874000212178
+    },
+    {
+      "id": "s4-015",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2374.7959999600425
+    },
+    {
+      "id": "s4-016",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 2632.284800056368
+    },
+    {
+      "id": "s4-017",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 2536.4197000162676
+    },
+    {
+      "id": "s4-018",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 2328.3420000225306
+    },
+    {
+      "id": "s4-019",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": false,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 5594.308499945328
+    },
+    {
+      "id": "s4-020",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 2745.4840999562293
+    },
+    {
+      "id": "s4-021",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 2528.503500041552
+    },
+    {
+      "id": "s4-022",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 3238.8582999119535
+    },
+    {
+      "id": "s4-023",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2775.453699985519
+    },
+    {
+      "id": "s4-024",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": false,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 2528.5043000476435
+    },
+    {
+      "id": "s4-025",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2543.502499931492
+    },
+    {
+      "id": "s4-026",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 2275.1360000111163
+    },
+    {
+      "id": "s4-027",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 3092.8792000049725
+    },
+    {
+      "id": "s4-028",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 2548.5820000758395
+    },
+    {
+      "id": "s4-029",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 2388.696899986826
+    },
+    {
+      "id": "s4-030",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 2568.986500031315
+    },
+    {
+      "id": "s4-031",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 2327.7880999958143
+    },
+    {
+      "id": "s4-032",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 2884.7028000745922
+    },
+    {
+      "id": "s4-033",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 3121.8023999826983
+    },
+    {
+      "id": "s4-034",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "far_look_break",
+      "client_ms": 2787.267299951054
+    },
+    {
+      "id": "s4-035",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "far_look_break",
+      "client_ms": 2244.8763999855146
+    },
+    {
+      "id": "s4-036",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break",
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": true
+      },
+      "choice": "far_look_break",
+      "client_ms": 3422.8122000349686
+    },
+    {
+      "id": "s4-037",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 2634.2950999969617
+    },
+    {
+      "id": "s4-038",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 2722.6735999574885
+    },
+    {
+      "id": "s4-039",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2873.7104000756517
+    },
+    {
+      "id": "s4-040",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2389.0867999289185
+    },
+    {
+      "id": "s4-041",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 2201.3421000447124
+    },
+    {
+      "id": "s4-042",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 2397.239499958232
+    },
+    {
+      "id": "s4-043",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 2472.1175000304356
+    },
+    {
+      "id": "s4-044",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 2316.992099978961
+    },
+    {
+      "id": "s4-045",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 2451.6277000075206
+    },
+    {
+      "id": "s4-046",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "far_look_break",
+      "client_ms": 2772.654000087641
+    },
+    {
+      "id": "s4-047",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2715.367400087416
+    },
+    {
+      "id": "s4-048",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 2666.700900066644
+    },
+    {
+      "id": "s4-049",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2685.8754999702796
+    },
+    {
+      "id": "s4-050",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": false,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 2275.8290000492707
+    },
+    {
+      "id": "s4-051",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": false,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 2217.107499949634
+    },
+    {
+      "id": "s4-052",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2928.942900034599
+    },
+    {
+      "id": "s4-053",
+      "label": "far_look_break",
+      "triggers": [
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "far_look_break",
+      "client_ms": 2626.1303999926895
+    },
+    {
+      "id": "s4-054",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 2515.413999906741
+    },
+    {
+      "id": "s4-055",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": true,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 2731.5072000492364
+    },
+    {
+      "id": "s4-056",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 2415.529499994591
+    },
+    {
+      "id": "s4-057",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2453.5798999713734
+    },
+    {
+      "id": "s4-058",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": false,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 2603.150099981576
+    },
+    {
+      "id": "s4-059",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2765.075600007549
+    },
+    {
+      "id": "s4-060",
+      "label": "brighten_screen",
+      "triggers": [
+        "brighten_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": true,
+        "7": false,
+        "8": false
+      },
+      "choice": "brighten_screen",
+      "client_ms": 4413.754899986088
+    },
+    {
+      "id": "s4-061",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 2983.746499987319
+    },
+    {
+      "id": "s4-062",
+      "label": "enlarge_text",
+      "triggers": [
+        "enlarge_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": true,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "enlarge_text",
+      "client_ms": 3150.2938999328762
+    },
+    {
+      "id": "s4-063",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2247.3993999883533
+    },
+    {
+      "id": "s4-064",
+      "label": "none",
+      "triggers": [],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "none",
+      "client_ms": 2531.336500076577
+    },
+    {
+      "id": "s4-065",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 2737.2863999335095
+    },
+    {
+      "id": "s4-066",
+      "label": "ask_user",
+      "triggers": [
+        "ask_user",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": true,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "ask_user",
+      "client_ms": 3095.208900049329
+    },
+    {
+      "id": "s4-067",
+      "label": "reduce_text",
+      "triggers": [
+        "reduce_text"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": true
+      },
+      "choice": "reduce_text",
+      "client_ms": 2338.360100053251
+    },
+    {
+      "id": "s4-068",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2333.0655000172555
+    },
+    {
+      "id": "s4-069",
+      "label": "glasses_reminder",
+      "triggers": [
+        "glasses_reminder"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "glasses_reminder",
+      "client_ms": 2502.7953000972047
+    },
+    {
+      "id": "s4-070",
+      "label": "dim_screen",
+      "triggers": [
+        "dim_screen"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": true,
+        "6": false,
+        "7": false,
+        "8": false
+      },
+      "choice": "dim_screen",
+      "client_ms": 2574.2280000122264
+    },
+    {
+      "id": "s4-071",
+      "label": "dark_mode",
+      "triggers": [
+        "dark_mode",
+        "far_look_break"
+      ],
+      "verdicts": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": true,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
+      "choice": "dark_mode",
+      "client_ms": 2496.547400020063
+    }
+  ]
+}

@@ -41,6 +41,7 @@ The near-work limits come from the Clouclip pilot: closer than 30 cm for more th
 | Per-rule nouls + code priority (S3, held-out seed 4, preregistered) | **87.5%** end to end, 100% with Nova Lite on the 9 states that had an unsure rule | [`eval/S3_RESULTS.md`](eval/S3_RESULTS.md) |
 | Same decomposition on Phase 1's text (ablation) | 30.6%: the renderer does most of the work | [`eval/S3_RESULTS.md`](eval/S3_RESULTS.md) |
 | Latency, 8 rule nouls + `interrupt_ok` | p50 458-574 ms, p90 533-612 ms | `results/s3_*.json` |
+| Amazon Nova Lite alone on the same 72 held-out states (S4, preregistered) | 100%, but p50 2,572 ms / p90 3,179 ms per decision and 1,493 tokens each. The hybrid matches 100% with Nova on 9 of 72 states: 4.5x faster, 11x fewer tokens | [`eval/S4_RESULTS.md`](eval/S4_RESULTS.md) |
 | Image mode (Phase 1) | Fits in VRAM (peak 6.56 GB), 0.51 s p50. Accuracy not measured, so it stays off | [`eval/SPIKE_RESULTS.md`](eval/SPIKE_RESULTS.md) |
 
 The states are synthetic. The weaknesses are written up in both results files.
