@@ -100,3 +100,12 @@ Thresholds are fixed at fire p >= 0.65, clear p <= 0.35, unsure in between (`pat
 4. Optional: `--seed 3 --render new --tag dev_new`
 
 Each run writes `results/s3_<tag>.json`. Results are reported in `eval/S3_RESULTS.md` whatever they are, including misses against the targets.
+
+## Phase 3: S4 LLM-only baseline (written 2026-10-23, before any run)
+
+Question: on the same 72 held-out states (seed 4, `new` renderer), how does Amazon Nova Lite alone compare with the Decider on tool selection, latency and tokens?
+
+- Arm: `eval/spike_s4.py`. One Bedrock call per state through `farpoint.escalate.NovaEscalator` (same prompt Far Point uses for escalation, temperature 0, text only), asked about all 8 rules at once. Code applies the same priority order: the first rule Nova marks true wins; any rule Nova leaves without a verdict above that point means quiet (`none`), exactly like the Decider arm's unsure band.
+- Compared against the existing `results/s3_held_new.json` (Decider, no escalation) and `results/s3_held_new_esc.json` (Decider + Nova on unsure rules). The Decider runs are not re-run.
+- Metrics: end-to-end agreement with `label().next_action`; per-rule accuracy; client wall-clock latency p50/p90 per state; Bedrock input/output tokens. `interrupt_ok` is not asked in this arm (the escalation prompt covers rules only), so it is not compared.
+- No target. Results go to `eval/S4_RESULTS.md` whatever they are. One run, no prompt changes after seeing results.
