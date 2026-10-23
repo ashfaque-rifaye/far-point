@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 720" width="1600" height="720" font-family="Segoe UI, Manrope, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#2fd3c4"/>
+      <stop offset="1" stop-color="#3b6cf6"/>
+    </linearGradient>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#26344a"/>
+    </marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c26a00"/>
+    </marker>
+    <style>
+      .t { font-size: 18px; font-weight: 700; fill: #0d1b2a; }
+      .s { font-size: 13.5px; fill: #4a5568; }
+      .k { font-size: 11.5px; font-weight: 800; letter-spacing: 1.5px; fill: #3b6cf6; }
+      .m { font-family: Consolas, 'Cascadia Mono', monospace; font-size: 12.5px; fill: #26344a; }
+      .node { fill: #ffffff; stroke: #d7deeb; stroke-width: 1.5; }
+      .line { stroke: #26344a; stroke-width: 2.2; fill: none; }
+      .cloud { stroke: #c26a00; stroke-width: 2.2; fill: none; stroke-dasharray: 7 6; }
+    </style>
+  </defs>
+  <rect width="1600" height="720" fill="#eef1f7"/>
+  <text x="40" y="56" font-size="30" font-weight="700" fill="#0d1b2a">One tick of the reflex loop (every 2.5 s)</text>
+  <text x="40" y="84" class="s" font-size="15">The Decider answers which rules apply. Code applies the order. Nova is asked only when a rule that would outrank the winner is unsure.</text>
+
+  <!-- step 1 -->
+  <rect x="40" y="120" width="270" height="250" rx="22" class="node"/>
+  <text x="62" y="152" class="k">1 · RENDER (CODE)</text>
+  <text x="62" y="180" class="t">Facts as verdicts</text>
+  <rect x="58" y="196" width="234" height="156" rx="12" fill="#f1f4fa"/>
+  <text x="70" y="220" class="m">Viewing distance: 27 cm,</text>
+  <text x="70" y="238" class="m">under 30 cm for 8 s</text>
+  <text x="70" y="256" class="m">(limit 5 s): too close,</text>
+  <text x="70" y="274" class="m" font-weight="700">enlarging needed.</text>
+  <text x="70" y="302" class="m">Theme: light, room</text>
+  <text x="70" y="320" class="m">normal: no change</text>
+  <text x="70" y="338" class="m">needed.  …</text>
+
+  <!-- step 2 -->
+  <rect x="350" y="120" width="380" height="250" rx="22" fill="#0d1b2a"/>
+  <text x="372" y="152" class="k" style="fill:#36dccd">2 · DECIDER 2B · ONE REQUEST · ~0.5 s</text>
+  <text x="372" y="180" class="t" style="fill:#fff">9 typed yes/no questions</text>
+  <g font-size="13.5" fill="#c9d4e6">
+    <text x="372" y="214">rule_1 enlarge_text</text><rect x="560" y="203" width="130" height="14" rx="7" fill="#1c2a40"/><rect x="560" y="203" width="124" height="14" rx="7" fill="url(#g)"/><text x="696" y="214" fill="#fff" font-weight="700">.96</text>
+    <text x="372" y="240">rule_2 glasses_reminder</text><rect x="560" y="229" width="130" height="14" rx="7" fill="#1c2a40"/><rect x="560" y="229" width="8" height="14" rx="7" fill="#6b7a93"/><text x="696" y="240" fill="#fff">.04</text>
+    <text x="372" y="266">rule_3 dark_mode</text><rect x="560" y="255" width="130" height="14" rx="7" fill="#1c2a40"/><rect x="560" y="255" width="9" height="14" rx="7" fill="#6b7a93"/><text x="696" y="266" fill="#fff">.05</text>
+    <text x="372" y="292">… rules 4-8</text><rect x="560" y="281" width="130" height="14" rx="7" fill="#1c2a40"/><rect x="560" y="281" width="8" height="14" rx="7" fill="#6b7a93"/><text x="696" y="292" fill="#fff">≤.07</text>
+    <text x="372" y="318">interrupt_ok</text><rect x="560" y="307" width="130" height="14" rx="7" fill="#1c2a40"/><rect x="560" y="307" width="120" height="14" rx="7" fill="url(#g)"/><text x="696" y="318" fill="#fff" font-weight="700">.92</text>
+  </g>
+  <text x="372" y="352" font-size="13" fill="#9aa9c2">each: {"type": "noul", criteria: {true, false}}</text>
+
+  <!-- step 3 -->
+  <rect x="770" y="120" width="380" height="250" rx="22" class="node"/>
+  <text x="792" y="152" class="k">3 · REFLEX GATE POLICY (CODE)</text>
+  <text x="792" y="180" class="t">Walk rules in priority order</text>
+  <rect x="792" y="200" width="336" height="34" rx="10" fill="#dff6ec"/>
+  <text x="806" y="222" class="s" fill="#0b8a5f" font-weight="700">p ≥ 0.65  fires</text>
+  <rect x="792" y="242" width="336" height="34" rx="10" fill="#fff0dc"/>
+  <text x="806" y="264" class="s" fill="#9a5200" font-weight="700">0.35 &lt; p &lt; 0.65  unsure</text>
+  <rect x="792" y="284" width="336" height="34" rx="10" fill="#f1f4fa"/>
+  <text x="806" y="306" class="s" font-weight="700">p ≤ 0.35  clear</text>
+  <text x="792" y="350" class="s">First firing rule wins, unless a rule above it is unsure.</text>
+
+  <!-- step 4 -->
+  <rect x="1190" y="120" width="370" height="250" rx="22" class="node"/>
+  <text x="1212" y="152" class="k">4 · STRANDS AGENT + INTERVENTIONS</text>
+  <text x="1212" y="180" class="t">agent.tool.enlarge_text()</text>
+  <text x="1212" y="212" class="s">InterruptGate reuses interrupt_ok:</text>
+  <text x="1212" y="232" class="s">breaks and reminders denied during</text>
+  <text x="1212" y="252" class="s">calls, typing, fullscreen video.</text>
+  <text x="1212" y="284" class="s">ConfirmGate: your approval before</text>
+  <text x="1212" y="304" class="s">a new rulebook or opening an email.</text>
+  <text x="1212" y="342" class="s" font-weight="700" fill="#0b8a5f">Then verify 30 s later with the camera.</text>
+
+  <path class="line" d="M310 245 H346" marker-end="url(#a)"/>
+  <path class="line" d="M730 245 H766" marker-end="url(#a)"/>
+  <path class="line" d="M1150 245 H1186" marker-end="url(#a)"/>
+
+  <!-- unsure branch -->
+  <path class="cloud" d="M960 370 V428" marker-end="url(#ao)"/>
+  <rect x="770" y="432" width="380" height="112" rx="20" fill="#fff6ea" stroke="#e8b46b" stroke-width="1.5"/>
+  <text x="792" y="464" class="k" style="fill:#9a5200">ONLY IF UNSURE · AMAZON NOVA LITE · ~2.2 s</text>
+  <text x="792" y="492" class="t">Same text, only the unsure rules</text>
+  <text x="792" y="518" class="s">Verdict true → act. No verdict → stay quiet.</text>
+  <text x="792" y="536" class="s">Held-out: needed on 9 of 72 states.</text>
+
+  <!-- comparison strip -->
+  <rect x="40" y="580" width="1520" height="110" rx="22" class="node"/>
+  <text x="62" y="614" class="k">SAME 72 HELD-OUT STATES (PREREGISTERED)</text>
+  <g font-size="15">
+    <text x="62" y="648" class="t" font-size="16">Decider alone</text>
+    <text x="62" y="672" class="s" font-size="15">87.5% · 0.57 s · 0 tokens</text>
+    <text x="440" y="648" class="t" font-size="16">Nova Lite alone</text>
+    <text x="440" y="672" class="s" font-size="15">100% · 2.57 s (p90 3.18 s &gt; 2.5 s tick) · 107,500 tokens</text>
+    <text x="960" y="648" class="t" font-size="16">Far Point: Decider + Nova when unsure</text>
+    <text x="960" y="672" class="s" font-size="15" font-weight="700" fill="#0b8a5f">100% · 0.46 s, Nova on 9 of 72 · 9,522 tokens (11x fewer)</text>
+  </g>
+</svg>

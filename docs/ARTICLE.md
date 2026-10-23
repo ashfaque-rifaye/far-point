@@ -6,6 +6,10 @@ Repo: https://github.com/ashfaque-rifaye/far-point (Apache-2.0) · Video: <add Y
 
 > Not a medical device. Far Point does not diagnose, treat or prevent any eye condition.
 
+![Far Point](images/cover.png)
+
+*Dashboard screenshots in this article come from its built-in demo story, so the numbers in them are scripted. The results tables are measured.*
+
 ## The moment it is built for
 
 It is late. My glasses are on the desk, the page is small, and I have crept to 26 cm from the screen without noticing. Nearsightedness is common and growing; a widely cited projection puts it at about half the world's population by 2050 (Holden et al., *Ophthalmology*, 2016). In children, reading closer than 30 cm and long unbroken stretches of near work are linked to higher myopia risk.
@@ -23,7 +27,16 @@ Every 2.5 seconds, entirely on my laptop (RTX 4060, Windows 11):
 
 Amazon Nova Lite on Bedrock does the language work: it turns my own description of my eyes into a draft rulebook that I adopt with one click, writes a numbers-only report for my optometrist, proposes new rules from moments where the Decider was unsure, and drafts an eye-exam email that opens only after I confirm. Bedrock gets words and numbers, never an image. The dashboard's privacy counter, "face images uploaded: 0", has nothing that can increment it.
 
+## Architecture
+
+![Architecture](images/architecture.png)
+
+Everything left of the line runs on the laptop. Only text and numbers cross to Bedrock. More detail: `docs/ARCHITECTURE.md` in the repo.
+
 ## The decision handed to Decider 2B
+
+![One tick of the reflex loop](images/decision-loop.png)
+
 
 Declared pattern: **tool selection**. Which of nine tools, if any, should run right now?
 

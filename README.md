@@ -6,6 +6,24 @@ Far Point watches how you use your eyes at the screen and adapts the screen to y
 
 Not a medical device. Far Point does not diagnose, treat or prevent any eye condition. Its reports are behavioral observations, not a diagnosis.
 
+## For reviewers: where each requirement is
+
+| Requirement | Where |
+|---|---|
+| Working agent, Strands Decider 2B makes a meaningful decision | Every 2.5 s the local Decider decides which rulebook rules apply, which picks the tool (`#tool-selection`). Loop: [`farpoint/loop.py`](farpoint/loop.py) |
+| Paired with Amazon Bedrock for the generative part | Amazon Nova Lite through a Strands Agent: rulebook from your words, reports, rule proposals, exam-email draft ([`farpoint/coach.py`](farpoint/coach.py)); second opinion on unsure rules ([`farpoint/escalate.py`](farpoint/escalate.py)) |
+| Reusable decision pattern, clearly labelled | [`patterns/reflex_gate/`](patterns/reflex_gate/README.md): typed questions and option set, the wiring (Strands `InterventionHandler`s), usage note, tests, and a non-eye example |
+| Architecture | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| Measured latency / cost vs an LLM, accuracy, low-confidence handling | [Measured](#measured), [`eval/S3_RESULTS.md`](eval/S3_RESULTS.md), [`eval/S4_RESULTS.md`](eval/S4_RESULTS.md), all preregistered in [`eval/PREREGISTRATION.md`](eval/PREREGISTRATION.md) |
+| Article / video | Article draft: [`docs/ARTICLE.md`](docs/ARTICLE.md) · Video: see the links section below |
+| OSI license | Apache-2.0 ([`LICENSE`](LICENSE)) |
+| Try it without a GPU, camera or AWS | Run the backend in replay mode with `--fake-decider --no-bedrock`, or open the dashboard with `?demo=1`; `python -m pytest -q` |
+
+## Links
+
+- Builder Center article: _(added on publish)_
+- Demo video (under 3 minutes): _(added on upload)_
+
 ## The decision handed to the Decider
 
 Declared pattern: `#tool-selection` with `#strands-decider-2b`. The reusable version is in [`patterns/reflex_gate/`](patterns/reflex_gate/README.md).
@@ -16,6 +34,11 @@ Declared pattern: `#tool-selection` with `#strands-decider-2b`. The reusable ver
 4. The chosen tool runs through a Strands Agent (`agent.tool.<name>()`). Strands interventions gate it: `InterruptGate` denies breaks and reminders during calls, typing or fullscreen video, and `ConfirmGate` puts your approval in front of adopting a rulebook or opening the email draft.
 
 ## Architecture
+
+Full write-up with diagrams: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+![Architecture](docs/images/architecture.png)
+
 
 | Stage | What happens | Where |
 |---|---|---|
@@ -119,7 +142,7 @@ Each original is written to `<runtime>/restore.json` before the change. On exit,
 | `patterns/reflex_gate/` | Reusable decision pattern (per-rule nouls, policy, InterruptGate / ConfirmGate, fakes, posture example) |
 | `eval/`, `results/` | Preregistrations, spikes S1-S3 and their raw results |
 | `scripts/` | Decider start, calibration, demo trace, smoke tests, guided human session, screenshots, demo recorder, pre-push scan |
-| `docs/` | UI contract, [article draft](docs/ARTICLE.md), [video script](docs/VIDEO_SCRIPT.md), screenshots |
+| `docs/` | [Architecture](docs/ARCHITECTURE.md), UI contract, [article draft](docs/ARTICLE.md), [video script](docs/VIDEO_SCRIPT.md), [submission kit](docs/SUBMISSION.md), screenshots and diagrams |
 | `tests/` | pytest suite |
 
 ## License

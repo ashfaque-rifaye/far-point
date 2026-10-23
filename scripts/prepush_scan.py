@@ -4,8 +4,8 @@ like a credential, the AWS account id, or image bytes.
   python scripts/prepush_scan.py                       # STAGED content (git diff --cached)
   python scripts/prepush_scan.py --range origin/main..HEAD   # every file the push would change
 
-Dashboard screenshots under docs/images/ (names starting with "dashboard-") are the only
-images allowed; the UI never shows camera frames, and every other image is refused.
+Dashboard screenshots under docs/images/ (names starting with "dashboard-") and the three rendered
+doc images (architecture, decision-loop, cover) are the only images allowed; the UI never shows camera frames, and every other image is refused.
 """
 from __future__ import annotations
 
@@ -29,6 +29,8 @@ RULES = {
 IMAGE_RULES = {"jpeg_bytes", "png_bytes"}
 IMAGE_EXT = (".jpg", ".jpeg", ".png", ".bmp", ".webp", ".gif", ".mp4", ".mov")
 SCREENSHOT_PREFIX = "docs/images/dashboard-"
+# Rendered diagrams and the article cover (from SVG/HTML sources next to them, scripts/render_doc_images.py).
+DOC_IMAGES = {"docs/images/architecture.png", "docs/images/decision-loop.png", "docs/images/cover.png"}
 
 
 def account_id() -> bytes | None:
@@ -54,7 +56,7 @@ def main(argv=None) -> int:
     acct = account_id()
     hits = []
     for f in files:
-        screenshot = f.startswith(SCREENSHOT_PREFIX) and f.lower().endswith(".png")
+        screenshot = (f.startswith(SCREENSHOT_PREFIX) and f.lower().endswith(".png")) or f in DOC_IMAGES
         if f.lower().endswith(IMAGE_EXT) and not screenshot:
             hits.append((f, "image_file"))
         blob = show(f)

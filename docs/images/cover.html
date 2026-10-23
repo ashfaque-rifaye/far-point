@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Far Point cover</title>
+<style>
+  html, body { margin: 0; width: 1600px; height: 900px; overflow: hidden; }
+  body {
+    font-family: 'Segoe UI', Manrope, Helvetica, Arial, sans-serif;
+    background: radial-gradient(900px 600px at 85% -10%, rgba(59,108,246,.35), transparent 60%),
+                radial-gradient(800px 500px at -5% 110%, rgba(47,211,196,.30), transparent 60%), #070d18;
+    color: #e9effa; position: relative;
+  }
+  .left { position: absolute; left: 90px; top: 110px; width: 640px; }
+  .brand { display: flex; align-items: center; gap: 16px; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+  .brand i { font-style: normal; background: linear-gradient(120deg,#2fd3c4,#3b6cf6); -webkit-background-clip: text; color: transparent; }
+  h1 { font-size: 78px; line-height: 1.02; letter-spacing: -0.035em; margin: 60px 0 26px; font-weight: 700; }
+  h1 span { background: linear-gradient(120deg,#2fd3c4 0%,#3b8ff6 60%,#7b7cf8 100%); -webkit-background-clip: text; color: transparent; }
+  p { font-size: 24px; line-height: 1.45; color: #b6c3d9; margin: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 44px; }
+  .chip { padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); font-size: 19px; font-weight: 600; }
+  .chip.g { background: linear-gradient(120deg,#2fd3c4,#3b6cf6); color: #04101c; border: 0; }
+  .shot { position: absolute; right: -60px; top: 120px; width: 860px; border-radius: 28px; box-shadow: 0 40px 120px rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.12); transform: perspective(1600px) rotateY(-9deg) rotateX(3deg); }
+  .foot { position: absolute; left: 90px; bottom: 60px; font-size: 18px; color: #7f8ea8; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="brand">
+      <svg width="56" height="56" viewBox="0 0 64 64"><defs><linearGradient id="l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2fd3c4"/><stop offset="1" stop-color="#3b6cf6"/></linearGradient></defs><rect width="64" height="64" rx="20" fill="#e9effa"/><circle cx="32" cy="32" r="16" fill="none" stroke="url(#l)" stroke-width="5"/><circle cx="32" cy="32" r="6" fill="url(#l)"/></svg>
+      <span>Far Point<i>.</i></span>
+    </div>
+    <h1>A screen that adapts to <span>your eyes.</span></h1>
+    <p>Strands Decider 2B decides on the laptop every 2.5 s. Amazon Nova on Bedrock writes the words. No face image ever leaves the machine.</p>
+    <div class="chips">
+      <span class="chip g">#strands-decider-2b</span>
+      <span class="chip">#tool-selection</span>
+      <span class="chip">0.57 s local · 11x fewer tokens</span>
+    </div>
+  </div>
+  <img class="shot" src="dashboard-now-too-close.png" alt="">
+  <div class="foot">Not a medical device · github.com/ashfaque-rifaye/far-point</div>
+</body>
+</html>
