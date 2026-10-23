@@ -4,10 +4,10 @@ No GPU, no AWS, no camera: FAKE oracle Decider, Bedrock off, dry-run actuators.
 """
 from fastapi.testclient import TestClient
 
-from farpoint.config import DEFAULT_TRACE, Settings
-from farpoint.contract import errors
-from farpoint.dashboard import create_app
-from farpoint.runtime import Runtime
+from myrmidon.config import DEFAULT_TRACE, Settings
+from myrmidon.contract import errors
+from myrmidon.dashboard import create_app
+from myrmidon.runtime import Runtime
 
 WS = "ws://127.0.0.1:8765/ws"
 BASE = "http://127.0.0.1:8765"

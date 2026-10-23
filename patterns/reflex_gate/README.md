@@ -1,6 +1,6 @@
 # REUSABLE DECISION PATTERN: Reflex Gate
 
-Reflex Gate turns a small rulebook into fast local decisions with Strands Decider 2B, then runs the chosen tool through a Strands Agent, where interventions can stop it. Far Point uses it for eye habits. Nothing in this package knows about eyes: it imports only `strands`, `pydantic` and the standard library. `examples/posture_agent.py` applies it to posture.
+Reflex Gate turns a small rulebook into fast local decisions with Strands Decider 2B, then runs the chosen tool through a Strands Agent, where interventions can stop it. Myrmidon uses it for eye habits. Nothing in this package knows about eyes: it imports only `strands`, `pydantic` and the standard library. `examples/posture_agent.py` applies it to posture.
 
 ## What it does
 
@@ -9,7 +9,7 @@ Reflex Gate turns a small rulebook into fast local decisions with Strands Decide
 3. Code applies the priority order and a confidence policy (below) and picks at most one tool. The Decider judges which rules apply; the order picks the tool.
 4. The tool runs as `agent.tool.<name>(...)`. Strands interventions run on that call. `InterruptGate` denies interruptive tools at a bad moment, and `ConfirmGate` puts a human answer in front of persistent or outbound tools.
 
-Why per-rule nouls: in Far Point's Phase 1 spike, a single 9-way `choice` question agreed with the rulebook on 68.1% of held-out states, and it mostly lost on the priority order. The same spike scored the v2 `interrupt_ok` noul at 100% (`eval/SPIKE_RESULTS.md`). Asking one yes/no question per rule and resolving the order in code plays to what the model did well.
+Why per-rule nouls: in Myrmidon's Phase 1 spike, a single 9-way `choice` question agreed with the rulebook on 68.1% of held-out states, and it mostly lost on the priority order. The same spike scored the v2 `interrupt_ok` noul at 100% (`eval/SPIKE_RESULTS.md`). Asking one yes/no question per rule and resolving the order in code plays to what the model did well.
 
 ## Typed questions and options
 
@@ -26,7 +26,7 @@ Why per-rule nouls: in Far Point's Phase 1 spike, a single 9-way `choice` questi
 }
 ```
 
-The rendered line it reads is written by code, for example `- Viewing distance: 27 cm, under 30 cm for 8 s (limit 5 s): too close, enlarging needed.` Two wording lessons came from probing the real Decider while building Far Point (single requests, not a held-out eval):
+The rendered line it reads is written by code, for example `- Viewing distance: 27 cm, under 30 cm for 8 s (limit 5 s): too close, enlarging needed.` Two wording lessons came from probing the real Decider while building Myrmidon (single requests, not a held-out eval):
 
 - End each line with one verdict phrase, in the form "X needed" / "no X needed". For the brightness rule, "dimming needed" / "no change needed" scored p 0.97 / 0.10. The descriptive pair "high for a dark room" / "suits the room" scored 0.95 / 0.43, so the no-change case sat in the unsure band.
 - Fold any AND that a rule needs into one line in code. A rule that needed "too close" on one line AND "zoom control available" on another left the no-change states at p 0.37-0.69.
@@ -55,7 +55,7 @@ The rendered line it reads is written by code, for example `- Viewing distance: 
 | `interrupt_p` | 0.5 | `InterruptGate` proceeds at p >= 0.5 |
 | `ask_cooldown_s` | 1800 | The ask tool runs at most once per 30 min |
 
-The policy walks the rules in priority order and takes the first one that fires, unless a higher-priority rule is unsure. Those unsure rules go to `escalate` (Far Point uses Amazon Nova Lite on the same text state). If escalation is off, fails or gives no verdict, the policy stays quiet and the caller logs the unsure moment ("fail quiet"). A wrong interruption costs more than a missed one, so the 0.35-0.65 band is wide on purpose. The values are fixed before measurement, not tuned on the eval sets.
+The policy walks the rules in priority order and takes the first one that fires, unless a higher-priority rule is unsure. Those unsure rules go to `escalate` (Myrmidon uses Amazon Nova Lite on the same text state). If escalation is off, fails or gives no verdict, the policy stays quiet and the caller logs the unsure moment ("fail quiet"). A wrong interruption costs more than a missed one, so the 0.35-0.65 band is wide on purpose. The values are fixed before measurement, not tuned on the eval sets.
 
 ## Wiring
 
@@ -94,7 +94,7 @@ References: the official Decider + Strands example, https://github.com/strands-l
 
 `python -m patterns.reflex_gate.examples.posture_agent --fake` runs offline. Drop `--fake` to use a Decider on 127.0.0.1:8099. It prints the selection and the gate verdict for 4 canned states. The meeting state is denied by `InterruptGate`.
 
-## Measured (Far Point, `eval/S3_RESULTS.md`)
+## Measured (Myrmidon, `eval/S3_RESULTS.md`)
 
 Preregistered, held-out seed 4, 72 synthetic states, thresholds fixed at 0.35 / 0.65:
 
@@ -107,7 +107,7 @@ Preregistered, held-out seed 4, 72 synthetic states, thresholds fixed at 0.35 / 
 
 - Phase 1 baseline: one 9-way choice agreed with the rulebook on 68.1% of held-out states.
 - With verdict-style rendering, code computes each rule's conditions and the Decider reads the verdict. That is the point of the pattern, but it means rules that combine lines in new ways (for example ones a language model writes) are less reliable than the S3 number.
-- `interrupt_ok` scored 83.3% over the S3 rendering, with misses on typing bursts and video calls. Far Point now appends code's activity verdict to the Activity line. Probes improved, but S3 did not measure it.
+- `interrupt_ok` scored 83.3% over the S3 rendering, with misses on typing bursts and video calls. Myrmidon now appends code's activity verdict to the Activity line. Probes improved, but S3 did not measure it.
 - Wording matters. In the spike, rewording one question moved one label from 100% to 12%. Keep criteria explicit, quote the rendered line the rule should read, and do the arithmetic in code.
 - Every Decider call in a process goes through one lock (`client._LOCK`), because overlapping requests can get each other's answers (strands-decider issue #17). Throughput is one request at a time.
 - `DeciderHttpClient` refuses to send images to any host other than localhost.

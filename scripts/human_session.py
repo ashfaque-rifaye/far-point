@@ -10,7 +10,7 @@
 Every part waits for ENTER first (S skips it, Q quits) and can be re-run alone:
   .\\scripts\\human_session.ps1 -Parts b
 Nothing here uploads anything. Camera frames stay in memory, except the S2 labeled capture,
-which goes to FARPOINT_RUNTIME/s2-frames (outside the repo) and can be deleted after scoring.
+which goes to MYRMIDON_RUNTIME/s2-frames (outside the repo) and can be deleted after scoring.
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import decider_ctl  # noqa: E402
 
-RUNTIME = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+RUNTIME = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
 RESULTS = ROOT / "results"
 SESSION_DIR = RUNTIME / "human-session"
 PROGRESS = SESSION_DIR / "progress.jsonl"
@@ -116,9 +116,9 @@ DISTANCES = {"a": (29.7, "the long side of one A4 sheet"), "b": (59.4, "two A4 s
 
 
 def part_a(args) -> dict:
-    from farpoint.preview import Preview
-    from farpoint.sense import CALIBRATION_PATH, Calibration, FaceSensor, focal_length_px, frame_luma, open_camera
-    from farpoint.signals import LOOK_PITCH_DEG, LOOK_YAW_DEG
+    from myrmidon.preview import Preview
+    from myrmidon.sense import CALIBRATION_PATH, Calibration, FaceSensor, focal_length_px, frame_luma, open_camera
+    from myrmidon.signals import LOOK_PITCH_DEG, LOOK_YAW_DEG
 
     res: dict = {"part": "a", "date": now_iso(), "status": "failed"}
     try:
@@ -127,7 +127,7 @@ def part_a(args) -> dict:
         old = None
     sensor = FaceSensor()
     cap = open_camera(args.camera)
-    pv = Preview("Far Point setup - camera (press keys here or in the console)")
+    pv = Preview("Myrmidon setup - camera (press keys here or in the console)")
 
     def frame():
         ok, f = cap.read()
@@ -234,7 +234,7 @@ def part_a(args) -> dict:
         res["calibration"] = {"method": how, "distance_cm": cm, "frames": len(iris),
                               "focal_px": round(calib.focal_px, 1), "ear_baseline": round(calib.ear_baseline, 4),
                               "previous_focal_px": round(old.focal_px, 1) if old else None,
-                              "saved_to": "FARPOINT_RUNTIME/calibration.local.json (previous kept as .bak)"}
+                              "saved_to": "MYRMIDON_RUNTIME/calibration.local.json (previous kept as .bak)"}
         print(f"Calibration saved (focal {calib.focal_px:.0f} px, eye-opening baseline {calib.ear_baseline:.3f}).")
 
         # 4. lean test: does the distance follow you?
@@ -299,7 +299,7 @@ def part_a(args) -> dict:
 
 # ---- B: live lean-in trial in Edge ----------------------------------------------------------
 
-PAGE = """<!doctype html><html><head><meta charset="utf-8"><title>Far Point reading test</title>
+PAGE = """<!doctype html><html><head><meta charset="utf-8"><title>Myrmidon reading test</title>
 <style>
 body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#f6f5ef;color:#222}
 #bar{position:sticky;top:0;background:#0b1d2a;color:#fff;padding:18px 28px;box-shadow:0 2px 8px #0004}
@@ -310,16 +310,16 @@ main{max-width:760px;margin:26px auto;padding:0 24px;font-size:16px;line-height:
 <div id="bar"><div id="instr">Loading...</div><div id="meta"></div></div>
 <main>
 <h2>A short reading test</h2>
-<p>This page is served by Far Point on your own laptop (127.0.0.1). It holds no images and sends nothing anywhere.
-The bar above tells you what to do, step by step. Far Point watches your viewing distance through the webcam,
+<p>This page is served by Myrmidon on your own laptop (127.0.0.1). It holds no images and sends nothing anywhere.
+The bar above tells you what to do, step by step. Myrmidon watches your viewing distance through the webcam,
 on the laptop only, and decides with a small local model whether larger text would help.</p>
 <p>Most people drift closer to the screen when text is small or the work is hard. Holding the eyes close for long
 periods asks the focusing muscles to work harder. The usual advice is simple: keep the screen at a comfortable
 distance, make the text bigger instead of leaning in, and every so often look at something far away.</p>
-<p>When you lean in for more than a few seconds, Far Point enlarges the text by one step so you can sit back.
+<p>When you lean in for more than a few seconds, Myrmidon enlarges the text by one step so you can sit back.
 About thirty seconds later it checks, again through the camera, whether you actually leaned back. That check is
 what lets it learn which changes help you and which ones it should stop making.</p>
-<p>Everything Far Point changes can be undone, and it undoes it when it stops: the zoom on this page goes back to
+<p>Everything Myrmidon changes can be undone, and it undoes it when it stops: the zoom on this page goes back to
 where it started when the test ends.</p>
 <p>Keep reading this text normally while you follow the instructions in the bar. There is nothing else to do.</p>
 </main>
@@ -419,12 +419,12 @@ def find_window(title_part: str) -> int | None:
 
 
 def part_b(args) -> dict:
-    from farpoint.act import RegistryTheme, WinWindow, WmiBrightness
-    from farpoint.config import Settings
-    from farpoint.doctrine import DoctrineStore, default_doctrine
-    from farpoint.runtime import Runtime
+    from myrmidon.act import RegistryTheme, WinWindow, WmiBrightness
+    from myrmidon.config import Settings
+    from myrmidon.doctrine import DoctrineStore, default_doctrine
+    from myrmidon.runtime import Runtime
 
-    res: dict = {"part": "b", "date": now_iso(), "status": "failed", "app": "Microsoft Edge (Far Point test page)"}
+    res: dict = {"part": "b", "date": now_iso(), "status": "failed", "app": "Microsoft Edge (Myrmidon test page)"}
     if not decider_ctl.health():
         print("The local Decider is not answering. Starting it in text mode (about 1-2 min)...")
         res["decider_start"] = decider_ctl.restart(vision=False)
@@ -460,7 +460,7 @@ def part_b(args) -> dict:
             near = f", closer than 30 cm for {tr.under_near_s:.0f} s" if (d and d < 30) else ""
             zoom = rt.actuators.zoom.zoom_step()
             srv.state["meta"] = (f"Distance now: {d:.0f} cm{near}." if d else "Distance now: no face seen.") + \
-                                f"   Far Point zoom: {zoom:+d}."
+                                f"   Myrmidon zoom: {zoom:+d}."
 
     def wait_for(pred, timeout):
         end = time.time() + timeout
@@ -483,7 +483,7 @@ def part_b(args) -> dict:
             res["error"] = "the Edge page did not load within 20 s"
             print(res["error"])
             return res
-        hwnd = wait_for(lambda: find_window("Far Point reading test"), 10)
+        hwnd = wait_for(lambda: find_window("Myrmidon reading test"), 10)
         if hwnd:
             win.set_foreground(hwnd)
         time.sleep(1.0)
@@ -505,7 +505,7 @@ def part_b(args) -> dict:
         res["actions"] = [{k: a[k] for k in ("tool", "status", "message")} for a in attempts]
         if act is None:
             res["error"] = f"enlarge_text did not fire within {args.lean_timeout:.0f} s"
-            srv.state["text"] = "Far Point did not enlarge the text this time. The test will stop now."
+            srv.state["text"] = "Myrmidon did not enlarge the text this time. The test will stop now."
             print(res["error"])
         else:
             seconds_to_act = round(time.time() - t_lean, 1)
@@ -525,7 +525,7 @@ def part_b(args) -> dict:
                              "rule_1_p": next((r["p"] for r in dec.get("answers", {}).get("rules", []) if r["n"] == 1),
                                               None)}
             res["verification"] = ({k: ver[k] for k in ("outcome", "before", "after", "window_s")} if ver else None)
-        srv.state["text"] = "Done. Far Point is putting the zoom back now..."
+        srv.state["text"] = "Done. Myrmidon is putting the zoom back now..."
         time.sleep(0.5)
     finally:
         stop_feed.set()
@@ -538,7 +538,7 @@ def part_b(args) -> dict:
             import win32con
             import win32gui
             try:
-                if "Far Point reading test" in win32gui.GetWindowText(hwnd):
+                if "Myrmidon reading test" in win32gui.GetWindowText(hwnd):
                     win32gui.PostMessage(hwnd, win32con.WM_CLOSE, 0, 0)
             except Exception:  # noqa: BLE001
                 pass
@@ -596,7 +596,7 @@ class VisionServer:
 
 
 def part_c(args, state: dict) -> dict:
-    from farpoint.doctrine import DoctrineStore
+    from myrmidon.doctrine import DoctrineStore
 
     res: dict = {"part": "c", "date": now_iso(), "status": "failed"}
     print("Starting the local Decider in vision mode in the background (needed for part D)...")
@@ -611,7 +611,7 @@ def part_c(args, state: dict) -> dict:
     store = DoctrineStore(RUNTIME / "profile")
     store.update_profile(glasses_for_screen=glasses_for_screen)
     res["glasses_for_screen"] = glasses_for_screen
-    res["profile_updated"] = "FARPOINT_RUNTIME/profile/doctrine.json: glasses_for_screen=" + glasses_for_screen
+    res["profile_updated"] = "MYRMIDON_RUNTIME/profile/doctrine.json: glasses_for_screen=" + glasses_for_screen
     if src == "n":
         res.update(status="skipped", reason="no glasses available, so glasses_on cannot be labeled")
         return res
@@ -671,14 +671,14 @@ def part_d(args, state: dict) -> dict:
             res["error"] = f"scoring exited with {rc}"
     frames = RUNTIME / "s2-frames"
     if frames.exists() and any(frames.glob("pose*_*.jpg")):
-        if ask("Delete the captured face frames from FARPOINT_RUNTIME\\s2-frames now?  Y = delete, N = keep:",
+        if ask("Delete the captured face frames from MYRMIDON_RUNTIME\\s2-frames now?  Y = delete, N = keep:",
                {"y", "n"}, default="y") == "y":
             shutil.rmtree(frames, ignore_errors=True)
             res["frames_deleted"] = True
             print("Frames deleted. The aggregate numbers stay in results/.")
         else:
             res["frames_deleted"] = False
-    print("Switching the Decider back to text mode in the background (Far Point's default)...")
+    print("Switching the Decider back to text mode in the background (Myrmidon's default)...")
     state["text_restart"] = decider_ctl.start(vision=False)
     res["decider_after"] = "text (restart started)"
     return res
@@ -693,7 +693,7 @@ def part_e(args) -> dict:
         print("Part E skipped: the dashboard UI (web/dist) is not built yet.")
         return res
     res.update(status="skipped", reason="run the live app and approve the rulebook in the dashboard")
-    print("Start Far Point (python -m farpoint.app --mode live) and approve the rulebook at http://127.0.0.1:8765/.")
+    print("Start Myrmidon (python -m myrmidon.app --mode live) and approve the rulebook at http://127.0.0.1:8765/.")
     return res
 
 
@@ -706,7 +706,7 @@ def main(argv=None) -> int:
     ap.add_argument("--lean-timeout", type=float, default=45.0)
     args = ap.parse_args(argv)
     parts = [p for p in args.parts.lower() if p in "abcde"]
-    print("Far Point guided session. Parts: " + ", ".join(p.upper() for p in parts) + ". About 8-10 minutes in all.")
+    print("Myrmidon guided session. Parts: " + ", ".join(p.upper() for p in parts) + ". About 8-10 minutes in all.")
     print("Every part waits for ENTER. S skips a part, Q quits. Results go to results/*.json.")
     progress("session", "start", parts="".join(parts))
     state: dict = {}

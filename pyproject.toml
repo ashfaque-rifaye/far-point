@@ -1,5 +1,5 @@
 [project]
-name = "far-point"
+name = "myrmidon"
 version = "0.0.1"
 requires-python = ">=3.12,<3.13"
 license = "Apache-2.0"
@@ -8,5 +8,5 @@ license = "Apache-2.0"
 testpaths = ["tests", "patterns/reflex_gate/tests"]
 pythonpath = ["."]
 markers = [
-    "live: needs real camera / Decider / Bedrock (FARPOINT_LIVE=1)",
+    "live: needs real camera / Decider / Bedrock (MYRMIDON_LIVE=1)",
 ]

@@ -3,9 +3,9 @@ import time
 
 import pytest
 
-from farpoint.decide import client
-from farpoint.doctrine import default_doctrine
-from farpoint.facts import Facts, render_state
+from myrmidon.decide import client
+from myrmidon.doctrine import default_doctrine
+from myrmidon.facts import Facts, render_state
 from patterns.reflex_gate import build_questions, select
 
 

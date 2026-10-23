@@ -1,4 +1,4 @@
-# Dependencies (npm cache lives outside the repo at E:\farpoint-runtime\npm-cache)
+# Dependencies (npm cache lives outside the repo at E:\myrmidon-runtime\npm-cache)
 node_modules/
 .npm/
 .pnpm-store/

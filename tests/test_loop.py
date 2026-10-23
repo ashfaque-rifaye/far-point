@@ -1,8 +1,8 @@
 """Reflex loop, ticked by hand over synthetic numeric readings (no GPU, AWS or camera)."""
-from farpoint.config import Settings
-from farpoint.contract import errors
-from farpoint.predicates import PREDICATES
-from farpoint.runtime import Runtime
+from myrmidon.config import Settings
+from myrmidon.contract import errors
+from myrmidon.predicates import PREDICATES
+from myrmidon.runtime import Runtime
 from patterns.reflex_gate import FakeDecider
 
 ACROBAT = dict(process="acrobat.exe", title="paper.pdf - Adobe Acrobat Reader", idle_s=30, fullscreen=False)
@@ -78,7 +78,7 @@ def test_dark_room_light_theme_switches_dark_mode(tmp_path):
     assert d["answers"]["next_action"]["choice"] == "dark_mode" and d["rule_ref"] == "rule 3"
     assert "Theme: light, in a dark room: mismatch, dark mode needed." in d["state_text"]
     assert sim.of("action")[-1]["status"] == "done" and sim.rt.actuators.state()["theme"] == "dark"
-    sim.run(3, luma=30, theme="light")  # the trace keeps saying light; Far Point's change sticks
+    sim.run(3, luma=30, theme="light")  # the trace keeps saying light; Myrmidon's change sticks
     assert sim.tick()["policy"] == "quiet"
     sim.assert_schema()
 

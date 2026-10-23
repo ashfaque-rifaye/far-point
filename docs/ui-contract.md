@@ -1,6 +1,6 @@
-# Far Point UI contract (protocol v1)
+# Myrmidon UI contract (protocol v1)
 
-The data contract between the Far Point web UI (`web/`) and the local Python backend. Three files describe the same contract and must stay in sync:
+The data contract between the Myrmidon web UI (`web/`) and the local Python backend. Three files describe the same contract and must stay in sync:
 
 | File | Role |
 | --- | --- |
@@ -118,7 +118,7 @@ Perception summary at 5 to 10 Hz. The UI renders the latest one and may keep a s
 | `glasses_on` | boolean \| null | |
 | `bout_s` | number | Current continuous near-work bout, seconds |
 | `under30_today_s` | number | Seconds closer than 30 cm today |
-| `app` | `{ name: string, category: 'browser'\|'editor'\|'office'\|'pdf'\|'video'\|'meeting'\|'other', zoom_step: integer }` | `zoom_step` is the net zoom Far Point applied; 0 = untouched |
+| `app` | `{ name: string, category: 'browser'\|'editor'\|'office'\|'pdf'\|'video'\|'meeting'\|'other', zoom_step: integer }` | `zoom_step` is the net zoom Myrmidon applied; 0 = untouched |
 
 ```json
 {
@@ -408,7 +408,7 @@ The backend needs explicit user approval for a consequential step (opening the m
   "data": {
     "request_id": "c_000009",
     "title": "Open email draft in your mail app?",
-    "detail": "Far Point will open a mailto: link. Nothing is sent until you press Send yourself."
+    "detail": "Myrmidon will open a mailto: link. Nothing is sent until you press Send yourself."
   }
 }
 ```

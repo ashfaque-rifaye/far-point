@@ -6,7 +6,7 @@
 #   .\scripts\start_decider.ps1 -Vision    # image mode (keeps Qwen3.5's vision tower)
 param(
     [switch]$Vision,
-    [string]$Runtime = "E:\farpoint-runtime",
+    [string]$Runtime = "E:\myrmidon-runtime",
     [int]$Port = 8099
 )
 $ErrorActionPreference = "Stop"

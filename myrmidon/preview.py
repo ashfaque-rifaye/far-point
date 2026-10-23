@@ -26,7 +26,7 @@ def console_key() -> str | None:
 
 
 class Preview:
-    def __init__(self, title: str = "Far Point setup"):
+    def __init__(self, title: str = "Myrmidon setup"):
         import cv2
         self.cv2 = cv2
         self.title = title

@@ -1,6 +1,6 @@
 import pytest
 
-from farpoint.context import (
+from myrmidon.context import (
     ZOOM_ALLOWLIST,
     activity_line,
     categorize,
@@ -19,7 +19,7 @@ def test_categorize():
     assert categorize("Acrobat.exe", "paper.pdf - Adobe Acrobat Reader") == "pdf"
     assert categorize("msedge.exe", "report.pdf - Edge") == "pdf"
     assert categorize("msedge.exe", "Inbox") == "browser"
-    assert categorize("Code.exe", "app.py - far-point") == "editor"
+    assert categorize("Code.exe", "app.py - myrmidon") == "editor"
     assert categorize("WINWORD.EXE", "Doc1 - Word") == "office"
     assert categorize("explorer.exe", "Downloads") == "other"
 

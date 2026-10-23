@@ -31,7 +31,7 @@ const DOCTRINE: DoctrineData = {
     ['The Screen brightness line says dimming needed.', 'A screen much brighter than a dark room adds glare.'],
     ['The Screen brightness line says brightening needed.', 'A dim screen in a bright room makes you lean in and squint.'],
     ['The Near-work bout line says break is due.', 'Clouclip pilot: under 60 cm for more than 45 min counts as unhealthy near work.'],
-    ['The Relaxed reading line says text can go back one step.', "Undo Far Point's own zoom once you read comfortably."],
+    ['The Relaxed reading line says text can go back one step.', "Undo Myrmidon's own zoom once you read comfortably."],
     ['The Squint despite zoom line says yes.', 'If enlarging has not helped, ask instead of guessing.'],
   ].map(([text, basis], i) => ({ n: i + 1, text, basis, origin: 'default' as const, status: 'active' as const })),
 };

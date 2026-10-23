@@ -23,8 +23,8 @@ from s1_states import Facts, generate  # noqa: E402
 from s3_rules import RULES_NEW, reference, render_s3  # noqa: E402
 from spike_s1 import pct  # noqa: E402
 
-from farpoint.escalate import NovaEscalator  # noqa: E402
-from farpoint.stats import StatsStore  # noqa: E402
+from myrmidon.escalate import NovaEscalator  # noqa: E402
+from myrmidon.stats import StatsStore  # noqa: E402
 
 
 def choose(rules, verdicts: dict) -> str:
@@ -45,7 +45,7 @@ def main() -> None:
 
     rules = RULES_NEW
     items = generate(a.seed)
-    stats = StatsStore(Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime")) / "s4-eval")
+    stats = StatsStore(Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime")) / "s4-eval")
     nova = NovaEscalator(stats=stats, min_interval_s=0, daily_budget=1000, timeout_s=30)
     tok0 = stats.get("bedrock_tokens") or 0
 

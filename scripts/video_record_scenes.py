@@ -1,4 +1,4 @@
-"""Film the dashboard for the demo video while the real agent replays the demo trace.
+﻿"""Film the dashboard for the demo video while the real agent replays the demo trace.
 
 Starts the backend in replay mode with the real local Decider and Amazon Nova (dry-run actuators, so
 nothing on the desktop changes), drives Edge through the scenes the narration needs, and captures
@@ -24,7 +24,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNTIME = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+RUNTIME = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
 OUT = RUNTIME / "recordings" / "video"
 PY = ROOT / ".venv" / "Scripts" / "python.exe"
 BASE = "http://127.0.0.1:8765/"
@@ -79,6 +79,34 @@ async def replay_scenes(mark, at_trace, go, page) -> None:
     await at_trace(243)
 
 
+async def adopt_latest(page, settle_ms: int = 3000) -> None:
+    """Click "Adopt vN" once the draft stops changing (Nova can write two drafts in one turn)."""
+    adopt = page.get_by_role("button", name="Adopt v")
+    approve = page.locator(".modal .btn.grad")
+    for _ in range(4):
+        if await approve.count():
+            # Nova called adopt_doctrine itself: the ConfirmGate intervention asks the user first
+            await page.wait_for_timeout(2500)
+            await approve.click()
+            await page.wait_for_timeout(1500)
+            if not await adopt.count():
+                return
+        if not await adopt.count():
+            await page.wait_for_timeout(500)
+            continue
+        label = await adopt.inner_text()
+        await page.wait_for_timeout(settle_ms)
+        if not await adopt.count() or await adopt.inner_text() != label:
+            continue
+        await adopt.click()  # the click is the approval: a single-use token passes the ConfirmGate
+        try:
+            await adopt.wait_for(state="detached", timeout=10000)
+            return
+        except Exception:  # noqa: BLE001  (a newer draft arrived; adopt that one)
+            continue
+    raise RuntimeError("the rulebook draft never settled")
+
+
 async def coach_scenes(mark, go, page) -> None:
     """Amazon Nova: a rulebook from the user's words, adopted with one click, then a report."""
     await go("rules")
@@ -89,11 +117,9 @@ async def coach_scenes(mark, go, page) -> None:
     await page.get_by_role("button", name="Draft my rulebook").click()
     mark("rules_draft")
     adopt = page.get_by_role("button", name="Adopt v")
-    await adopt.wait_for(timeout=60000)  # Nova's draft arrives
+    await page.locator(".modal .btn.grad, button:has-text('Adopt v')").first.wait_for(timeout=120000)  # Nova's draft
     mark("rules_drafted")
-    await page.wait_for_timeout(2500)
-    await adopt.click()  # the click is the approval: a single-use token passes the ConfirmGate
-    await adopt.wait_for(state="detached", timeout=30000)
+    await adopt_latest(page, settle_ms=2500)
     mark("rules_adopted")
     await page.wait_for_timeout(4000)
 
@@ -114,7 +140,7 @@ async def main(coach_only: bool) -> None:
     from playwright.async_api import async_playwright
 
     if port_open(8765):
-        sys.exit("port 8765 is busy: stop the other Far Point backend first")
+        sys.exit("port 8765 is busy: stop the other Myrmidon backend first")
     if not port_open(8099):
         sys.exit("the Decider is not listening on 8099: run scripts/start_decider.ps1")
     suffix = "_coach" if coach_only else ""
@@ -122,6 +148,9 @@ async def main(coach_only: bool) -> None:
     shutil.rmtree(frames, ignore_errors=True)
     frames.mkdir(parents=True)
 
+    # Replay mode keeps its own profile; start from the default rulebook every take, or the rulebook
+    # adopted in the last take changes the story's timing (a lower break limit fires a break early).
+    shutil.rmtree(RUNTIME / "replay" / "profile", ignore_errors=True)
     log = open(OUT / f"backend{suffix}.log", "w", encoding="utf-8")
     backend = None
     try:
@@ -131,8 +160,8 @@ async def main(coach_only: bool) -> None:
             ctx = await browser.new_context(viewport=VIEW, device_scale_factor=1.2)
             page = await ctx.new_page()
             backend = subprocess.Popen(
-                [str(PY), "-m", "farpoint.app", "--mode", "replay",
-                 "--trace", str(ROOT / "farpoint/replay/demo_session.jsonl"), "--dry-run",
+                [str(PY), "-m", "myrmidon.app", "--mode", "replay",
+                 "--trace", str(ROOT / "myrmidon/replay/demo_session.jsonl"), "--dry-run",
                  # coach-only: crawl through the calm opening so no break screen covers the page
                  "--speed", "0.05" if coach_only else "1"],
                 cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
@@ -164,8 +193,7 @@ async def main(coach_only: bool) -> None:
             stale = page.get_by_role("button", name="Adopt v")  # a draft left waiting by an earlier run
             await page.wait_for_timeout(1500)
             if await stale.count():
-                await stale.click()
-                await stale.wait_for(state="detached", timeout=30000)
+                await adopt_latest(page, settle_ms=500)
             camera = asyncio.ensure_future(film())
             video0 = time.time()
             marks: dict[str, float] = {"trace_offset": round(trace0 - video0, 2)}

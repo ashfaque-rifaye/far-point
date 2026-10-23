@@ -1,4 +1,4 @@
-"""What Far Point learns about this user: which adaptations work where, and the moments
+"""What Myrmidon learns about this user: which adaptations work where, and the moments
 worth a human look (unsure, escalated, demoted, asked). Numbers and short notes only."""
 from __future__ import annotations
 

@@ -36,7 +36,7 @@ export function Now() {
           </h1>
         </div>
         <p className="lede">
-          Far Point reads your distance, squint and blinks from the webcam, on this laptop. When your rules say so, it changes the screen
+          Myrmidon reads your distance, squint and blinks from the webcam, on this laptop. When your rules say so, it changes the screen
           and checks whether it helped.
         </p>
         <div className="metric-grid">

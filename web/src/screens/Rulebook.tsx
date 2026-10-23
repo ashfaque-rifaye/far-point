@@ -33,7 +33,7 @@ export function Rulebook() {
       {doctrine && !doctrine.approved && (
         <div className="banner" role="status">
           <PenLine size={20} />
-          <span className="grow">Draft v{doctrine.version} is waiting for you. Far Point keeps using the current rules until you adopt it.</span>
+          <span className="grow">Draft v{doctrine.version} is waiting for you. Myrmidon keeps using the current rules until you adopt it.</span>
           <button className="btn grad" onClick={() => send('approve_doctrine', { version: doctrine.version })}>
             <Check size={17} /> Adopt v{doctrine.version}
           </button>

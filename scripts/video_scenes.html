@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Myrmidon explainers</title>
+<!-- Animated explainer scenes for the demo video. scripts/video_build.py opens this page with
+     ?scene=<id>, calls setup({dur, lead, cues}) with the narration timings, then render(t) for every
+     frame. Every beat is keyed to the start of a narration sentence (cue(i)). -->
+<style>
+  :root { --bg:#070d18; --card:#0e1a2b; --line:#22324a; --ink:#e9effa; --mute:#9fb0cc; --dim:#6f84a6;
+          --teal:#2fd3c4; --blue:#3b6cf6; --ok:#36d39a; --warn:#ffb547; --bad:#ff6b6b; --aws:#ff9900; }
+  html, body { margin:0; width:1920px; height:1080px; overflow:hidden; }
+  body { font-family:'Segoe UI', Arial, sans-serif; color:var(--ink);
+         background: radial-gradient(1100px 700px at 88% -10%, rgba(59,108,246,.28), transparent 60%),
+                     radial-gradient(900px 600px at -5% 110%, rgba(47,211,196,.22), transparent 60%), var(--bg); }
+  .abs { position:absolute; }
+  /* In the video the scene is scaled to leave the bottom 150 px for captions; ?doc=1 renders full size. */
+  #root { position:absolute; left:0; top:0; width:1920px; height:1080px; transform:scale(.86); transform-origin:50% 0; }
+  #root.doc { transform:none; }
+  .k { font-size:20px; font-weight:800; letter-spacing:3px; color:var(--teal); text-transform:uppercase; }
+  h1 { position:absolute; left:80px; top:44px; margin:0; font-size:52px; letter-spacing:-1.2px; font-weight:700; }
+  .sub { position:absolute; left:82px; top:118px; font-size:24px; color:var(--mute); }
+  .card { position:absolute; background:var(--card); border:1.5px solid var(--line); border-radius:22px; padding:20px 24px; box-sizing:border-box; }
+  .card .t { font-size:27px; font-weight:700; margin-top:6px; }
+  .card .s { font-size:20px; color:var(--mute); margin-top:8px; line-height:1.4; }
+  .hero { background:linear-gradient(135deg,#0b2a3a,#10204a); border:2px solid var(--teal); box-shadow:0 0 60px rgba(47,211,196,.25); }
+  .awsc { border-color:rgba(255,153,0,.55); background:#1b150b; }
+  .awsc .k { color:var(--aws); }
+  .zone { position:absolute; border-radius:30px; border:2px solid; box-sizing:border-box; }
+  .zone .k { position:absolute; left:28px; top:18px; }
+  .mono { font-family:Consolas,'Cascadia Mono',monospace; }
+  .chip { display:inline-block; padding:8px 16px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); font-size:21px; font-weight:600; }
+  .g { background:linear-gradient(120deg,var(--teal),var(--blue)); color:#04101c; border:0; }
+  svg.arrows { position:absolute; left:0; top:0; width:1920px; height:1080px; pointer-events:none; overflow:visible; }
+  .lbl { font-size:19px; font-weight:700; fill:var(--mute); }
+  .stat { position:absolute; text-align:left; }
+  .stat .n { font-size:46px; font-weight:800; background:linear-gradient(120deg,var(--teal),#7aa7ff); -webkit-background-clip:text; color:transparent; }
+  .stat .d { font-size:20px; color:var(--mute); margin-top:2px; }
+  .barrow { position:absolute; height:44px; }
+  .barrow .name { position:absolute; left:0; top:8px; font-size:21px; width:250px; color:var(--ink); }
+  .barrow .track { position:absolute; left:260px; top:6px; height:32px; border-radius:10px; background:#15243a; overflow:hidden; }
+  .barrow .fill { position:absolute; left:0; top:0; bottom:0; border-radius:10px; }
+  .barrow .val { position:absolute; top:6px; font-size:22px; font-weight:800; }
+  .check { font-size:28px; margin:0 0 22px; display:flex; gap:18px; align-items:flex-start; }
+  .check i { font-style:normal; width:38px; height:38px; border-radius:50%; background:linear-gradient(120deg,var(--teal),var(--blue)); color:#04101c; display:flex; align-items:center; justify-content:center; font-weight:900; flex:none; font-size:24px; }
+  .check b { color:#fff; }
+  .check span.m { color:var(--mute); font-size:22px; display:block; margin-top:4px; }
+  pre { margin:0; font:21px/1.5 Consolas,monospace; color:#d6e2f5; white-space:pre-wrap; }
+  .s1 { color:#7ee2b8; } .c1 { color:var(--dim); } .o1 { color:var(--aws); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const SCENE = new URLSearchParams(location.search).get('scene') || 'arch';
+let DUR = 24, LEAD = 0.35, CUES = [];
+const root = document.getElementById('root');
+if (new URLSearchParams(location.search).has('doc')) root.classList.add('doc');
+const $ = (id) => document.getElementById(id);
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const cue = (i) => LEAD + (CUES[i] ? CUES[i][0] : DUR);
+const pr = (t, a, d = 0.7) => ease(clamp((t - a) / d));
+const lerp = (a, b, p) => a + (b - a) * p;
+function show(id, p, dy = 18) { const e = $(id); if (!e) return; e.style.opacity = p; e.style.transform = `translateY(${(1 - p) * dy}px)`; }
+function draw(id, p) { const e = $(id); if (!e) return; e.style.strokeDashoffset = 1 - p; e.style.opacity = p > 0 ? 1 : 0; }
+function typed(id, text, p) { const e = $(id); if (e) e.textContent = text.slice(0, Math.round(text.length * clamp(p))); }
+function arrow(id, d, color = '#5d7396', dash = false, w = 3) {
+  return `<path id="${id}" d="${d}" pathLength="1" stroke="${color}" stroke-width="${w}" fill="none"
+    style="stroke-dasharray:${dash ? '0.012 0.01' : '1'};stroke-dashoffset:1" marker-end="url(#ah-${color.replace('#', '')})"/>`;
+}
+function markers(colors) {
+  return '<defs>' + colors.map((c) => `<marker id="ah-${c.replace('#', '')}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`).join('') + '</defs>';
+}
+// dashed arrows reveal by opacity (a dash pattern cannot double as the draw-on mask)
+function drawDashed(id, p) { const e = $(id); if (e) { e.style.strokeDashoffset = 0; e.style.opacity = p; } }
+function pointOn(id, p) { const e = $(id); const L = e.getTotalLength(); return e.getPointAtLength(L * clamp(p)); }
+
+/* ------------------------------------------------------------------ EYES */
+const SCENES = {};
+SCENES.eyes = {
+  build() {
+    root.innerHTML = `
+    <h1 id="h">How Myrmidon reads your eyes</h1>
+    <div class="sub" id="hs">On the laptop, from a plain webcam. No depth sensor, no images kept.</div>
+    <div class="card" id="cam" style="left:80px;top:200px;width:860px;height:620px;padding:0;overflow:hidden;background:#0a1422">
+      <div class="k" style="position:absolute;left:24px;top:18px">Webcam frame · in memory</div>
+      <div id="saved" class="chip" style="position:absolute;right:20px;top:14px">frames saved: 0</div>
+      <svg width="860" height="620" viewBox="0 0 860 620" style="position:absolute;left:0;top:0">
+        <defs>
+          <radialGradient id="ir" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#7ef0e2"/><stop offset=".55" stop-color="#2fd3c4"/><stop offset="1" stop-color="#1f5bd6"/></radialGradient>
+          <clipPath id="eyeclip"><path id="eyeclipPath" d=""/></clipPath>
+        </defs>
+        <g id="eyeG" transform="translate(430 330)">
+          <path id="sclera" fill="#f3f6fb" d=""/>
+          <g clip-path="url(#eyeclip)">
+            <circle id="iris" r="80" fill="url(#ir)"/>
+            <circle id="pupil" r="30" fill="#05101d"/>
+            <circle cx="-22" cy="-24" r="11" fill="#fff" opacity=".85"/>
+          </g>
+          <path id="lidline" fill="none" stroke="#0a1422" stroke-width="5" d=""/>
+          <g id="lms"></g>
+          <g id="meas" opacity="0">
+            <line id="mline" x1="-80" y1="0" x2="80" y2="0" stroke="#ffb547" stroke-width="4"/>
+            <circle id="mL" cx="-80" cy="0" r="9" fill="#ffb547"/><circle id="mR" cx="80" cy="0" r="9" fill="#ffb547"/>
+            <text id="mtext" x="0" y="-108" text-anchor="middle" font-size="30" font-weight="800" fill="#ffb547">41 px</text>
+          </g>
+        </g>
+      </svg>
+      <div id="dist" class="abs" style="left:24px;bottom:20px;font-size:30px;font-weight:800">27 cm</div>
+      <div id="open" class="abs" style="right:24px;bottom:22px;font-size:24px;color:#9fb0cc">eye opening 100% of baseline</div>
+    </div>
+    <div class="card" id="c1" style="left:990px;top:200px;width:850px;height:118px">
+      <div class="k">1 · MediaPipe Face Landmarker</div>
+      <div class="t">478 face points per frame, iris edges included</div></div>
+    <div class="card" id="c2" style="left:990px;top:334px;width:850px;height:150px">
+      <div class="k">2 · Distance from the iris</div>
+      <div class="t mono" style="font-size:25px">distance = focal × 11.7 mm ÷ iris width (px)</div>
+      <div class="s">An iris is about 11.7 mm across in almost everyone.</div></div>
+    <div class="card" id="c3" style="left:990px;top:500px;width:850px;height:150px">
+      <div class="k">3 · Your baseline</div>
+      <div class="t">Calibrate once at a measured distance</div>
+      <div class="s">→ the camera's focal length, and how open your eyes normally are</div></div>
+    <div class="card" id="c4" style="left:990px;top:666px;width:850px;height:150px">
+      <div class="k">4 · Squint and blinks</div>
+      <div class="t">Eye opening ÷ your baseline</div>
+      <div class="s">under 75% for a while = squinting · a dip under 60% = a blink</div></div>
+    <div class="card" id="c5" style="left:80px;top:850px;width:1760px;height:170px;border-color:rgba(47,211,196,.5)">
+      <div class="k">5 · Code writes each number as a sentence with a verdict · this is what the Decider reads</div>
+      <pre id="v1" style="margin-top:12px"></pre></div>`;
+    const lm = [];
+    for (let i = 0; i < 26; i++) { const a = (i / 26) * Math.PI * 2; lm.push(`<circle class="lm" data-i="${i}" cx="${Math.cos(a) * 250}" cy="${Math.sin(a) * (a < Math.PI ? 105 : 120)}" r="5" fill="#36dccd"/>`); }
+    for (let i = 0; i < 4; i++) { const a = (i / 4) * Math.PI * 2; lm.push(`<circle class="lm ir" data-i="${26 + i}" cx="${Math.cos(a) * 80}" cy="${Math.sin(a) * 80}" r="6" fill="#ffb547"/>`); }
+    $('lms').innerHTML = lm.join('');
+  },
+  render(t) {
+    show('h', pr(t, 0, 0.6)); show('hs', pr(t, 0.2, 0.6)); show('cam', pr(t, 0.1, 0.8));
+    // distance: 46 cm, leaning in to 27 cm during the formula beat
+    const lean = pr(t, cue(2) + 0.8, 2.2);
+    const d = lerp(46, 27, lean);
+    const focal = 950, iris = focal * 11.7 / (d * 10);
+    const scale = iris / 41;
+    // eye opening: normal, then squint, then a blink
+    const sq = pr(t, cue(4), 0.9) * (1 - pr(t, cue(4) + 3.6, 0.6));
+    const bl = Math.max(0, 1 - Math.abs(t - (cue(4) + 2.2)) / 0.18);
+    const open = Math.max(0.05, 1 - 0.24 * sq - 0.9 * bl);
+    const W = 250 * scale, H = 118 * scale * open;
+    const eye = `M${-W},0 Q0,${-H * 1.55} ${W},0 Q0,${H * 1.55} ${-W},0 Z`;
+    $('sclera').setAttribute('d', eye); $('eyeclipPath').setAttribute('d', eye);
+    $('lidline').setAttribute('d', `M${-W},0 Q0,${-H * 1.55} ${W},0`);
+    $('iris').setAttribute('r', 80 * scale); $('pupil').setAttribute('r', 30 * scale);
+    document.querySelectorAll('.lm').forEach((c) => {
+      const i = +c.dataset.i, irisPt = i >= 26;
+      const p = pr(t, cue(1) + (irisPt ? 1.2 : i * 0.04), 0.35);
+      const a = irisPt ? ((i - 26) / 4) * Math.PI * 2 : (i / 26) * Math.PI * 2;
+      const rx = irisPt ? 80 * scale : W, ry = irisPt ? 80 * scale : H * (a < Math.PI ? 0.78 : 0.78);
+      c.setAttribute('cx', Math.cos(a) * rx); c.setAttribute('cy', Math.sin(a) * ry); c.setAttribute('opacity', p);
+    });
+    const m = pr(t, cue(2), 0.5);
+    $('meas').setAttribute('opacity', m);
+    $('mline').setAttribute('x1', -80 * scale); $('mline').setAttribute('x2', 80 * scale);
+    $('mL').setAttribute('cx', -80 * scale); $('mR').setAttribute('cx', 80 * scale);
+    $('mtext').setAttribute('y', -80 * scale - 22); $('mtext').textContent = `${Math.round(iris)} px`;
+    $('dist').textContent = m > 0 ? `${Math.round(d)} cm` : ''; $('dist').style.color = d < 30 ? '#ff8a6b' : '#e9effa';
+    const pct = Math.round(100 * Math.min(1, open + 0.0001));
+    $('open').textContent = t > cue(3) ? `eye opening ${pct}% of your baseline${bl > 0.3 ? ' · blink' : sq > 0.6 ? ' · squinting' : ''}` : '';
+    show('c1', pr(t, cue(1))); show('c2', pr(t, cue(2))); show('c3', pr(t, cue(3))); show('c4', pr(t, cue(4)));
+    show('c5', pr(t, cue(5)));
+    typed('v1', '- Viewing distance: 27 cm, under 30 cm for 8 s (limit 5 s): too close, enlarging needed.\n- Eyes: squinting for 9 s (eye opening 76% of your baseline).        - Blink rate: 10 per minute: normal.', pr(t, cue(5) + 0.3, 3.2));
+  },
+};
+
+/* ------------------------------------------------------------------ ARCH */
+SCENES.arch = {
+  build() {
+    root.innerHTML = `
+    <h1 id="h">How Myrmidon works</h1>
+    <div class="sub" id="hs">One loop every 2.5 s. Strands Decider 2B makes the decision on the laptop; Amazon Bedrock does the language.</div>
+    <div class="zone" id="zl" style="left:60px;top:170px;width:1210px;height:880px;border-color:rgba(47,211,196,.35);background:rgba(47,211,196,.03)"><div class="k">Your laptop · Windows · RTX 4060 · stays local</div></div>
+    <div class="zone" id="zr" style="left:1310px;top:170px;width:550px;height:880px;border-color:rgba(255,153,0,.6);background:rgba(255,153,0,.05)"><div class="k" style="color:var(--aws)">AWS · Amazon Bedrock · us-east-1</div></div>
+    <div class="card" id="n1" style="left:100px;top:240px;width:300px;height:130px"><div class="k">Input</div><div class="t">Webcam</div><div class="s">in memory only</div></div>
+    <div class="card" id="n2" style="left:490px;top:240px;width:330px;height:130px"><div class="k">Measure</div><div class="t">MediaPipe</div><div class="s">distance · eye opening · blinks</div></div>
+    <div class="card" id="n3" style="left:910px;top:240px;width:330px;height:130px"><div class="k">Render (code)</div><div class="t">Verdict sentences</div><div class="s">+ foreground app (Win32)</div></div>
+    <div class="card hero" id="n4" style="left:100px;top:470px;width:640px;height:200px"><div class="k">Decide · Strands Decider 2B · local GPU</div><div class="t" style="font-size:34px">Which tool, if any, right now?</div><div class="s" style="color:#cfe0f5">8 rule questions + interrupt_ok in one request<br>calibrated p each · ~0.5 s · 0 cloud tokens</div></div>
+    <div class="card" id="n5" style="left:830px;top:490px;width:410px;height:160px"><div class="k">Reflex Gate policy (code)</div><div class="t">Priority order</div><div class="s">fire ≥ 0.65 · clear ≤ 0.35<br>unsure between → ask Bedrock</div></div>
+    <div class="card" id="n6" style="left:100px;top:770px;width:560px;height:150px"><div class="k">Act · Strands Agent</div><div class="t mono" style="font-size:24px">agent.tool.enlarge_text()</div><div class="s">InterruptGate · ConfirmGate (intervention handlers)</div></div>
+    <div class="card" id="n7" style="left:750px;top:770px;width:490px;height:150px"><div class="k">Reversible actuators</div><div class="t" style="font-size:24px">Zoom · dark mode · brightness · break</div><div class="s">originals journaled, restored on exit</div></div>
+    <div class="card" id="n8" style="left:750px;top:950px;width:490px;height:80px;padding:14px 22px"><div class="t" style="font-size:23px;margin:0">Verify: 30 s later, did it help? <span style="color:var(--ok)">worked</span></div></div>
+    <div class="card awsc" id="b1" style="left:1350px;top:470px;width:470px;height:200px"><div class="k">Only when unsure</div><div class="t">Amazon Nova Lite</div><div class="s">judges only the unsure rules, same text<br>needed on 9 of 72 test states</div></div>
+    <div class="card awsc" id="b2" style="left:1350px;top:240px;width:470px;height:190px"><div class="k">Coach · Strands Agent</div><div class="t">Amazon Nova Lite</div><div class="s">your words → your rulebook<br>numbers → report · rule proposals</div></div>
+    <div class="card awsc" id="b3" style="left:1350px;top:770px;width:470px;height:150px"><div class="k">What crosses to AWS</div><div class="t">Text and numbers only</div><div class="s">face images uploaded: <b style="color:#fff">0</b></div></div>
+    <svg class="arrows" id="svg"></svg>
+    <div id="pulse" class="abs" style="width:22px;height:22px;border-radius:50%;background:#7ef0e2;box-shadow:0 0 24px 8px rgba(47,211,196,.7);opacity:0"></div>`;
+    const A = '#7d93b6', O = '#ff9900';
+    $('svg').innerHTML = markers([A, O]) +
+      arrow('a12', 'M400,305 L486,305', A) + arrow('a23', 'M820,305 L906,305', A) +
+      arrow('a34', 'M1075,370 L1075,410 L600,410 L600,466', A) +
+      arrow('a45', 'M740,570 L826,570', A) +
+      arrow('a5b', 'M1240,545 L1346,545', O, true) + arrow('ab5', 'M1350,610 L1244,610', O, true) +
+      arrow('a56', 'M1035,650 C1035,720 420,700 390,766', A) +
+      arrow('a67', 'M660,845 L746,845', A) + arrow('a78', 'M995,920 L995,946', A) +
+      arrow('a81', 'M750,990 L80,990 L80,305 L96,305', A) +
+      arrow('ab4', 'M1350,335 L1290,335 L1290,452 L785,452 L785,520 L746,520', O, true) +
+      `<text class="lbl" id="l34" x="640" y="400">verdict sentences</text>
+       <text class="lbl" id="l45" x="752" y="600">p per rule</text>
+       <text class="lbl" id="l5b" x="1250" y="533" style="fill:#ffb347">unsure</text>
+       <text class="lbl" id="lb5" x="1250" y="640" style="fill:#ffb347">verdict</text>
+       <text class="lbl" id="l56" x="1050" y="700">at most one tool</text>
+       <text class="lbl" id="l81" x="96" y="1020">next tick</text>
+       <text class="lbl" id="lb4" x="850" y="442" style="fill:#ffb347">your rulebook → the Decider's questions</text>`;
+  },
+  render(t) {
+    show('h', pr(t, 0, 0.6)); show('hs', pr(t, 0.2, 0.6));
+    show('zl', pr(t, 0.3, 0.8), 0); show('zr', pr(t, cue(3) - 0.2, 0.8), 0);
+    // beat 0: measuring chain
+    show('n1', pr(t, 0.6)); draw('a12', pr(t, 1.1, 0.5)); show('n2', pr(t, 1.3)); draw('a23', pr(t, 1.8, 0.5)); show('n3', pr(t, 2.0));
+    // beat 1: the Decider (hero) and policy
+    draw('a34', pr(t, cue(1), 0.8)); show('l34', pr(t, cue(1) + 0.4)); show('n4', pr(t, cue(1) + 0.5));
+    draw('a45', pr(t, cue(1) + 1.6, 0.5)); show('l45', pr(t, cue(1) + 1.8)); show('n5', pr(t, cue(1) + 1.9));
+    const glow = 0.25 + 0.2 * Math.sin(t * 4) * pr(t, cue(1) + 0.5);
+    $('n4').style.boxShadow = `0 0 ${60 + 40 * glow}px rgba(47,211,196,${glow + 0.1})`;
+    // beat 2: act, actuate, verify, loop
+    draw('a56', pr(t, cue(2), 0.7)); show('l56', pr(t, cue(2) + 0.3)); show('n6', pr(t, cue(2) + 0.4));
+    draw('a67', pr(t, cue(2) + 1.2, 0.5)); show('n7', pr(t, cue(2) + 1.4));
+    draw('a78', pr(t, cue(2) + 2.2, 0.4)); show('n8', pr(t, cue(2) + 2.4));
+    draw('a81', pr(t, cue(2) + 3.0, 1.2)); show('l81', pr(t, cue(2) + 3.6));
+    // beat 3: AWS
+    show('b1', pr(t, cue(3) + 0.2)); drawDashed('a5b', pr(t, cue(3) + 0.8, 0.5)); drawDashed('ab5', pr(t, cue(3) + 1.2, 0.5));
+    show('l5b', pr(t, cue(3) + 0.8)); show('lb5', pr(t, cue(3) + 1.2));
+    show('b2', pr(t, cue(3) + 2.2)); drawDashed('ab4', pr(t, cue(3) + 2.8, 0.6)); show('lb4', pr(t, cue(3) + 3.0));
+    // beat 4: privacy
+    show('b3', pr(t, cue(4)));
+    // pulse travels the loop once the loop exists
+    const loop = ['a12', 'a23', 'a34', 'a45', 'a56', 'a67', 'a78', 'a81'];
+    const t0 = cue(2) + 4.4;
+    const pulse = $('pulse');
+    if (t > t0) {
+      const per = 0.55, k = Math.floor((t - t0) / per) % loop.length, f = ((t - t0) % per) / per;
+      const p = pointOn(loop[k], f);
+      pulse.style.left = p.x - 11 + 'px'; pulse.style.top = p.y - 11 + 'px'; pulse.style.opacity = 1;
+    } else pulse.style.opacity = 0;
+  },
+};
+
+/* ------------------------------------------------------------------ DECIDE */
+const RULES = [['Enlarge text', 0.97], ['Glasses reminder', 0.07], ['Dark mode', 0.06], ['Dim screen', 0.09],
+  ['Brighten screen', 0.13], ['Far-look break', 0.03], ['Reduce text', 0.19], ['Ask you', 0.05]];
+SCENES.decide = {
+  build() {
+    const rows = RULES.map((r, i) => `<div class="barrow" id="r${i}" style="left:1180px;top:${310 + i * 54}px;width:660px">
+      <div class="name"><span style="color:var(--dim)">rule ${i + 1}</span> ${r[0]}</div>
+      <div class="track" style="width:330px"><div class="zones"></div><div class="fill" id="f${i}"></div></div>
+      <div class="val" id="v${i}" style="left:606px"></div></div>`).join('');
+    root.innerHTML = `
+    <h1 id="h">The decision handed to Decider 2B</h1>
+    <div class="sub" id="hs"><span class="chip g" style="font-size:20px">#tool-selection</span>&nbsp; Which tool, if any, should run right now?</div>
+    <div class="card" id="st" style="left:80px;top:220px;width:520px;height:560px">
+      <div class="k">What the Decider reads</div>
+      <pre id="stt" style="margin-top:14px;font-size:19px"></pre></div>
+    <div class="card" id="q" style="left:630px;top:220px;width:520px;height:560px">
+      <div class="k">One typed question per rule</div>
+<pre style="margin-top:14px;font-size:19px">{"type": "<span class="s1">noul</span>",
+ "instructions":
+   "Does rule 1 apply right now?",
+ "criteria": {
+   "true":  "the line says
+             <span class="s1">'enlarging needed'</span>",
+   "false": "the line says
+             <span class="s1">'no enlarging needed'</span>"}}</pre>
+      <div id="qn" style="margin-top:22px;font-size:23px;line-height:1.5">× 8 rules <b>+ interrupt_ok</b><br><b style="color:var(--teal)">all in one request</b> to Strands<br>Decider 2B on the laptop GPU</div>
+      <div id="lat" class="chip" style="position:absolute;left:24px;bottom:22px;font-size:22px">⏱ 0.50 s · 0 tokens</div></div>
+    <div class="abs" id="ph" style="left:1180px;top:226px;width:660px;font-size:20px;color:var(--mute)">
+      <div class="k" style="margin-bottom:10px">Calibrated p · priority order</div>
+      <span style="color:#8aa0c0">clear ≤ 0.35</span> &nbsp; <span style="color:var(--warn)">unsure → ask Bedrock</span> &nbsp; <span style="color:var(--ok)">fires ≥ 0.65</span></div>
+    ${rows}
+    <div class="barrow" id="rio" style="left:1180px;top:${310 + 8 * 54 + 16}px;width:660px">
+      <div class="name"><b>interrupt_ok</b></div>
+      <div class="track" style="width:330px"><div class="fill" id="fio"></div></div><div class="val" id="vio" style="left:606px"></div></div>
+    <div id="scan" class="abs" style="left:1150px;width:16px;height:16px;border-radius:50%;background:var(--warn);box-shadow:0 0 18px 4px rgba(255,181,71,.7);opacity:0"></div>
+    <div class="card hero" id="win" style="left:1180px;top:840px;width:660px;height:120px">
+      <div class="k">Code applies the order → tool</div>
+      <div class="t mono" style="font-size:28px">rule 1 fires → enlarge_text()</div></div>
+    <div class="stat" id="s1" style="left:90px;top:840px"><div class="n">every 2.5 s</div><div class="d">a fresh decision</div></div>
+    <div class="stat" id="s2" style="left:380px;top:840px"><div class="n" id="dc">11,520</div><div class="d">decisions in an 8-hour day</div></div>
+    <div class="stat" id="s3" style="left:740px;top:840px"><div class="n">0</div><div class="d">cloud tokens when it is sure</div></div>`;
+    const zones = '<div style="position:absolute;left:0;top:0;bottom:0;width:35%;background:#1a2a42"></div><div style="position:absolute;left:35%;top:0;bottom:0;width:30%;background:#3a2f1a"></div><div style="position:absolute;left:65%;top:0;bottom:0;width:35%;background:#173a30"></div>';
+    document.querySelectorAll('.zones').forEach((z) => (z.innerHTML = zones));
+    $('fio').parentElement.insertAdjacentHTML('afterbegin', zones);
+  },
+  render(t) {
+    show('h', pr(t, 0, 0.6)); show('hs', pr(t, 0.3, 0.6));
+    show('st', pr(t, 0.8));
+    typed('stt', '- Viewing distance: 27 cm, under\n  30 cm for 8 s (limit 5 s): too\n  close, enlarging needed.\n- Glasses: unknown: no reminder\n  needed.\n- Theme: light: no change needed.\n- Near-work bout: 43 min closer\n  than 60 cm: break not due yet.\n- Eyes: squinting for 9 s (76% of\n  your baseline).\n- Activity: reading, a good moment\n  to interrupt.', pr(t, 1.0, 3.0));
+    show('q', pr(t, cue(1))); show('qn', pr(t, cue(1) + 1.6));
+    show('lat', pr(t, cue(2)));
+    show('ph', pr(t, cue(2)));
+    RULES.forEach((r, i) => {
+      show('r' + i, pr(t, cue(2) + 0.1 + i * 0.07, 0.4), 8);
+      const p = r[1] * pr(t, cue(2) + 0.5 + i * 0.05, 0.9);
+      $('f' + i).style.width = (p * 100) + '%';
+      $('f' + i).style.background = r[1] >= 0.65 ? 'linear-gradient(90deg,#2fd3c4,#36d39a)' : '#7f93b3';
+      $('v' + i).textContent = p > 0 ? p.toFixed(2) : '';
+      $('v' + i).style.color = r[1] >= 0.65 ? 'var(--ok)' : 'var(--mute)';
+    });
+    show('rio', pr(t, cue(2) + 0.7, 0.4), 8);
+    const pio = 0.96 * pr(t, cue(2) + 1.0, 0.9);
+    $('fio').style.width = pio * 100 + '%'; $('fio').style.background = 'linear-gradient(90deg,#2fd3c4,#3b6cf6)';
+    $('vio').textContent = pio > 0 ? pio.toFixed(2) : '';
+    // priority scan: walks down from rule 1 and stops on the first rule that fires
+    const sp = pr(t, cue(3) + 1.0, 0.6);
+    const sc = $('scan'); sc.style.opacity = sp * (1 - pr(t, cue(3) + 5, 0.4)); sc.style.top = (310 + 14) + 'px';
+    $('r0').style.filter = t > cue(3) + 1.6 ? 'drop-shadow(0 0 12px rgba(54,211,154,.8))' : 'none';
+    show('win', pr(t, cue(3) + 1.8));
+    show('s1', pr(t, cue(4))); show('s2', pr(t, cue(4) + 0.4)); show('s3', pr(t, cue(4) + 0.8));
+    $('dc').textContent = Math.round(11520 * pr(t, cue(4) + 0.4, 1.6)).toLocaleString('en-US');
+  },
+};
+
+/* ------------------------------------------------------------------ RESULTS */
+SCENES.results = {
+  build() {
+    const acc = [['One 9-way choice question', 68.1, '#7f93b3'], ['One noul per rule, code applies the order', 87.5, '#3b8ff6'], ['Myrmidon: Decider + Nova only when unsure', 100, 'linear-gradient(90deg,#2fd3c4,#36d39a)']];
+    root.innerHTML = `
+    <h1 id="h">Measured, not guessed</h1>
+    <div class="sub" id="hs">72 held-out test states, written down before the runs (preregistered). Synthetic states.</div>
+    <div class="card" id="ca" style="left:80px;top:200px;width:1760px;height:330px">
+      <div class="k">Tool-selection accuracy</div>
+      ${acc.map((a, i) => `<div class="barrow" id="ar${i}" style="left:24px;top:${70 + i * 78}px;width:1700px">
+        <div class="name" style="width:560px">${a[0]}</div>
+        <div class="track" style="left:580px;width:1000px"><div class="fill" id="af${i}" style="background:${a[2]}"></div></div>
+        <div class="val" id="av${i}" style="left:1600px"></div></div>`).join('')}
+    </div>
+    <div class="card" id="cl" style="left:80px;top:560px;width:860px;height:300px">
+      <div class="k">Latency per decision (p50)</div>
+      <div class="barrow" style="left:24px;top:80px;width:800px"><div class="name">Decider 2B, laptop GPU</div><div class="track" style="width:420px"><div class="fill" id="lf0" style="background:linear-gradient(90deg,#2fd3c4,#36d39a)"></div></div><div class="val" id="lv0" style="left:700px"></div></div>
+      <div class="barrow" style="left:24px;top:150px;width:800px"><div class="name">Nova Lite alone</div><div class="track" style="width:420px"><div class="fill" id="lf1" style="background:#ff9900"></div></div><div class="val" id="lv1" style="left:700px"></div></div>
+      <div class="s" id="lnote" style="position:absolute;left:24px;bottom:22px">Nova Lite's p90 is 3.18 s: longer than the 2.5 s loop.</div></div>
+    <div class="card" id="ct" style="left:980px;top:560px;width:860px;height:300px">
+      <div class="k">Bedrock tokens for the 72 states</div>
+      <div class="barrow" style="left:24px;top:80px;width:800px"><div class="name">Myrmidon (hybrid)</div><div class="track" style="width:420px"><div class="fill" id="tf0" style="background:linear-gradient(90deg,#2fd3c4,#36d39a)"></div></div><div class="val" id="tv0" style="left:700px"></div></div>
+      <div class="barrow" style="left:24px;top:150px;width:800px"><div class="name">Nova Lite alone</div><div class="track" style="width:420px"><div class="fill" id="tf1" style="background:#ff9900"></div></div><div class="val" id="tv1" style="left:700px"></div></div>
+      <div class="s" id="tnote" style="position:absolute;left:24px;bottom:22px"><b style="color:#fff">11× fewer tokens</b>, same 100% accuracy</div></div>
+    <div class="card hero" id="learn" style="left:80px;top:890px;width:1760px;height:130px">
+      <div class="k">What we learned</div>
+      <div class="t">Let code do the arithmetic and write verdicts. Ask the Decider one clear yes/no per rule.</div></div>`;
+  },
+  render(t) {
+    show('h', pr(t, 0, 0.6)); show('hs', pr(t, 0.2, 0.6)); show('ca', pr(t, 0.4));
+    const acc = [68.1, 87.5, 100];
+    acc.forEach((a, i) => {
+      const p = pr(t, cue(1) + i * 1.6, 1.0);
+      $('af' + i).style.width = (a * p) + '%'; $('av' + i).textContent = p > 0 ? (a * p).toFixed(1).replace('.0', '') + '%' : '';
+      show('ar' + i, pr(t, cue(1) + i * 1.6 - 0.2, 0.3), 6);
+    });
+    show('cl', pr(t, cue(2))); show('ct', pr(t, cue(2) + 0.5));
+    const pl = pr(t, cue(2) + 0.4, 1.2), pt = pr(t, cue(2) + 0.9, 1.2);
+    $('lf0').style.width = (0.57 / 3.2 * 100 * pl) + '%'; $('lv0').textContent = pl > 0 ? (0.57 * pl).toFixed(2) + ' s' : '';
+    $('lf1').style.width = (2.57 / 3.2 * 100 * pl) + '%'; $('lv1').textContent = pl > 0 ? (2.57 * pl).toFixed(2) + ' s' : '';
+    $('tf0').style.width = (9522 / 107500 * 100 * pt) + '%'; $('tv0').textContent = pt > 0 ? Math.round(9522 * pt).toLocaleString('en-US') : '';
+    $('tf1').style.width = (100 * pt) + '%'; $('tv1').textContent = pt > 0 ? Math.round(107500 * pt).toLocaleString('en-US') : '';
+    show('lnote', pr(t, cue(2) + 1.6)); show('tnote', pr(t, cue(2) + 2.0));
+    show('learn', pr(t, cue(3)));
+  },
+};
+
+/* ------------------------------------------------------------------ PATTERN */
+SCENES.pattern = {
+  build() {
+    root.innerHTML = `
+    <h1 id="h">The reusable piece: Reflex Gate</h1>
+    <div class="sub" id="hs"><span class="mono">patterns/reflex_gate/</span> · Apache-2.0 · no eye-specific code · drop it into your own agent</div>
+    <div class="card" id="p1" style="left:80px;top:200px;width:560px;height:640px">
+      <div class="k">1 · Typed question + option set</div>
+<pre style="margin-top:16px">rule_question(Rule(n=1,
+  tool="enlarge_text", ...))
+→ {"type": "<span class="s1">noul</span>",
+   "criteria": {"true": ...,
+                "false": ...}}
+
+build_questions(rules)
+→ rule_1 … rule_N
+  + <span class="s1">interrupt_ok</span>
+
+options = the rules' tools
+        + <span class="s1">none</span></pre></div>
+    <div class="card" id="p2" style="left:680px;top:200px;width:580px;height:640px">
+      <div class="k">2 · Wiring into a Strands agent</div>
+<pre style="margin-top:16px">gate = InterruptGate(decider, ...)
+agent = Agent(tools=[...],
+  interventions=[<span class="s1">gate</span>, <span class="s1">confirm</span>])
+
+resp = decider.ask(state,
+         build_questions(rules))
+sel  = select(rules, resp["answers"],
+         escalate=<span class="o1">nova</span>)
+gate.prime(sel.interrupt_p)
+getattr(agent.tool, sel.tool)()
+<span class="c1"># the interventions run here</span></pre></div>
+    <div class="card" id="p3" style="left:1300px;top:200px;width:540px;height:640px">
+      <div class="k">3 · How to use it</div>
+      <div class="check" style="margin-top:24px"><i>✓</i><div><b>README</b><span class="m">the JSON, the wiring, the thresholds and why</span></div></div>
+      <div class="check"><i>✓</i><div><b>Two wording rules</b><span class="m">end each fact with one verdict · fold every AND into one line in code</span></div></div>
+      <div class="check"><i>✓</i><div><b>Fakes for tests</b><span class="m">FakeDecider, ScriptedModel: no GPU, no AWS</span></div></div>
+      <div class="check"><i>✓</i><div><b>Second agent</b><span class="m">examples/posture_agent.py reuses it for posture</span></div></div></div>
+    <div class="card hero" id="p4" style="left:80px;top:880px;width:1760px;height:130px">
+      <div class="k">Strands InterventionHandlers on the tool call</div>
+      <div class="t">InterruptGate holds breaks during calls · ConfirmGate puts your approval before lasting changes</div></div>`;
+  },
+  render(t) {
+    show('h', pr(t, 0, 0.6)); show('hs', pr(t, 0.2, 0.6));
+    show('p1', pr(t, cue(1))); show('p2', pr(t, cue(1) + 1.6)); show('p3', pr(t, cue(1) + 3.2));
+    show('p4', pr(t, cue(2)));
+  },
+};
+
+/* ------------------------------------------------------------------ END */
+SCENES.end = {
+  build() {
+    const items = [
+      ['An agent that uses Strands Decider 2B for a meaningful decision', 'tool selection every 2.5 s, on the laptop, paired with Amazon Bedrock (Nova Lite)'],
+      ['Decision pattern: #tool-selection', 'which of the rulebook\'s tools to run right now, if any'],
+      ['A reusable Decider 2B pattern', 'Reflex Gate: typed questions, confidence policy, InterventionHandler wiring, README'],
+      ['Public repository, open source', 'github.com/ashfaque-rifaye/myrmidon · Apache-2.0'],
+      ['Measured latency and cost', '0.57 s vs 2.57 s per decision · 11× fewer Bedrock tokens · same accuracy'],
+    ];
+    root.innerHTML = `
+    <div class="abs" id="brand" style="left:80px;top:70px;display:flex;align-items:center;gap:26px;font-size:76px;font-weight:700;letter-spacing:-2px">
+      <svg width="86" height="86" viewBox="0 0 64 64"><defs><linearGradient id="l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2fd3c4"/><stop offset="1" stop-color="#3b6cf6"/></linearGradient></defs><rect width="64" height="64" rx="20" fill="#e9effa"/><circle cx="32" cy="32" r="16" fill="none" stroke="url(#l)" stroke-width="5"/><circle cx="32" cy="32" r="6" fill="url(#l)"/></svg>Myrmidon</div>
+    <div class="abs" id="tag" style="left:84px;top:180px;font-size:28px;color:var(--mute)">A screen that adapts to your eyes · decided locally by Strands Decider 2B</div>
+    <div class="abs" id="list" style="left:84px;top:270px;width:1500px">
+      ${items.map((x, i) => `<div class="check" id="ck${i}"><i>✓</i><div><b>${x[0]}</b><span class="m">${x[1]}</span></div></div>`).join('')}
+    </div>
+    <div class="abs" id="tags" style="left:84px;top:900px;display:flex;gap:16px"><span class="chip g" style="font-size:26px">#strands-decider-2b</span><span class="chip" style="font-size:26px">#tool-selection</span></div>
+    <div class="abs mono" id="url" style="left:84px;top:975px;font-size:28px;color:#b6c3d9">github.com/ashfaque-rifaye/myrmidon</div>
+    <div class="abs" id="fine" style="right:80px;bottom:44px;font-size:20px;color:var(--dim);text-align:right">Not a medical device.<br>Narration: Kokoro TTS, on the laptop.</div>`;
+  },
+  render(t) {
+    show('brand', pr(t, 0, 0.6)); show('tag', pr(t, 0.3, 0.6));
+    for (let i = 0; i < 5; i++) show('ck' + i, pr(t, 0.8 + i * 0.55, 0.5), 10);
+    show('tags', pr(t, 3.8)); show('url', pr(t, 4.1)); show('fine', pr(t, 4.4));
+  },
+};
+
+window.setup = (o) => { DUR = o.dur; LEAD = o.lead; CUES = o.cues || []; SCENES[SCENE].build(); SCENES[SCENE].render(0); };
+window.render = (t) => SCENES[SCENE].render(t);
+</script>
+</body>
+</html>

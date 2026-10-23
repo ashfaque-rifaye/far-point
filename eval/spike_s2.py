@@ -1,8 +1,8 @@
 """Spike S2: Decider image mode over webcam frames.
 
 Frames never enter the repository. Live frames stay in memory; a guided labeled
-capture writes to FARPOINT_RUNTIME (E:\\farpoint-runtime by default), outside the repo.
-The questions and state are imported from farpoint/vision.py, the same request the
+capture writes to MYRMIDON_RUNTIME (E:\\myrmidon-runtime by default), outside the repo.
+The questions and state are imported from myrmidon/vision.py, the same request the
 optional vision mode sends (the wording measured in Phase 1, unchanged).
 
 Usage:
@@ -31,10 +31,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from farpoint import decide  # noqa: E402
-from farpoint.vision import GATED, S2_QUESTIONS, S2_STATE  # noqa: E402
+from myrmidon import decide  # noqa: E402
+from myrmidon.vision import GATED, S2_QUESTIONS, S2_STATE  # noqa: E402
 
-RUNTIME = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+RUNTIME = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
 FRAMES_DIR = RUNTIME / "s2-frames"
 RESULTS = ROOT / "results"
 WARMUP = 3
@@ -116,7 +116,7 @@ def pct(xs, q):
 
 
 def cmd_latency(a):
-    from farpoint.sense import open_camera
+    from myrmidon.sense import open_camera
     cap = open_camera(a.camera)
     try:
         for _ in range(10):
@@ -165,15 +165,15 @@ def _wait(cap, seconds: float) -> None:
 
 def cmd_capture(a):
     import cv2
-    from farpoint.sense import open_camera
+    from myrmidon.sense import open_camera
     FRAMES_DIR.mkdir(parents=True, exist_ok=True)
     for old in FRAMES_DIR.glob("pose*_*.jpg"):  # a re-run replaces the previous capture
         old.unlink()
     cap = open_camera(a.camera)
     pv = None
     if a.preview:  # camera preview with the prompt and countdown drawn on top (display only)
-        from farpoint.preview import Preview
-        pv = Preview("Far Point setup - labeled capture")
+        from myrmidon.preview import Preview
+        pv = Preview("Myrmidon setup - labeled capture")
 
     def wait_show(seconds: float, lines, big=None) -> None:
         end = time.time() + seconds
@@ -234,7 +234,7 @@ def cmd_capture(a):
         "glasses_for_screen": a.glasses_for_screen,
         "dark_poses": dark,
         "seconds": round(time.time() - t_start, 1),
-        "frames_location": "outside the repository (FARPOINT_RUNTIME/s2-frames); never committed",
+        "frames_location": "outside the repository (MYRMIDON_RUNTIME/s2-frames); never committed",
     }
     (RESULTS / "s2_capture.json").write_text(json.dumps(summary, indent=2))
     if dark:
@@ -293,7 +293,7 @@ def decide_s2(score_path: Path, capture_path: Path, out_path: Path, spike_result
         "glasses_source": cap.get("glasses_source"),
         "glasses_for_screen": cap.get("glasses_for_screen"),
         "effect": ("vision mode turns on automatically whenever the Decider runs with -Vision"
-                   if passed else "Far Point stays text-only; run the Decider in text mode"),
+                   if passed else "Myrmidon stays text-only; run the Decider in text mode"),
     }
     Path(out_path).write_text(json.dumps(decision, indent=2))
     if spike_results is not None and Path(spike_results).exists():
@@ -315,7 +315,7 @@ def update_spike_results(path: Path, d: dict) -> None:
         ("Vision mode is now ON whenever the Decider runs with `-Vision` (`results/s2_decision.json`). "
          "The loop sends one webcam frame per tick, with exactly the measured wording, to the local server only."
          if d["pass"] else
-         "Far Point stays TEXT-ONLY (`results/s2_decision.json`). Glasses off and leaning in are inferred from "
+         "Myrmidon stays TEXT-ONLY (`results/s2_decision.json`). Glasses off and leaning in are inferred from "
          "distance and squint changes, not seen."),
         MARK_END,
     ])

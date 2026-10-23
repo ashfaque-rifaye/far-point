@@ -1,4 +1,4 @@
-"""Wires Far Point together for live mode, replay mode and event replay.
+"""Wires Myrmidon together for live mode, replay mode and event replay.
 
 Threads: the signal source (camera or replay) feeds the tracker and calls `on_time`;
 the reflex loop runs on its own thread in live mode (inline on the replay clock in replay
@@ -34,7 +34,7 @@ from .tools import ToolContext
 from .verify import Verifier
 from .vision import resolve_vision
 
-log = logging.getLogger("farpoint.runtime")
+log = logging.getLogger("myrmidon.runtime")
 
 FAKE_MODEL_NAME = "FAKE oracle (tests/demo)"
 SIGNALS_EVERY_S = 0.2  # 5 Hz
@@ -62,7 +62,7 @@ class EventsReplay:
         self.count = 0
 
     def start(self) -> None:
-        self._thread = threading.Thread(target=self._run, name="farpoint-events", daemon=True)
+        self._thread = threading.Thread(target=self._run, name="myrmidon-events", daemon=True)
         self._thread.start()
 
     def pause(self, paused: bool) -> None:  # nothing to pause meaningfully
@@ -302,12 +302,12 @@ class Runtime:
                 self.bus.publish("proposal", p["data"])
         self.publish_stats()
         self._poll_health()
-        self._health_thread = threading.Thread(target=self._health_loop, name="farpoint-health", daemon=True)
+        self._health_thread = threading.Thread(target=self._health_loop, name="myrmidon-health", daemon=True)
         self._health_thread.start()
         self.source.start()
         if self.settings.mode == "live" and self.settings.events is None:
             self.loop.start()
-        log.info("Far Point %s started: mode=%s decider=%s bedrock=%s actuators=%s", APP_VERSION,
+        log.info("Myrmidon %s started: mode=%s decider=%s bedrock=%s actuators=%s", APP_VERSION,
                  "replay" if self.replay else "live", self.decider_model, self.bedrock_status,
                  "dry-run" if self.actuators.dry_run else "real")
 

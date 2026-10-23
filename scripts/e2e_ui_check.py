@@ -3,7 +3,7 @@
   python scripts/e2e_ui_check.py            # backend in replay mode, FAKE Decider, Bedrock off
   python scripts/e2e_ui_check.py --live     # backend in live mode (real Decider, camera, Bedrock if creds)
 
-1. Starts `python -m farpoint.app` on 127.0.0.1:8765 in its own process group.
+1. Starts `python -m myrmidon.app` on 127.0.0.1:8765 in its own process group.
 2. GET / and every /assets/* that index.html references: all must be 200, and no file may load
    from an http(s) origin other than 127.0.0.1/localhost (no CDNs). If web/dist is not built,
    it records that and checks the WebSocket only.
@@ -30,7 +30,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from farpoint.contract import errors  # noqa: E402
+from myrmidon.contract import errors  # noqa: E402
 
 BASE = "http://127.0.0.1:8765"
 WS = "ws://127.0.0.1:8765/ws"
@@ -54,7 +54,7 @@ def wait_up(timeout: float = 90.0) -> bool:
 
 
 def check_static(report: dict) -> bool:
-    dist = Path(os.environ.get("FARPOINT_WEB_DIST", ROOT / "web" / "dist"))
+    dist = Path(os.environ.get("MYRMIDON_WEB_DIST", ROOT / "web" / "dist"))
     status, body, ctype = http_get("/")
     if not (dist / "index.html").exists():
         report["ui"] = f"UI dist not available at {datetime.now():%Y-%m-%d %H:%M} ({dist}); WebSocket checked only"
@@ -160,10 +160,10 @@ def main(argv=None) -> int:
     ap.add_argument("--seconds", type=float, default=30.0)
     ap.add_argument("--out", type=Path)
     a = ap.parse_args(argv)
-    runtime = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+    runtime = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
     log_path = runtime / "logs" / f"e2e-ui-check-{datetime.now():%Y%m%d-%H%M%S}.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    args = [sys.executable, "-m", "farpoint.app"]
+    args = [sys.executable, "-m", "myrmidon.app"]
     if a.live:
         args += ["--mode", "live"] + ([] if a.actuate else ["--dry-run"])
     else:
@@ -174,10 +174,10 @@ def main(argv=None) -> int:
     # The backend under test gets its own runtime dir, so the check never leaves drafts, stats or
     # moments in the real profile. It still reads the real calibration and face model.
     env = dict(os.environ)
-    env["FARPOINT_RUNTIME"] = str(runtime / "e2e-check")
-    env.setdefault("FARPOINT_CALIBRATION", str(runtime / "calibration.local.json"))
-    env.setdefault("FARPOINT_FACE_MODEL", str(runtime / "models" / "face_landmarker.task"))
-    report["runtime"] = env["FARPOINT_RUNTIME"]
+    env["MYRMIDON_RUNTIME"] = str(runtime / "e2e-check")
+    env.setdefault("MYRMIDON_CALIBRATION", str(runtime / "calibration.local.json"))
+    env.setdefault("MYRMIDON_FACE_MODEL", str(runtime / "models" / "face_landmarker.task"))
+    report["runtime"] = env["MYRMIDON_RUNTIME"]
     with log_path.open("w", encoding="utf-8") as log:
         proc = subprocess.Popen(args, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, env=env,
                                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)

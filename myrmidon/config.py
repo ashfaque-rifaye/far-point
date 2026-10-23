@@ -10,8 +10,8 @@ from patterns.reflex_gate import Thresholds
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_VERSION = "0.2.0"
-DEFAULT_RUNTIME = r"E:\farpoint-runtime"
-DEFAULT_TRACE = ROOT / "farpoint" / "replay" / "demo_session.jsonl"
+DEFAULT_RUNTIME = r"E:\myrmidon-runtime"
+DEFAULT_TRACE = ROOT / "myrmidon" / "replay" / "demo_session.jsonl"
 ALLOWED_HOST = "127.0.0.1"
 
 
@@ -25,22 +25,22 @@ class Settings:
     dry_run: bool = False
     actuate: bool = False  # replay only: drive the real actuators
     # None = automatic: on only if results/s2_decision.json records an S2 pass AND the Decider
-    # server runs with --vision (farpoint/vision.py). True/False force it.
-    vision: bool | None = field(default_factory=lambda: {"1": True, "0": False}.get(os.environ.get("FARPOINT_VISION", "")))
+    # server runs with --vision (myrmidon/vision.py). True/False force it.
+    vision: bool | None = field(default_factory=lambda: {"1": True, "0": False}.get(os.environ.get("MYRMIDON_VISION", "")))
     record: bool = False
     host: str = ALLOWED_HOST
     port: int = 8765
     decider_url: str = field(default_factory=lambda: os.environ.get(
-        "FARPOINT_DECIDER_URL", "http://127.0.0.1:8099/v1/systemone"))
-    runtime_dir: Path = field(default_factory=lambda: Path(os.environ.get("FARPOINT_RUNTIME", DEFAULT_RUNTIME)))
-    web_dist: Path = field(default_factory=lambda: Path(os.environ.get("FARPOINT_WEB_DIST", ROOT / "web" / "dist")))
+        "MYRMIDON_DECIDER_URL", "http://127.0.0.1:8099/v1/systemone"))
+    runtime_dir: Path = field(default_factory=lambda: Path(os.environ.get("MYRMIDON_RUNTIME", DEFAULT_RUNTIME)))
+    web_dist: Path = field(default_factory=lambda: Path(os.environ.get("MYRMIDON_WEB_DIST", ROOT / "web" / "dist")))
     period_s: float = 2.5
     speed: float = 1.0
     loop_replay: bool = False
     camera_index: int = 0
-    profile_name: str = field(default_factory=lambda: os.environ.get("FARPOINT_PROFILE_NAME", "you"))
+    profile_name: str = field(default_factory=lambda: os.environ.get("MYRMIDON_PROFILE_NAME", "you"))
     thresholds: Thresholds = field(default_factory=Thresholds)
-    coach_model: str = field(default_factory=lambda: os.environ.get("FARPOINT_COACH_MODEL", "us.amazon.nova-lite-v1:0"))
+    coach_model: str = field(default_factory=lambda: os.environ.get("MYRMIDON_COACH_MODEL", "us.amazon.nova-lite-v1:0"))
     region: str = field(default_factory=lambda: os.environ.get("AWS_REGION", "us-east-1"))
     decider_timeout_s: float = 4.0
 
@@ -55,7 +55,7 @@ class Settings:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(prog="python -m farpoint.app", description="Far Point backend (localhost only)")
+    ap = argparse.ArgumentParser(prog="python -m myrmidon.app", description="Myrmidon backend (localhost only)")
     ap.add_argument("--mode", choices=["live", "replay"], default="live")
     ap.add_argument("--trace", type=Path, help="replay trace (JSONL of numeric readings)")
     ap.add_argument("--events", type=Path, help="re-emit a recorded bus event trace to the UI; runs no loop")

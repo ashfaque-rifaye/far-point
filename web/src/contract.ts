@@ -1,5 +1,5 @@
 /**
- * Far Point UI <-> local backend data contract (protocol v1).
+ * Myrmidon UI <-> local backend data contract (protocol v1).
  *
  * Single source of truth for the web UI. Mirrors:
  *   - web/contract.schema.json   (JSON Schema, draft 2020-12)
@@ -182,7 +182,7 @@ export interface AppContext {
   /** Foreground app display name, e.g. "Code", "Chrome". */
   name: string;
   category: AppCategory;
-  /** Zoom steps applied by Far Point relative to the user's default; 0 = untouched, +n larger, -n smaller. */
+  /** Zoom steps applied by Myrmidon relative to the user's default; 0 = untouched, +n larger, -n smaller. */
   zoom_step: number;
 }
 
@@ -1015,7 +1015,7 @@ export const EXAMPLE_EVENTS: { [K in ServerEventType]: ServerEventOf<K> } = {
     data: {
       request_id: 'c_000009',
       title: 'Open email draft in your mail app?',
-      detail: 'Far Point will open a mailto: link. Nothing is sent until you press Send yourself.',
+      detail: 'Myrmidon will open a mailto: link. Nothing is sent until you press Send yourself.',
     },
   },
   toast: {

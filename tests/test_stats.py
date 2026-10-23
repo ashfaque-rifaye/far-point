@@ -1,5 +1,5 @@
-from farpoint.contract import errors
-from farpoint.stats import StatsStore
+from myrmidon.contract import errors
+from myrmidon.stats import StatsStore
 
 
 class Clock:

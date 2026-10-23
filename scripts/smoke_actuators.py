@@ -21,7 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from farpoint.act import (  # noqa: E402
+from myrmidon.act import (  # noqa: E402
     BrightnessController,
     OverlayHost,
     RegistryTheme,
@@ -33,7 +33,7 @@ from farpoint.act import (  # noqa: E402
     ZoomController,
 )
 
-RUNTIME = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+RUNTIME = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
 
 
 class ZoomProbe:
@@ -51,7 +51,7 @@ class ZoomProbe:
     def _run(self):
         import tkinter as tk
         root = tk.Tk()
-        root.title("Far Point actuator smoke test")
+        root.title("Myrmidon actuator smoke test")
         root.geometry("420x160+200+200")
         root.attributes("-topmost", True)
         label = tk.Label(root, text="zoom 0", font=("Segoe UI", 14))
@@ -152,7 +152,7 @@ def main() -> int:
         overlay.update(s)
         time.sleep(1)
     overlay.close()
-    overlay.toast("Far Point smoke test: toast", seconds=2)
+    overlay.toast("Myrmidon smoke test: toast", seconds=2)
     time.sleep(2.5)
     overlay.shutdown()
     report["overlay"] = "shown 3 s, closed; toast shown 2 s"

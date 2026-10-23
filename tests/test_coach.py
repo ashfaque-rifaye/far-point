@@ -2,13 +2,13 @@ import time
 
 import pytest
 
-from farpoint.bus import EventBus
-from farpoint.coach import DISCLAIMER, Coach, red_flags
-from farpoint.confirm import ConfirmBroker
-from farpoint.contract import errors
-from farpoint.doctrine import DoctrineStore
-from farpoint.memory import MomentLog
-from farpoint.stats import StatsStore
+from myrmidon.bus import EventBus
+from myrmidon.coach import DISCLAIMER, Coach, red_flags
+from myrmidon.confirm import ConfirmBroker
+from myrmidon.contract import errors
+from myrmidon.doctrine import DoctrineStore
+from myrmidon.memory import MomentLog
+from myrmidon.stats import StatsStore
 from patterns.reflex_gate import ScriptedModel, contains_image
 
 RULE = {"n": 1, "text": "The Viewing distance line says enlarging needed.", "tool": "enlarge_text",
@@ -74,6 +74,16 @@ def test_second_write_doctrine_in_one_compile_saves_nothing_new(runtime_dir):
     assert store.current_draft.version == 2 and len(kinds(seen, "doctrine")) == 1
 
 
+def test_model_cannot_adopt_or_open_only_the_user_can(runtime_dir):
+    coach, model, seen, store, *_ = make(runtime_dir, [{"tool": "write_doctrine", "input": DOCTRINE_INPUT},
+                                                       {"text": "Done."}])
+    assert coach.compile_doctrine("myopia") == 2
+    offered = set(model.calls[0]["tools"])
+    assert "write_doctrine" in offered and not offered & {"adopt_doctrine", "open_exam_email"}
+    assert not kinds(seen, "confirm_request") and store.active.version == 1
+    assert coach.adopt(2) and store.active.version == 2  # the UI click adopts it
+
+
 def test_invalid_tool_is_retried_then_saved(runtime_dir):
     bad = {**DOCTRINE_INPUT, "rules": [{**RULE, "tool": "format_disk"}]}
     coach, model, seen, store, *_ = make(runtime_dir, [{"tool": "write_doctrine", "input": bad},
@@ -95,8 +105,8 @@ def test_three_invalid_attempts_keep_current_rules(runtime_dir):
 
 
 def test_tidy_rules_dedupes_and_keeps_ask_user_last():
-    from farpoint.coach import tidy_rules
-    from farpoint.doctrine import DoctrineRule
+    from myrmidon.coach import tidy_rules
+    from myrmidon.doctrine import DoctrineRule
     ask = DoctrineRule(**{**RULE, "n": 1, "tool": "ask_user", "when_true": "the Squint despite zoom line ends with 'yes'"})
     a = DoctrineRule(**{**RULE, "n": 2})
     dup = DoctrineRule(**{**RULE, "n": 3, "text": "Same condition, other words."})
@@ -214,14 +224,14 @@ def test_live_compile_doctrine_with_nova_lite(runtime_dir):
 
 
 def test_report_preamble_is_stripped():
-    from farpoint.coach import strip_preamble
+    from myrmidon.coach import strip_preamble
     md = "I have the data from the tools. I will now format it.\n\n- Today, 0.3 min closer than 30 cm."
     assert strip_preamble(md) == "- Today, 0.3 min closer than 30 cm."
     assert strip_preamble("## Today\n- Here is a line") == "## Today\n- Here is a line"
 
 
 def test_report_tool_narration_is_dropped():
-    from farpoint.coach import strip_preamble
+    from myrmidon.coach import strip_preamble
     md = ("The rule proposal has been sent for human approval. I will now inform the user about the report.\n"
           "Here is your short report for today:\n- **Breaks verified:** 4\n"
           "I have also proposed a rule for you to consider: a break every 45 minutes.")

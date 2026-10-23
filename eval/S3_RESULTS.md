@@ -21,15 +21,15 @@ Escalation run: 9 states escalated, 9 Bedrock calls, 9,522 tokens in total, Nova
 
 - **The renderer does most of the work.** With S1's old text, the same 8 per-rule nouls reached only 30.6% end to end. 29% of nouls were unsure, so the fail-quiet policy stayed silent on 58 of 72 states, and `reduce_text` was at 26% (53 false positives). With the new renderer, code folds every condition a rule combines into one line that ends in "X needed" / "no X needed". Per-rule accuracy is then 99.7%. Said plainly: in the new setup the Decider reads verdict phrases that code computed, and code applies the priority order.
 - **Every miss without escalation was fail quiet, not a wrong action.** All 9 held-out misses are states whose label is `dim_screen` (3) or `brighten_screen` (6), where the higher-priority `dim_screen` rule was unsure (7 unsure nouls, 2 false positives). The policy stayed quiet instead of acting. Escalating those 9 states to Nova Lite fixed all of them.
-- **`interrupt_ok` dropped to 83.3% with the new renderer** (97.2% with the old text). The misses are "typing in a burst" (8 of 10 judged OK to interrupt) and "in a video call" (4 of 17). Those are the cases where interrupting is wrong. S3 is reported as measured. After S3, Far Point's own renderer (`farpoint/facts.py`) appends code's activity verdict to the Activity line ("...: not a good moment to interrupt"). In single-request probes with the full Far Point state, that moved a typing burst from p 0.58 to 0.43 and a video call from 0.55 to 0.25, with idle states at 0.94-0.97. In the replayed demo session, the Teams-call deny went from p 0.36 to 0.17. That change was made after S3, and S3 did not measure it.
+- **`interrupt_ok` dropped to 83.3% with the new renderer** (97.2% with the old text). The misses are "typing in a burst" (8 of 10 judged OK to interrupt) and "in a video call" (4 of 17). Those are the cases where interrupting is wrong. S3 is reported as measured. After S3, Myrmidon's own renderer (`myrmidon/facts.py`) appends code's activity verdict to the Activity line ("...: not a good moment to interrupt"). In single-request probes with the full Myrmidon state, that moved a typing burst from p 0.58 to 0.43 and a video call from 0.55 to 0.25, with idle states at 0.94-0.97. In the replayed demo session, the Teams-call deny went from p 0.36 to 0.17. That change was made after S3, and S3 did not measure it.
 - Two-trigger states are the weak spot without escalation: 71.4% on held-out (10/14). Phase 1 got 5/14 with the 9-way choice.
 
 ## Weaknesses
 
 - The states are synthetic (`eval/s1_states.py`), 72 per set, and there is one held-out set. Real webcam-derived facts are noisier.
 - The dev set (seed 3) came in at 84.7%, just under the 85% target. The held-out pass is not a large margin.
-- The new renderer is specific to this rulebook. A rulebook written by Bedrock (`farpoint/coach.py`) may phrase rules that combine lines, and S3 does not measure that. The Phase 2 probes showed that cross-line ANDs leave the Decider unsure (p 0.37-0.69).
-- Escalation adds about 2 s and a cloud call whenever a higher-priority rule is unsure. Far Point rate-limits it (once per 10 s, 300 per day) and stays quiet otherwise.
+- The new renderer is specific to this rulebook. A rulebook written by Bedrock (`myrmidon/coach.py`) may phrase rules that combine lines, and S3 does not measure that. The Phase 2 probes showed that cross-line ANDs leave the Decider unsure (p 0.37-0.69).
+- Escalation adds about 2 s and a cloud call whenever a higher-priority rule is unsure. Myrmidon rate-limits it (once per 10 s, 300 per day) and stays quiet otherwise.
 
 ## Reproduce
 

@@ -5,7 +5,7 @@ V1 = {
     "next_action": {
         "type": "choice",
         "instructions": (
-            "Choose Far Point's single next action for this user, following the doctrine. "
+            "Choose Myrmidon's single next action for this user, following the doctrine. "
             "When several actions apply, pick the one that comes first in the doctrine's priority order."
         ),
         "criteria": {
@@ -50,7 +50,7 @@ V2 = {
     "next_action": {
         "type": "choice",
         "instructions": (
-            "Pick Far Point's next action. Check the options from first to last and pick the "
+            "Pick Myrmidon's next action. Check the options from first to last and pick the "
             "FIRST one whose condition holds in the measured facts."
         ),
         "criteria": {

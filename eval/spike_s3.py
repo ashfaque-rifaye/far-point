@@ -24,7 +24,7 @@ from s1_states import Facts, generate, label, render  # noqa: E402
 from s3_rules import RULES_NEW, RULES_OLD, reference, render_s3  # noqa: E402
 from spike_s1 import gpu_mem, pct  # noqa: E402
 
-from farpoint.decide import ask  # noqa: E402
+from myrmidon.decide import ask  # noqa: E402
 from patterns.reflex_gate import Thresholds, build_questions, select  # noqa: E402
 
 WARMUP = 5
@@ -47,10 +47,10 @@ def main() -> None:
     items = generate(a.seed)
     escalator = None
     if a.escalate:
-        from farpoint.escalate import NovaEscalator
-        from farpoint.stats import StatsStore
+        from myrmidon.escalate import NovaEscalator
+        from myrmidon.stats import StatsStore
         import os
-        stats = StatsStore(Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime")) / "s3-eval")
+        stats = StatsStore(Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime")) / "s3-eval")
         escalator = NovaEscalator(stats=stats, min_interval_s=0, daily_budget=1000, timeout_s=15)
 
     for it in items[:WARMUP]:

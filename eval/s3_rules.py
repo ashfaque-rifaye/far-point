@@ -1,6 +1,6 @@
 """S3: the S1 doctrine as 8 per-rule nouls, plus the renderers (see eval/PREREGISTRATION.md, Phase 2).
 
-`RULES_NEW` pairs with `render_s3` (Far Point's Phase 2 style: code folds every condition a
+`RULES_NEW` pairs with `render_s3` (Myrmidon's Phase 2 style: code folds every condition a
 rule combines into one line ending in a verdict phrase). `RULES_OLD` pairs with the original
 `s1_states.render` text (ablation); its criteria quote the old lines, as the S1 v2 options did.
 """
@@ -96,7 +96,7 @@ def reference(f: Facts) -> dict[str, bool]:
 
 
 def render_s3(f: Facts) -> str:
-    """S1 facts in Far Point's Phase 2 style: one verdict phrase per rule line, computed by code."""
+    """S1 facts in Myrmidon's Phase 2 style: one verdict phrase per rule line, computed by code."""
     p = PROFILES[f.profile]
     ref = reference(f)
     dist = (f"{f.distance_cm} cm (minimum {MIN_DISTANCE_CM} cm): too close" if f.too_close

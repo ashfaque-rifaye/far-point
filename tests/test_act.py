@@ -1,4 +1,4 @@
-from farpoint.act import (
+from myrmidon.act import (
     Actuators,
     BrightnessController,
     DryRunBrightness,
@@ -87,5 +87,5 @@ def test_replay_env_changes_apply_only_when_trace_changes():
     a.observe_env({"process": "acrobat.exe", "title": "p.pdf", "idle_s": 30}, theme="light", brightness=60)
     a.theme.set_dark(True)
     a.observe_env({"process": "acrobat.exe", "title": "p.pdf", "idle_s": 30}, theme="light", brightness=60)
-    assert a.state()["theme"] == "dark"  # Far Point's change sticks while the trace is unchanged
+    assert a.state()["theme"] == "dark"  # Myrmidon's change sticks while the trace is unchanged
     assert a.state()["zoom_available"] is True

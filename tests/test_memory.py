@@ -1,4 +1,4 @@
-from farpoint.memory import MomentLog, PreferenceStore
+from myrmidon.memory import MomentLog, PreferenceStore
 
 
 def test_demotion_after_three_failures(runtime_dir):

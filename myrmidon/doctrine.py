@@ -1,7 +1,7 @@
 """The user's rulebook ("doctrine"): numbered, priority-ordered rules, one tool each.
 
 Rules carry explicit `when_true` / `when_false` criteria that quote the lines
-`farpoint.facts.render_state` writes. Numeric knobs live in `Limits` and are clamped to
+`myrmidon.facts.render_state` writes. Numeric knobs live in `Limits` and are clamped to
 safe ranges in code, whoever wrote them (default, Bedrock, the user).
 """
 from __future__ import annotations
@@ -178,7 +178,7 @@ _DEFAULT_RULES = [
         text="The Relaxed reading line says text can go back one step.",
         when_true="the Relaxed reading line ends with 'text can go back one step'",
         when_false="the Relaxed reading line ends with 'no change needed'",
-        basis="Undo Far Point's own zoom once you have read comfortably for a while.",
+        basis="Undo Myrmidon's own zoom once you have read comfortably for a while.",
     ),
     dict(
         n=8, tool="ask_user",

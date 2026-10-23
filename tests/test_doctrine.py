@@ -1,8 +1,8 @@
 import pytest
 from pydantic import ValidationError
 
-from farpoint.contract import errors
-from farpoint.doctrine import (
+from myrmidon.contract import errors
+from myrmidon.doctrine import (
     TOOLS,
     DoctrineRule,
     DoctrineStore,

@@ -1,7 +1,7 @@
 """Helpers to switch the local Decider between text and vision mode (via start_decider.ps1).
 
 Used by scripts/smoke_vision.py and scripts/human_session.py. Everything stays on
-127.0.0.1; caches stay under FARPOINT_RUNTIME (start_decider.ps1 sets them).
+127.0.0.1; caches stay under MYRMIDON_RUNTIME (start_decider.ps1 sets them).
 """
 from __future__ import annotations
 
@@ -14,11 +14,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from farpoint.decide import client  # noqa: E402
-from farpoint.vision import S2_QUESTIONS, S2_STATE  # noqa: E402
+from myrmidon.decide import client  # noqa: E402
+from myrmidon.vision import S2_QUESTIONS, S2_STATE  # noqa: E402
 
 START_SCRIPT = ROOT / "scripts" / "start_decider.ps1"
-RUNTIME = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+RUNTIME = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
 
 
 def health() -> dict | None:

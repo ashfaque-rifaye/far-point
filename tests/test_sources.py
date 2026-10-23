@@ -1,9 +1,9 @@
 import json
 import re
 
-from farpoint.config import DEFAULT_TRACE
-from farpoint.signals import SensorSample, SignalTracker
-from farpoint.sources import ROW_KEYS, ReplayClock, ReplaySource, TraceRecorder, load_trace
+from myrmidon.config import DEFAULT_TRACE
+from myrmidon.signals import SensorSample, SignalTracker
+from myrmidon.sources import ROW_KEYS, ReplayClock, ReplaySource, TraceRecorder, load_trace
 
 
 def test_replay_at_speed_100_gives_expected_tracker_states():

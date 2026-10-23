@@ -30,7 +30,8 @@ IMAGE_RULES = {"jpeg_bytes", "png_bytes"}
 IMAGE_EXT = (".jpg", ".jpeg", ".png", ".bmp", ".webp", ".gif", ".mp4", ".mov")
 SCREENSHOT_PREFIX = "docs/images/dashboard-"
 # Rendered diagrams and the article cover (from SVG/HTML sources next to them, scripts/render_doc_images.py).
-DOC_IMAGES = {"docs/images/architecture.png", "docs/images/decision-loop.png", "docs/images/cover.png"}
+DOC_IMAGES = {"docs/images/architecture.png", "docs/images/decision-loop.png", "docs/images/cover.png",
+              "docs/images/results.png", "docs/images/reflex-gate.png"}
 
 
 def account_id() -> bytes | None:

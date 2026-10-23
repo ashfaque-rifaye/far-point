@@ -15,7 +15,7 @@
 5. Restore: Runtime.stop() restores everything. Brightness, app theme and the test window's
    zoom must be back to their starting values and the restore journal empty.
 
-Runtime data goes to <FARPOINT_RUNTIME>/smoke-live, never the live profile.
+Runtime data goes to <MYRMIDON_RUNTIME>/smoke-live, never the live profile.
 """
 from __future__ import annotations
 
@@ -31,15 +31,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from smoke_actuators import ZoomProbe, wait_idle  # noqa: E402
 
-from farpoint.act import ZOOM_ALLOWLIST, RegistryTheme, WinWindow, WmiBrightness  # noqa: E402
-from farpoint.config import Settings  # noqa: E402
-from farpoint.contract import errors  # noqa: E402
-from farpoint.doctrine import Limits  # noqa: E402
-from farpoint.runtime import Runtime  # noqa: E402
-from farpoint.signals import SignalTracker  # noqa: E402
-from farpoint.sources import LiveSource  # noqa: E402
+from myrmidon.act import ZOOM_ALLOWLIST, RegistryTheme, WinWindow, WmiBrightness  # noqa: E402
+from myrmidon.config import Settings  # noqa: E402
+from myrmidon.contract import errors  # noqa: E402
+from myrmidon.doctrine import Limits  # noqa: E402
+from myrmidon.runtime import Runtime  # noqa: E402
+from myrmidon.signals import SignalTracker  # noqa: E402
+from myrmidon.sources import LiveSource  # noqa: E402
 
-RUNTIME = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+RUNTIME = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
 
 
 def segment(t0: float, dur: float, **kw):

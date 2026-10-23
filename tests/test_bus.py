@@ -1,9 +1,9 @@
 import asyncio
 import json
 
-from farpoint.bus import EventBus, EventRecorder
-from farpoint.contract import errors
-from farpoint.doctrine import default_doctrine
+from myrmidon.bus import EventBus, EventRecorder
+from myrmidon.contract import errors
+from myrmidon.doctrine import default_doctrine
 
 HELLO = {
     "mode": "replay", "app_version": "0.2.0", "profile_name": "you",

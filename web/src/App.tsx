@@ -111,7 +111,7 @@ export function App() {
 
 function Logo() {
   return (
-    <svg className="logo" viewBox="0 0 64 64" role="img" aria-label="Far Point">
+    <svg className="logo" viewBox="0 0 64 64" role="img" aria-label="Myrmidon">
       <defs>
         <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#2fd3c4" />
@@ -135,7 +135,7 @@ function TopBar({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => voi
   return (
     <header className="topbar">
       <div className="wordmark">
-        Far Point<i>.</i>
+        Myrmidon<i>.</i>
       </div>
       <div className="pills" aria-label="Status">
         {conn === 'demo' && <span className="pill demo">DEMO story, scripted numbers</span>}
@@ -180,9 +180,9 @@ function Offline() {
     <div className="offline">
       <div className="card">
         <div className="eyebrow">Not connected</div>
-        <h2 style={{ fontSize: '1.7rem', margin: '8px 0' }}>Far Point's backend isn't running</h2>
+        <h2 style={{ fontSize: '1.7rem', margin: '8px 0' }}>Myrmidon's backend isn't running</h2>
         <p className="muted">Start it from the repo, then this page connects by itself.</p>
-        <div className="code">.venv\Scripts\python.exe -m farpoint.app --mode live</div>
+        <div className="code">.venv\Scripts\python.exe -m myrmidon.app --mode live</div>
         <p className="muted" style={{ fontSize: '0.82rem' }}>Trying {wsUrl}</p>
         <button className="btn grad" style={{ marginTop: 8 }} onClick={enterDemo}>
           Play the demo story instead

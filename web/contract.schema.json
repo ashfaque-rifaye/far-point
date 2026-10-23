@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://far-point.local/contract.schema.json",
-  "title": "Far Point UI <-> backend WebSocket contract (protocol v1)",
+  "$id": "https://myrmidon.local/contract.schema.json",
+  "title": "Myrmidon UI <-> backend WebSocket contract (protocol v1)",
   "description": "Transport: one WebSocket at ws://127.0.0.1:8765/ws (override with ?ws= or VITE_WS_URL). Server->client frames match #/$defs/ServerEvent; client->server frames match #/$defs/ClientCommand. Unknown fields are allowed everywhere (forward compatibility). Mirrors web/src/contract.ts and docs/ui-contract.md.",
   "oneOf": [{ "$ref": "#/$defs/ServerEvent" }, { "$ref": "#/$defs/ClientCommand" }],
 
@@ -153,7 +153,7 @@
       "properties": {
         "name": { "type": "string" },
         "category": { "enum": ["browser", "editor", "office", "pdf", "video", "meeting", "other"] },
-        "zoom_step": { "type": "integer", "description": "Steps applied by Far Point vs user default; 0 = untouched." }
+        "zoom_step": { "type": "integer", "description": "Steps applied by Myrmidon vs user default; 0 = untouched." }
       }
     },
 

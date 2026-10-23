@@ -2,9 +2,9 @@ import json
 
 import pytest
 
-from farpoint.escalate import NovaEscalator, render_prompt
-from farpoint.memory import MomentLog
-from farpoint.stats import StatsStore
+from myrmidon.escalate import NovaEscalator, render_prompt
+from myrmidon.memory import MomentLog
+from myrmidon.stats import StatsStore
 from patterns.reflex_gate import Rule, ScriptedModel, contains_image
 
 RULES = [Rule(1, "enlarge_text", "Viewing distance says too close.", "ends with 'too close'", "says 'distance OK'"),

@@ -1,10 +1,10 @@
 import pytest
 
-from farpoint.contract import errors
-from farpoint.doctrine import Limits
-from farpoint.facts import too_close
-from farpoint.sense import head_angles
-from farpoint.signals import SensorSample, SignalTracker, ambient_bucket, distance_band
+from myrmidon.contract import errors
+from myrmidon.doctrine import Limits
+from myrmidon.facts import too_close
+from myrmidon.sense import head_angles
+from myrmidon.signals import SensorSample, SignalTracker, ambient_bucket, distance_band
 
 T0 = 1_800_000_000.0
 HZ = 10

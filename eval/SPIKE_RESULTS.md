@@ -20,7 +20,7 @@ S1 failed on agreement after the one allowed retune. Per the decision rule, the 
 
 - RTX 4060 Laptop (8188 MiB, driver 591.91), Ryzen 7 7435HS, AC power, Windows "Performance" power plan, native Windows (no WSL).
 - The laptop was busy throughout: CPU load around 80% (Android emulator / qemu, Ollama, EA Desktop, Creative Cloud, Teams, about 90 Edge/WebView processes). GPU memory with no Decider loaded was 1827 MiB. These apps belong to the user and were not closed.
-- Model `StrandsAgents/strands-decider-2B-qwen3.5-v1-2610`, `strands-decider serve --device cuda`, 127.0.0.1:8099, every call behind the lock in `farpoint/decide.py`.
+- Model `StrandsAgents/strands-decider-2B-qwen3.5-v1-2610`, `strands-decider serve --device cuda`, 127.0.0.1:8099, every call behind the lock in `myrmidon/decide.py`.
 
 ## S1: text decisions
 
@@ -49,7 +49,7 @@ What the errors show:
 Latency notes:
 
 - Native Windows with transformers' reference kernels: 860 ms p50.
-- Installing `triton-windows==3.7.1.post27` and `flash-linear-attention==0.5.2`: 715 ms. The first request after a fresh Triton cache autotunes for about 140 s. Do not send a second request while that runs: two overlapping autotunes crashed with `TypeError: 'NoneType' object is not a mapping`. The cache is at `E:\farpoint-runtime\triton-cache`.
+- Installing `triton-windows==3.7.1.post27` and `flash-linear-attention==0.5.2`: 715 ms. The first request after a fresh Triton cache autotunes for about 140 s. Do not send a second request while that runs: two overlapping autotunes crashed with `TypeError: 'NoneType' object is not a mapping`. The cache is at `E:\myrmidon-runtime\triton-cache`.
 - Raising the server process to High priority: 473-490 ms. On this loaded CPU, inference is launch-bound. The GPU stayed at P3 / about 1.1 GHz during runs. `scripts/start_decider.ps1` applies High priority and the E: cache paths.
 - Floor check: 2 short nouls took 610 ms at normal priority and 458 ms at High, against the 184 ms precedent. The difference is most likely the CPU load from other apps. `causal_conv1d` still uses the torch fallback because no Windows wheel is installed.
 
@@ -64,13 +64,13 @@ Latency notes:
 | Latency, 1 frame (448 px long side) + 3 nouls | p50 0.508 s, p90 0.544 s, max 0.567 s |
 | Accuracy | not measured: no labeled frames |
 
-Setup fix: `--vision` first failed with `OSError: Can't load image processor for 'Qwen/Qwen3.5-2B-Base'` because `HF_HUB_OFFLINE=1` was set and `preprocessor_config.json` had never been downloaded. Fetching the two small processor configs into `E:\farpoint-runtime\hf` fixed it.
+Setup fix: `--vision` first failed with `OSError: Can't load image processor for 'Qwen/Qwen3.5-2B-Base'` because `HF_HUB_OFFLINE=1` was set and `preprocessor_config.json` had never been downloaded. Fetching the two small processor configs into `E:\myrmidon-runtime\hf` fixed it.
 
 The live frames stayed in memory and none were written to disk. The mean P(true) on those unlabeled frames was glasses_on 0.19, rubbing_eyes 0.16 and looking_far_away 0.56. Without labels these numbers do not measure accuracy.
 
 ### Re-opening S2
 
-Takes about 2 minutes with a person at the webcam. Frames go to `E:\farpoint-runtime\s2-frames`, outside the repo.
+Takes about 2 minutes with a person at the webcam. Frames go to `E:\myrmidon-runtime\s2-frames`, outside the repo.
 
 ```powershell
 .\scripts\start_decider.ps1 -Vision

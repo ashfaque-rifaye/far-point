@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from farpoint.sense import CALIBRATION_PATH, Calibration, FaceSensor, focal_length_px, open_camera  # noqa: E402
+from myrmidon.sense import CALIBRATION_PATH, Calibration, FaceSensor, focal_length_px, open_camera  # noqa: E402
 
 
 def collect(sensor, cap, n):

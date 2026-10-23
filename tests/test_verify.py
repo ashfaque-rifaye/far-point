@@ -1,8 +1,8 @@
-from farpoint.bus import EventBus
-from farpoint.contract import errors
-from farpoint.memory import PreferenceStore
-from farpoint.stats import StatsStore
-from farpoint.verify import Verifier, judge
+from myrmidon.bus import EventBus
+from myrmidon.contract import errors
+from myrmidon.memory import PreferenceStore
+from myrmidon.stats import StatsStore
+from myrmidon.verify import Verifier, judge
 
 
 class Tracker:

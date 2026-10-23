@@ -18,7 +18,7 @@ from pathlib import Path
 from .context import ContextTracker, context_dict
 from .signals import SensorSample
 
-log = logging.getLogger("farpoint.sources")
+log = logging.getLogger("myrmidon.sources")
 
 ROW_KEYS = ("t", "face", "distance_cm", "ear", "squint_ratio", "yaw", "pitch", "luma", "process", "title",
             "idle_s", "fullscreen", "theme", "brightness")
@@ -78,7 +78,7 @@ class ReplaySource:
         self.rows_fed = 0
 
     def start(self) -> None:
-        self._thread = threading.Thread(target=self._run, name="farpoint-replay", daemon=True)
+        self._thread = threading.Thread(target=self._run, name="myrmidon-replay", daemon=True)
         self._thread.start()
 
     def pause(self, paused: bool) -> None:
@@ -217,7 +217,7 @@ class LiveSource:
                 self.on_status(s)
 
     def start(self) -> None:
-        self._thread = threading.Thread(target=self._run, name="farpoint-camera", daemon=True)
+        self._thread = threading.Thread(target=self._run, name="myrmidon-camera", daemon=True)
         self._thread.start()
 
     def pause(self, paused: bool) -> None:

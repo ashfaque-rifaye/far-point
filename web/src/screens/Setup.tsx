@@ -17,7 +17,7 @@ export function Setup() {
         <div>
           <div className="eyebrow">Setup</div>
           <h1>Camera, calibration and privacy</h1>
-          <p>Far Point measures distance from the size of your iris. Calibrate once at a distance you measured, and it stays accurate to about 10%.</p>
+          <p>Myrmidon measures distance from the size of your iris. Calibrate once at a distance you measured, and it stays accurate to about 10%.</p>
         </div>
       </div>
       <div className="two-col">
@@ -86,7 +86,7 @@ export function Setup() {
           <div className="card">
             <h3>Not a medical device</h3>
             <p className="muted" style={{ fontSize: '0.86rem', margin: '6px 0 0' }}>
-              Far Point does not diagnose, treat or prevent any eye condition. Its thresholds come from a study of school-age children (Clouclip pilot, 2020) and are applied to adults as a starting point.
+              Myrmidon does not diagnose, treat or prevent any eye condition. Its thresholds come from a study of school-age children (Clouclip pilot, 2020) and are applied to adults as a starting point.
             </p>
           </div>
         </div>

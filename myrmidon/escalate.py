@@ -20,7 +20,7 @@ from patterns.reflex_gate import Rule
 
 DEFAULT_MODEL = "us.amazon.nova-lite-v1:0"
 SYSTEM_PROMPT = (
-    "You check a few rules against a measured state for Far Point, a screen-habits assistant. "
+    "You check a few rules against a measured state for Myrmidon, a screen-habits assistant. "
     "Code computed every number in the state and wrote the verdict at the end of each line; trust those "
     "verdict words. For each listed rule, decide whether it applies right now, using its true/false criteria. "
     "Answer only through the RuleJudgements tool, one judgement per listed rule. Never give medical advice."
@@ -61,7 +61,7 @@ class NovaEscalator:
         self.timeout_s = timeout_s
         self.model_factory = model_factory
         self.clock = clock
-        self._pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="farpoint-escalate")
+        self._pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="myrmidon-escalate")
         self._inflight: Future | None = None
         self._lock = threading.Lock()
         self._last_t: float | None = None
@@ -78,7 +78,7 @@ class NovaEscalator:
     def _run(self, prompt: str) -> tuple[dict[int, bool], float]:
         from strands import Agent
         agent = Agent(model=self._model(), system_prompt=SYSTEM_PROMPT, callback_handler=None,
-                      structured_output_model=RuleJudgements, name="farpoint-escalator")
+                      structured_output_model=RuleJudgements, name="myrmidon-escalator")
         t0 = time.perf_counter()
         try:
             result = agent(prompt)

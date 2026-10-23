@@ -8,13 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from farpoint.config import Settings
-from farpoint.contract import errors
-from farpoint.doctrine import DoctrineStore, Limits, Profile
-from farpoint.facts import Facts, render_state
-from farpoint.runtime import Runtime
-from farpoint.signals import SensorSample, SignalTracker
-from farpoint.vision import GATED, S2_QUESTIONS, S2_STATE, resolve_vision, s2_allows_vision, tri, vision_questions
+from myrmidon.config import Settings
+from myrmidon.contract import errors
+from myrmidon.doctrine import DoctrineStore, Limits, Profile
+from myrmidon.facts import Facts, render_state
+from myrmidon.runtime import Runtime
+from myrmidon.signals import SensorSample, SignalTracker
+from myrmidon.vision import GATED, S2_QUESTIONS, S2_STATE, resolve_vision, s2_allows_vision, tri, vision_questions
 from patterns.reflex_gate import DeciderHttpClient, FakeDecider
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "eval"))
@@ -53,8 +53,8 @@ def test_images_never_go_to_a_non_local_decider():
 
 
 def test_glasses_line_and_rule_with_vision():
-    from farpoint.doctrine import default_doctrine
-    from farpoint.predicates import PREDICATES
+    from myrmidon.doctrine import default_doctrine
+    from myrmidon.predicates import PREDICATES
     d = default_doctrine().model_copy(update={"profile": Profile(glasses_for_screen="yes")})
     base = dict(face=True, distance_cm=52, squint_ratio=0.95, usual_distance_cm=52, glasses_prescribed="yes")
     off = Facts(**base, vision=True, glasses_on=False)
@@ -145,7 +145,7 @@ def test_vision_request_failure_still_decides(tmp_path):
 
 
 def test_text_only_by_default_in_live_mode_without_s2_pass(tmp_path, monkeypatch):
-    monkeypatch.delenv("FARPOINT_VISION", raising=False)
+    monkeypatch.delenv("MYRMIDON_VISION", raising=False)
     s = Settings(mode="live", runtime_dir=tmp_path, no_bedrock=True, dry_run=True)
     assert s.vision is None
     fake = FakeDecider(lambda *a: 0.5)

@@ -1,7 +1,7 @@
-"""Far Point's ACT tools as Strands tools.
+"""Myrmidon's ACT tools as Strands tools.
 
 The reflex loop calls them directly (`agent.tool.<name>(...)`), so Strands interventions
-(InterruptGate, ConfirmGate) run first. Every change is reversible (see `farpoint.act`).
+(InterruptGate, ConfirmGate) run first. Every change is reversible (see `myrmidon.act`).
 """
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def build_tools(ctx: ToolContext) -> list:
 
     @tool
     def reduce_text(steps: int = 1) -> dict:
-        """Undo Far Point's text zoom by `steps` steps."""
+        """Undo Myrmidon's text zoom by `steps` steps."""
         applied, msg, net = act.zoom.step(-1, steps)
         if applied:
             msg = "You have read comfortably for a while, so text went back one step."
@@ -116,15 +116,15 @@ def build_tools(ctx: ToolContext) -> list:
 
         rid = ctx.broker.request_async("How are your eyes?", question, on_answer)
         if rid is None:
-            return _result(False, "No dashboard is connected, so Far Point did not ask.", {"question": question})
+            return _result(False, "No dashboard is connected, so Myrmidon did not ask.", {"question": question})
         return _result(False, f"Asked you: {question}", {"question": question}, ok=True, pending_confirm=True,
                        request_id=rid)
 
     @tool
     def reset() -> dict:
-        """Undo every change Far Point made (zoom, brightness, theme)."""
+        """Undo every change Myrmidon made (zoom, brightness, theme)."""
         out = act.restore_all()
-        return _result(all(out.values()), "Everything Far Point changed is back to how it was.", {}, restored=out)
+        return _result(all(out.values()), "Everything Myrmidon changed is back to how it was.", {}, restored=out)
 
     return [enlarge_text, reduce_text, dim_screen, brighten_screen, dark_mode, far_look_break,
             glasses_reminder, ask_user, reset]

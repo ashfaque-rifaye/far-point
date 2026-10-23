@@ -8,7 +8,7 @@ never receives any image.
 Vision turns on automatically only when BOTH hold:
 - `results/s2_decision.json` records an S2 pass (both gated questions >= 85% accuracy), and
 - the local Decider server runs with `--vision` (its /health says `"vision": true`).
-`--vision` / `FARPOINT_VISION=1` force it on; `--no-vision` / `FARPOINT_VISION=0` force it off.
+`--vision` / `MYRMIDON_VISION=1` force it on; `--no-vision` / `MYRMIDON_VISION=0` force it off.
 """
 from __future__ import annotations
 
@@ -93,9 +93,9 @@ def s2_allows_vision(path: Path = S2_DECISION_PATH) -> bool:
 def resolve_vision(requested: bool | None, health_info: dict | None, decision_path: Path = S2_DECISION_PATH) -> tuple[bool, str]:
     """(vision on?, why). `requested` is the CLI/env choice; None means automatic."""
     if requested is True:
-        return True, "forced on (--vision or FARPOINT_VISION=1)"
+        return True, "forced on (--vision or MYRMIDON_VISION=1)"
     if requested is False:
-        return False, "forced off (--no-vision or FARPOINT_VISION=0)"
+        return False, "forced off (--no-vision or MYRMIDON_VISION=0)"
     if not s2_allows_vision(decision_path):
         return False, "text-only: S2 has not passed (results/s2_decision.json)"
     if not (health_info and health_info.get("vision")):

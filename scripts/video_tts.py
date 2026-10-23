@@ -4,7 +4,7 @@ Reads a JSON list of {"id", "lines": [sentence, ...]} and writes <out>/<id>.wav 
 (start and end of every sentence, for the captions). Runs in its own environment so torch never
 enters the agent's requirements:
 
-    E:\\farpoint-runtime\\tts-env\\Scripts\\python.exe scripts/video_tts.py narration.json out_dir
+    E:\\myrmidon-runtime\\tts-env\\Scripts\\python.exe scripts/video_tts.py narration.json out_dir
 """
 import json
 import sys
@@ -15,8 +15,9 @@ import soundfile as sf
 from kokoro import KPipeline
 
 RATE = 24000
-GAP_S = 0.28  # pause between sentences
+GAP_S = 0.22  # pause between sentences
 VOICE = "af_heart"
+SPEED = 1.08
 
 
 def main(spec_path: str, out_dir: str) -> None:
@@ -27,7 +28,7 @@ def main(spec_path: str, out_dir: str) -> None:
     for scene in json.loads(Path(spec_path).read_text(encoding="utf-8-sig")):
         parts, cues, t = [], [], 0.0
         for line in scene["lines"]:
-            audio = np.concatenate([np.asarray(a) for _, _, a in pipe(line, voice=VOICE, speed=1.0, split_pattern=None)])
+            audio = np.concatenate([np.asarray(a) for _, _, a in pipe(line, voice=VOICE, speed=SPEED, split_pattern=None)])
             cues.append([round(t, 3), round(t + len(audio) / RATE, 3), line])
             parts += [audio, np.zeros(int(GAP_S * RATE), dtype=np.float32)]
             t += len(audio) / RATE + GAP_S

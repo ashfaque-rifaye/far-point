@@ -23,7 +23,7 @@ def make_reflex_agent(ctx: ToolContext, model=None, interrupt_gate=None, confirm
         model = BedrockModel(model_id="us.amazon.nova-lite-v1:0", region_name=os.environ.get("AWS_REGION", "us-east-1"))
     interventions = [g for g in (interrupt_gate, confirm_gate) if g is not None]
     return Agent(model=model, tools=build_tools(ctx), interventions=interventions,
-                 record_direct_tool_call=False, callback_handler=None, name="farpoint-reflex")
+                 record_direct_tool_call=False, callback_handler=None, name="myrmidon-reflex")
 
 
 @dataclass

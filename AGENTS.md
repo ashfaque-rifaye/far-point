@@ -2,8 +2,8 @@
 
 ## Layout
 
-- `web/` holds the dashboard front end (Vite + React + TypeScript). It is the only UI: do not build a second one (no `farpoint/dashboard/static/index.html` or similar). Rebuild `web/dist` after changing `web/src` (`npm run build`, npm cache on `E:\farpoint-runtime\npm-cache`) and commit it, because the backend serves it.
-- The Python package `farpoint/`, `patterns/`, `eval/`, `results/`, `scripts/`, `tests/` hold the agent.
+- `web/` holds the dashboard front end (Vite + React + TypeScript). It is the only UI: do not build a second one (no `myrmidon/dashboard/static/index.html` or similar). Rebuild `web/dist` after changing `web/src` (`npm run build`, npm cache on `E:\myrmidon-runtime\npm-cache`) and commit it, because the backend serves it.
+- The Python package `myrmidon/`, `patterns/`, `eval/`, `results/`, `scripts/`, `tests/` hold the agent.
 
 ## How the backend and the UI connect
 

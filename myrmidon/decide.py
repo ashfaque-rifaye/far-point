@@ -12,7 +12,7 @@ import os
 from patterns.reflex_gate.client import _LOCK as _lock  # noqa: F401 - re-exported for eval/spike_s2.py
 from patterns.reflex_gate.client import DeciderHttpClient
 
-DECIDER_URL = os.environ.get("FARPOINT_DECIDER_URL", "http://127.0.0.1:8099/v1/systemone")
+DECIDER_URL = os.environ.get("MYRMIDON_DECIDER_URL", "http://127.0.0.1:8099/v1/systemone")
 _client = DeciderHttpClient(DECIDER_URL)
 
 

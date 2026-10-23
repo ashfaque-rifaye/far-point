@@ -23,8 +23,8 @@ FACT_LINE_GUIDE = """\
 - "Room light: dark" | "dim" | "normal indoor light" | "bright" (estimated from camera brightness)
 - "Theme: light, in a dark room: mismatch, dark mode needed" | "Theme: light: no change needed" | "Theme: dark: no change needed"
 - "Screen brightness: N%: dimming needed (...)" | "brightening needed (...)" | "no change needed" | "not adjustable"
-- "Text zoom: Far Point zoom +N in APP (category); zoom control available" | "zoom control not available for this app"
-- "Relaxed reading: N min ..., Far Point zoom +N": ends with "text can go back one step" | "no change needed"
+- "Text zoom: Myrmidon zoom +N in APP (category); zoom control available" | "zoom control not available for this app"
+- "Relaxed reading: N min ..., Myrmidon zoom +N": ends with "text can go back one step" | "no change needed"
 - "Squint despite zoom ...": ends with "yes" | "no"
 - "Activity: ...": idle | between tasks | just switched windows | typing in a burst | in a video call | watching a (fullscreen) video; ends with "a good moment to interrupt" | "not a good moment to interrupt"
 - "Local time: HH:MM (morning|afternoon|evening|night)" (night is 21:00-05:00)
@@ -204,19 +204,19 @@ def render_state(f: Facts, doctrine: Doctrine) -> str:
         lines.append(f"- Screen brightness: {f.brightness_pct}%: {bv}.")
 
     app = f.app_name or "unknown app"
-    zoom = f"Far Point zoom {f.zoom_step:+d} in {app} ({f.app_category}); "
+    zoom = f"Myrmidon zoom {f.zoom_step:+d} in {app} ({f.app_category}); "
     zoom += "zoom control available." if f.zoom_available else "zoom control not available for this app."
     lines.append(f"- Text zoom: {zoom}")
 
     lines.append(f"- Relaxed reading: {_num(f.relaxed_min_now)} min at {_num(L.relaxed_cm)} cm or more without "
-                 f"squinting (limit {_num(L.relaxed_min)} min), Far Point zoom {f.zoom_step:+d}: "
+                 f"squinting (limit {_num(L.relaxed_min)} min), Myrmidon zoom {f.zoom_step:+d}: "
                  + ("text can go back one step." if text_can_go_back(f, L) else "no change needed."))
 
     if squint_despite_zoom(f):
-        lines.append(f"- Squint despite zoom: squinting for {_num(f.squinting_s)} s at Far Point zoom "
+        lines.append(f"- Squint despite zoom: squinting for {_num(f.squinting_s)} s at Myrmidon zoom "
                      f"{f.zoom_step:+d} (ask after 60 s at +2 or more): yes.")
     else:
-        lines.append("- Squint despite zoom (ask after 60 s of squinting at Far Point zoom +2 or more): no.")
+        lines.append("- Squint despite zoom (ask after 60 s of squinting at Myrmidon zoom +2 or more): no.")
 
     # Code classified the activity (meeting, fullscreen video, typing burst, idle...). Its verdict
     # goes on the line: in a probe with the full rendered state, the bare S1 wording left a typing

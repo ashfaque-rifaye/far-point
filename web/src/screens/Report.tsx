@@ -54,7 +54,7 @@ export function Report() {
           <div className="card">
             <h3>Book an eye exam</h3>
             <p className="muted" style={{ fontSize: '0.86rem', margin: '4px 0 12px' }}>
-              Nova drafts the email. Far Point asks you before it opens it in your mail app, and it never sends it for you.
+              Nova drafts the email. Myrmidon asks you before it opens it in your mail app, and it never sends it for you.
             </p>
             {email ? (
               <>

@@ -27,11 +27,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import decider_ctl  # noqa: E402
 
-from farpoint.config import Settings  # noqa: E402
-from farpoint.contract import errors  # noqa: E402
-from farpoint.runtime import Runtime  # noqa: E402
+from myrmidon.config import Settings  # noqa: E402
+from myrmidon.contract import errors  # noqa: E402
+from myrmidon.runtime import Runtime  # noqa: E402
 
-RUNTIME = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
+RUNTIME = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
 
 
 def run(seconds: float, keep_vision: bool, out: Path | None = None) -> dict:

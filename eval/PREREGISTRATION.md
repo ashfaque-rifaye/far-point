@@ -15,7 +15,7 @@ Written before any spike measurement was run. The thresholds below are copied ve
 
 ## How each number is measured (fixed before running)
 
-Model: `StrandsAgents/strands-decider-2B-qwen3.5-v1-2610`, served by `strands-decider serve` on 127.0.0.1:8099, `--device cuda`. Every call goes through the lock in `farpoint/decide.py` (upstream issue #17), so requests never overlap.
+Model: `StrandsAgents/strands-decider-2B-qwen3.5-v1-2610`, served by `strands-decider serve` on 127.0.0.1:8099, `--device cuda`. Every call goes through the lock in `myrmidon/decide.py` (upstream issue #17), so requests never overlap.
 
 ### S1
 
@@ -72,7 +72,7 @@ The S1 doctrine as 8 rules, in S1 `PRIORITY` order: ask_user, glasses_reminder, 
 
 ### Renderers
 
-- `new`: the S1 facts rendered the way Far Point's own renderer works after Phase 2 (`farpoint/facts.py`). Code computes every comparison AND every condition a rule combines, and each rule's line ends with one verdict phrase of the form "X needed" / "no X needed" (for example "Theme: light, in a dark room: mismatch, dark mode needed."). The "balanced with the room" line from S1 is gone. Stated plainly: with `new`, the Decider reads verdict phrases that code computed; it does not combine conditions.
+- `new`: the S1 facts rendered the way Myrmidon's own renderer works after Phase 2 (`myrmidon/facts.py`). Code computes every comparison AND every condition a rule combines, and each rule's line ends with one verdict phrase of the form "X needed" / "no X needed" (for example "Theme: light, in a dark room: mismatch, dark mode needed."). The "balanced with the room" line from S1 is gone. Stated plainly: with `new`, the Decider reads verdict phrases that code computed; it does not combine conditions.
 - `old`: the original `s1_states.render` text, unchanged (ablation). It separates the effect of the renderer from the effect of the per-rule decomposition.
 
 ### Request
@@ -105,7 +105,7 @@ Each run writes `results/s3_<tag>.json`. Results are reported in `eval/S3_RESULT
 
 Question: on the same 72 held-out states (seed 4, `new` renderer), how does Amazon Nova Lite alone compare with the Decider on tool selection, latency and tokens?
 
-- Arm: `eval/spike_s4.py`. One Bedrock call per state through `farpoint.escalate.NovaEscalator` (same prompt Far Point uses for escalation, temperature 0, text only), asked about all 8 rules at once. Code applies the same priority order: the first rule Nova marks true wins; any rule Nova leaves without a verdict above that point means quiet (`none`), exactly like the Decider arm's unsure band.
+- Arm: `eval/spike_s4.py`. One Bedrock call per state through `myrmidon.escalate.NovaEscalator` (same prompt Myrmidon uses for escalation, temperature 0, text only), asked about all 8 rules at once. Code applies the same priority order: the first rule Nova marks true wins; any rule Nova leaves without a verdict above that point means quiet (`none`), exactly like the Decider arm's unsure band.
 - Compared against the existing `results/s3_held_new.json` (Decider, no escalation) and `results/s3_held_new_esc.json` (Decider + Nova on unsure rules). The Decider runs are not re-run.
 - Metrics: end-to-end agreement with `label().next_action`; per-rule accuracy; client wall-clock latency p50/p90 per state; Bedrock input/output tokens. `interrupt_ok` is not asked in this arm (the escalation prompt covers rules only), so it is not compared.
 - No target. Results go to `eval/S4_RESULTS.md` whatever they are. One run, no prompt changes after seeing results.

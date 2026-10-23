@@ -1,12 +1,12 @@
-from farpoint.act import Actuators
-from farpoint.agent import INTERRUPTIVE, call_tool, make_reflex_agent
-from farpoint.breaks import BreakManager
-from farpoint.bus import EventBus
-from farpoint.confirm import ConfirmBroker
-from farpoint.memory import PreferenceStore
-from farpoint.signals import SignalTracker
-from farpoint.stats import StatsStore
-from farpoint.tools import ToolContext
+from myrmidon.act import Actuators
+from myrmidon.agent import INTERRUPTIVE, call_tool, make_reflex_agent
+from myrmidon.breaks import BreakManager
+from myrmidon.bus import EventBus
+from myrmidon.confirm import ConfirmBroker
+from myrmidon.memory import PreferenceStore
+from myrmidon.signals import SignalTracker
+from myrmidon.stats import StatsStore
+from myrmidon.tools import ToolContext
 from patterns.reflex_gate import FakeDecider, InterruptGate, ScriptedModel
 
 

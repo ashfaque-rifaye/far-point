@@ -80,7 +80,7 @@
   color-scheme: dark;
 }
 
-/* High contrast + large text: the dashboard itself practices what Far Point preaches. */
+/* High contrast + large text: the dashboard itself practices what Myrmidon preaches. */
 :root[data-theme='contrast'] {
   --bg: #000000;
   --bg-glow: none;

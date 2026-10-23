@@ -4,7 +4,7 @@ every non-quiet decision, action, verification and break phase.
   python scripts/replay_story.py                      # demo trace, FAKE oracle Decider, dry-run actuators
   python scripts/replay_story.py --real-decider       # same trace, the real local Decider on 127.0.0.1:8099
 
-Runtime data goes to a scratch profile under FARPOINT_RUNTIME (never the live profile).
+Runtime data goes to a scratch profile under MYRMIDON_RUNTIME (never the live profile).
 """
 from __future__ import annotations
 
@@ -17,11 +17,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from farpoint.config import DEFAULT_TRACE, Settings  # noqa: E402
-from farpoint.contract import errors  # noqa: E402
-from farpoint.predicates import PREDICATES  # noqa: E402
-from farpoint.runtime import Runtime  # noqa: E402
-from farpoint.sources import load_trace  # noqa: E402
+from myrmidon.config import DEFAULT_TRACE, Settings  # noqa: E402
+from myrmidon.contract import errors  # noqa: E402
+from myrmidon.predicates import PREDICATES  # noqa: E402
+from myrmidon.runtime import Runtime  # noqa: E402
+from myrmidon.sources import load_trace  # noqa: E402
 
 
 def main(argv=None) -> int:
@@ -30,7 +30,7 @@ def main(argv=None) -> int:
     ap.add_argument("--real-decider", action="store_true")
     ap.add_argument("--json", type=Path, help="also write the event list here")
     a = ap.parse_args(argv)
-    scratch = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime")) / "scratch-story"
+    scratch = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime")) / "scratch-story"
     shutil.rmtree(scratch, ignore_errors=True)
     s = Settings(mode="replay", trace=a.trace, runtime_dir=scratch, fake_decider=not a.real_decider, no_bedrock=True)
     rt = Runtime(s, bedrock_available=False, deny_without_client=False)

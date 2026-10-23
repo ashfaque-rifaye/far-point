@@ -19,9 +19,9 @@ LEFT_IRIS_H = (474, 476)
 RIGHT_EYE = (33, 160, 158, 133, 153, 144)
 LEFT_EYE = (362, 385, 387, 263, 373, 380)
 
-RUNTIME_DIR = Path(os.environ.get("FARPOINT_RUNTIME", r"E:\farpoint-runtime"))
-MODEL_PATH = Path(os.environ.get("FARPOINT_FACE_MODEL", RUNTIME_DIR / "models" / "face_landmarker.task"))
-CALIBRATION_PATH = Path(os.environ.get("FARPOINT_CALIBRATION", RUNTIME_DIR / "calibration.local.json"))
+RUNTIME_DIR = Path(os.environ.get("MYRMIDON_RUNTIME", r"E:\myrmidon-runtime"))
+MODEL_PATH = Path(os.environ.get("MYRMIDON_FACE_MODEL", RUNTIME_DIR / "models" / "face_landmarker.task"))
+CALIBRATION_PATH = Path(os.environ.get("MYRMIDON_CALIBRATION", RUNTIME_DIR / "calibration.local.json"))
 
 
 def _dist(a, b) -> float:

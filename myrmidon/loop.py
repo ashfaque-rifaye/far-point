@@ -23,7 +23,7 @@ from .doctrine import DEFAULT_ARGS, DoctrineRule
 from .facts import Facts, render_state, strain
 from .vision import CONTRACT_KEYS, FRESH_S, S2_STATE, tri, vision_questions
 
-log = logging.getLogger("farpoint.loop")
+log = logging.getLogger("myrmidon.loop")
 
 COOLDOWN_S = 60.0
 BREAK_COOLDOWN_S = 600.0
@@ -89,7 +89,7 @@ class ReflexLoop:
         f.glasses_on = self.vision_glasses_on(now)
         return f
 
-    # ---- vision mode (off unless S2 passed; see farpoint/vision.py) ---------------------
+    # ---- vision mode (off unless S2 passed; see myrmidon/vision.py) ---------------------
     def vision_glasses_on(self, now: float | None = None) -> bool | None:
         lv = self.last_vision
         now = self.clock() if now is None else now
@@ -314,7 +314,7 @@ class ReflexLoop:
 
     def start(self) -> None:
         self._stop.clear()
-        self._thread = threading.Thread(target=self._run, name="farpoint-loop", daemon=True)
+        self._thread = threading.Thread(target=self._run, name="myrmidon-loop", daemon=True)
         self._thread.start()
 
     def _run(self) -> None:

@@ -24,7 +24,7 @@ function connect(url: string) {
   sock.onmessage = (m) => {
     const r = parseServerMessage(m.data);
     if (r.ok) ingest(r.event);
-    else if (r.reason !== 'unknown_type') console.warn('[far-point] dropped frame', r.reason, r.type);
+    else if (r.reason !== 'unknown_type') console.warn('[myrmidon] dropped frame', r.reason, r.type);
   };
   sock.onclose = () => {
     if (ws === sock) ws = null;
@@ -69,5 +69,5 @@ export function send<K extends CommandName>(name: K, args: CommandArgsMap[K]) {
     return;
   }
   if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(cmd));
-  else pushToast('warning', 'Not connected to the Far Point backend.');
+  else pushToast('warning', 'Not connected to the Myrmidon backend.');
 }

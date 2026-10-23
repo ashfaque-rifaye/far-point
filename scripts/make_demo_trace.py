@@ -1,4 +1,4 @@
-"""Write the deterministic ~4 min demo trace: farpoint/replay/demo_session.jsonl.
+"""Write the deterministic ~4 min demo trace: myrmidon/replay/demo_session.jsonl.
 
 SYNTHETIC numbers (no camera, no images). Segments:
   0-56 s    Acrobat: lean in to 27 cm -> enlarge_text -> lean back to 45 cm (verified: worked)
@@ -16,7 +16,7 @@ import random
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "farpoint" / "replay" / "demo_session.jsonl"
+OUT = ROOT / "myrmidon" / "replay" / "demo_session.jsonl"
 HZ = 5
 DURATION_S = 240
 # The near-work bout reaches 45 min (2700 s) about 105 s in, during the Teams call.

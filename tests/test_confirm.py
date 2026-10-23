@@ -1,9 +1,9 @@
 import threading
 import time
 
-from farpoint.bus import EventBus
-from farpoint.confirm import ConfirmBroker
-from farpoint.contract import errors
+from myrmidon.bus import EventBus
+from myrmidon.confirm import ConfirmBroker
+from myrmidon.contract import errors
 
 
 def setup():

@@ -94,7 +94,7 @@ export function Day() {
       </div>
 
       <div className="card">
-        <h3>What Far Point did</h3>
+        <h3>What Myrmidon did</h3>
         <div className="feed" style={{ marginTop: 12 }}>
           {done.length === 0 && <div className="muted">Nothing yet.</div>}
           {done.map((a) => {

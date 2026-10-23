@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "eval"))
 
-from farpoint.decide import ask  # noqa: E402
+from myrmidon.decide import ask  # noqa: E402
 from s1_questions import VERSIONS  # noqa: E402
 from s1_states import STRAIN_LEVELS, generate  # noqa: E402
 

@@ -1,8 +1,8 @@
-from farpoint.act import DryRunOverlay
-from farpoint.breaks import BreakManager
-from farpoint.bus import EventBus
-from farpoint.contract import errors
-from farpoint.stats import StatsStore
+from myrmidon.act import DryRunOverlay
+from myrmidon.breaks import BreakManager
+from myrmidon.bus import EventBus
+from myrmidon.contract import errors
+from myrmidon.stats import StatsStore
 
 
 class Tracker:

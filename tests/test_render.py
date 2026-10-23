@@ -1,6 +1,6 @@
-from farpoint.doctrine import Profile, default_doctrine
-from farpoint.facts import Facts, render_state, strain
-from farpoint.predicates import PREDICATES
+from myrmidon.doctrine import Profile, default_doctrine
+from myrmidon.facts import Facts, render_state, strain
+from myrmidon.predicates import PREDICATES
 
 
 def base(**kw) -> Facts:
@@ -42,8 +42,8 @@ def test_local_time_line():
 
 def test_relaxed_reading_line():
     d = default_doctrine()
-    assert "Far Point zoom +1: text can go back one step." in render_state(base(zoom_step=1, relaxed_min_now=11), d)
-    assert "Far Point zoom +0: no change needed." in render_state(base(zoom_step=0, relaxed_min_now=11), d)
+    assert "Myrmidon zoom +1: text can go back one step." in render_state(base(zoom_step=1, relaxed_min_now=11), d)
+    assert "Myrmidon zoom +0: no change needed." in render_state(base(zoom_step=0, relaxed_min_now=11), d)
 
 
 def test_brightness_and_glasses_lines():

@@ -4,10 +4,10 @@ import pytest
 from fastapi.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 
-from farpoint.config import Settings
-from farpoint.contract import errors
-from farpoint.dashboard import UI_MISSING, create_app
-from farpoint.runtime import Runtime
+from myrmidon.config import Settings
+from myrmidon.contract import errors
+from myrmidon.dashboard import UI_MISSING, create_app
+from myrmidon.runtime import Runtime
 
 BASE = "http://127.0.0.1:8765"
 WS = "ws://127.0.0.1:8765/ws"
@@ -120,12 +120,12 @@ def test_ui_notice_without_dist_and_static_with_dist(tmp_path):
         assert r.status_code == 200 and r.text == UI_MISSING
     dist = tmp_path / "dist"
     (dist / "assets").mkdir(parents=True)
-    (dist / "index.html").write_text("<!doctype html><title>Far Point</title><div id=root></div>")
+    (dist / "index.html").write_text("<!doctype html><title>Myrmidon</title><div id=root></div>")
     (dist / "assets" / "app.js").write_text("console.log('ok')")
     rt2, app2 = make(tmp_path / "two", dist=dist)
     with TestClient(app2, base_url=BASE) as client:
         r = client.get("/")
-        assert r.status_code == 200 and "Far Point" in r.text
+        assert r.status_code == 200 and "Myrmidon" in r.text
         assert client.get("/assets/app.js").status_code == 200
         with client.websocket_connect(WS) as ws:  # the WS route still wins over the static mount
             assert ws.receive_json()["type"] == "hello"

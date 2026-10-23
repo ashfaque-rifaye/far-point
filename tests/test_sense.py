@@ -1,4 +1,4 @@
-from farpoint.sense import distance_cm, focal_length_px
+from myrmidon.sense import distance_cm, focal_length_px
 
 
 def test_distance_roundtrip():
