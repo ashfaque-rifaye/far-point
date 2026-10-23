@@ -118,7 +118,8 @@ Each original is written to `<runtime>/restore.json` before the change. On exit,
 | `web/` | Dashboard (Vite + React + TypeScript); `web/dist` is committed so the backend can serve it without Node |
 | `patterns/reflex_gate/` | Reusable decision pattern (per-rule nouls, policy, InterruptGate / ConfirmGate, fakes, posture example) |
 | `eval/`, `results/` | Preregistrations, spikes S1-S3 and their raw results |
-| `scripts/` | Decider start, calibration, demo trace, smoke tests, pre-push scan |
+| `scripts/` | Decider start, calibration, demo trace, smoke tests, guided human session, screenshots, demo recorder, pre-push scan |
+| `docs/` | UI contract, [article draft](docs/ARTICLE.md), [video script](docs/VIDEO_SCRIPT.md), screenshots |
 | `tests/` | pytest suite |
 
 ## License
