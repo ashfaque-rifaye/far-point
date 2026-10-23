@@ -1,8 +1,8 @@
-﻿# Myrmidon: a screen that adapts to your eyes, decided locally by Strands Decider 2B
+# Myrmidon: a screen that adapts to your eyes, decided locally by Strands Decider 2B
 
 Tags: `#strands-decider-2b` `#tool-selection`
 
-Repo: https://github.com/ashfaque-rifaye/myrmidon (Apache-2.0) Â· Video: <add YouTube link>
+Repo: https://github.com/ashfaque-rifaye/myrmidon (Apache-2.0) · Live demo: https://main.d15fdmq2raifi0.amplifyapp.com/ · Video: <add YouTube link>
 
 > Not a medical device. Myrmidon does not diagnose, treat or prevent any eye condition.
 
@@ -29,14 +29,14 @@ Apple's Screen Distance and wearables like Clouclip warn you when you are too cl
 
 All of this runs on the laptop, from a plain webcam, and every frame is dropped after it is measured.
 
-- **Distance.** MediaPipe's Face Landmarker finds 478 face points per frame, including the edges of each iris. An iris is about 11.7 mm wide in almost everyone, so `distance = focal length Ã— 11.7 mm Ã· iris width in pixels`.
+- **Distance.** MediaPipe's Face Landmarker finds 478 face points per frame, including the edges of each iris. An iris is about 11.7 mm wide in almost everyone, so `distance = focal length × 11.7 mm ÷ iris width in pixels`.
 - **Your baseline.** A one-time calibration at a distance you measured sets the camera's focal length and how open your eyes normally are. Everything after that is compared to you, not to an average person. Distance is accurate to roughly 10% after calibration.
 - **Squint and blinks.** Eye opening divided by your baseline: under 75% for a while is squinting; a short dip under 60% is a blink. Head turn tells whether you are looking away during a break.
 - **Context.** The foreground app, typing bursts, fullscreen video and calls come from Win32.
 
 Code then writes each number as a sentence that ends in a verdict, for example `Viewing distance: 27 cm, under 30 cm for 8 s (limit 5 s): too close, enlarging needed.` That text is what the Decider reads.
 
-**What you get out of it.** The screen adapts in the app you are in (text one step larger or smaller, dark mode, brightness) and every change is undone on exit. Breaks arrive at a good moment and only count when you really look away. Each change is checked 30 seconds later against your own numbers ("27 â†’ 45 cm, worked"), and a change that keeps failing in an app is demoted there. At the end of the day Nova writes a report of minutes too close, longest near-work bout, breaks taken and squint episodes, which you can take to an eye exam.
+**What you get out of it.** The screen adapts in the app you are in (text one step larger or smaller, dark mode, brightness) and every change is undone on exit. Breaks arrive at a good moment and only count when you really look away. Each change is checked 30 seconds later against your own numbers ("27 → 45 cm, worked"), and a change that keeps failing in an app is demoted there. At the end of the day Nova writes a report of minutes too close, longest near-work bout, breaks taken and squint episodes, which you can take to an eye exam.
 
 ## The decision handed to Decider 2B
 
@@ -49,7 +49,7 @@ Why this decision suits Decider 2B: it is made **over and over**, every 2.5 seco
 How it is used:
 
 - **One typed `noul` per rule.** "Does rule N apply right now?" with explicit `true` and `false` criteria. All eight rules plus `interrupt_ok` go in **one request** over the same state: 9 answers in about 0.5 s on the laptop's RTX 4060, with no cloud tokens.
-- **Code applies the order and a confidence policy.** A rule fires at p â‰¥ 0.65 and is clear at p â‰¤ 0.35. If a higher-priority rule lands in between, Myrmidon asks Nova Lite on Bedrock about just those rules, with the same text. If Nova is unavailable, it stays quiet.
+- **Code applies the order and a confidence policy.** A rule fires at p ≥ 0.65 and is clear at p ≤ 0.35. If a higher-priority rule lands in between, Myrmidon asks Nova Lite on Bedrock about just those rules, with the same text. If Nova is unavailable, it stays quiet.
 - **Strands intervention handlers sit on the tool call.** `InterruptGate` denies breaks and reminders during a call, a typing burst or fullscreen video, reusing the batched `interrupt_ok` answer (p 0.18 on a Teams call in the video). `ConfirmGate` puts your approval in front of adopting a rulebook or opening the exam email.
 
 My first design asked one 9-way `choice` question. On a preregistered held-out set it agreed with the rulebook on **68.1%** of states: it read the state fine but applied the priority order badly. Splitting the decision into one yes/no per rule, with code applying the order, is what made it work.

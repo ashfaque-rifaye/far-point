@@ -28,6 +28,8 @@ Myrmidon watches how you use your eyes at the screen and adapts the screen to yo
 
 **Repo:** https://github.com/ashfaque-rifaye/myrmidon
 
+**Endpoint or live demo:** https://main.d15fdmq2raifi0.amplifyapp.com/ (the dashboard on AWS Amplify Hosting, playing its scripted demo story; republish with `scripts/deploy_demo.py`)
+
 ## Video upload (YouTube, Public)
 
 The built video is `E:\myrmidon-runtime\recordings\video\myrmidon-demo.mp4` with captions in `myrmidon-demo.srt` next to it (rebuild: `scripts/video_record_scenes.py`, then `scripts/video_build.py`; see `VIDEO_SCRIPT.md`).
@@ -59,7 +61,8 @@ Code (Apache-2.0) and the reusable Reflex Gate pattern: https://github.com/ashfa
 
 | File | Use |
 |---|---|
-| `cover.png` | Article cover / header |
+| `myrmidon-cover-1200x675.png` | Builder Center cover (1200x675, no text; source `cover-clean.html`) |
+| `cover.png` | Header image with title, for places that want text |
 | `architecture.png` | Architecture section |
 | `decision-loop.png` | "The decision handed to Decider 2B" section |
 | `results.png` | Results section |

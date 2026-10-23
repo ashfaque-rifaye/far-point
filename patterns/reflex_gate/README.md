@@ -102,6 +102,7 @@ Preregistered, held-out seed 4, 72 synthetic states, thresholds fixed at 0.35 / 
 - With Amazon Nova Lite on the unsure rules: 100%. 1.7% of nouls were unsure, and 9 of 72 states were escalated.
 - The same decomposition over the old text, which describes measurements but leaves conditions for the model to combine: 30.6%. The verdict-style rendering carries most of the gain.
 - 9 questions per request: p50 458-574 ms on an RTX 4060 laptop.
+- Amazon Nova Lite answering all 8 rules on its own (`eval/S4_RESULTS.md`): also 100%, but p50 2,572 ms per decision and 11x the Bedrock tokens of the hybrid.
 
 ## Limits
 

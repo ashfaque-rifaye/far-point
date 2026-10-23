@@ -1,4 +1,4 @@
-﻿"""Film the dashboard for the demo video while the real agent replays the demo trace.
+"""Film the dashboard for the demo video while the real agent replays the demo trace.
 
 Starts the backend in replay mode with the real local Decider and Amazon Nova (dry-run actuators, so
 nothing on the desktop changes), drives Edge through the scenes the narration needs, and captures

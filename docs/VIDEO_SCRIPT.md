@@ -1,4 +1,4 @@
-﻿# Myrmidon demo video (target 2:45, hard limit 3:00)
+# Myrmidon demo video (target 2:45, hard limit 3:00)
 
 ## The built cut
 
@@ -14,12 +14,12 @@ Run order of the cut (2:55), built around what the judges score:
 | Scene | Shows | Rubric point |
 |---|---|---|
 | hook | Dashboard: 27 cm, too close | Creativity: the problem in one shot |
-| eyes | Animated: iris width â†’ distance, your baseline, squint and blinks, verdict sentences | Communication: how it measures and what it outputs |
+| eyes | Animated: iris width → distance, your baseline, squint and blinks, verdict sentences | Communication: how it measures and what it outputs |
 | arch | Animated: the loop builds itself; Decider on the laptop, Bedrock on the right, only text crosses | Effective use of Decider 2B with Bedrock |
-| decide | Animated: 9 typed nouls in one request, calibrated p, thresholds, priority order â†’ tool | The decision handed to Decider 2B (#tool-selection) |
-| live, worked, deny | Real replay: rule 1 fires at 0.97, verified 27 â†’ 45 cm; InterruptGate holds a break at p 0.18 | The agent and its decision working |
+| decide | Animated: 9 typed nouls in one request, calibrated p, thresholds, priority order → tool | The decision handed to Decider 2B (#tool-selection) |
+| live, worked, deny | Real replay: rule 1 fires at 0.97, verified 27 → 45 cm; InterruptGate holds a break at p 0.18 | The agent and its decision working |
 | coach | Real Nova: rulebook from your words, report | Paired with Amazon Bedrock |
-| results | Animated: 68.1 â†’ 87.5 â†’ 100%, 0.57 s vs 2.57 s, 11x fewer tokens, what we learned | Measured latency/cost bonus; what we learned |
+| results | Animated: 68.1 → 87.5 → 100%, 0.57 s vs 2.57 s, 11x fewer tokens, what we learned | Measured latency/cost bonus; what we learned |
 | pattern, end | Reflex Gate: typed question + options, InterventionHandler wiring, README; requirements checklist | Reusable decision pattern; tags |
 
 ## Recording your own take
@@ -39,7 +39,7 @@ Before you start:
 | 0:00-0:12 | Phone: you at the laptop at night, glasses on, then you take them off and lean in | "It's late, my glasses are off, and I've crept to 26 centimetres from the screen. I never notice." |
 | 0:12-0:30 | Screen: Myrmidon Now screen. The pill drops to "26 cm", the dial needle goes amber/red, the drawn eye narrows | "Myrmidon is watching how I see. The webcam measures my distance and how open my eyes are, on this laptop. No image leaves it: that counter stays at zero." |
 | 0:30-0:50 | Decision card: rule 1 bar fills to 0.9+, "Enlarge text", chip "done". Cut to the Edge article getting one step bigger | "Every two and a half seconds, Strands Decider 2B, running on my laptop GPU, answers one yes-or-no per rule in my rulebook. Rule 1 applies. A Strands agent makes the text one step larger." |
-| 0:50-1:05 | Phone: you sit back. Screen: needle climbs to ~46 cm, "Did it help? 26 â†’ 46 cm. Worked." | "It didn't tell me to sit back. It made sitting back possible. Then it checked: 26 to 46 centimetres. Worked." |
+| 0:50-1:05 | Phone: you sit back. Screen: needle climbs to ~46 cm, "Did it help? 26 → 46 cm. Worked." | "It didn't tell me to sit back. It made sitting back possible. Then it checked: 26 to 46 centimetres. Worked." |
 | 1:05-1:25 | Reflex log screen, open one decision to show "What the Decider read" | "Code does the arithmetic and writes each fact as a verdict. The Decider only judges the words, in about half a second. The first version asked one nine-way question and got 68 percent. One question per rule, with code applying the order, got 87.5." |
 | 1:25-1:45 | Join a Teams call (or the demo's Teams segment): decision shows far-look break with "InterruptGate: deny" | "It knows when not to interrupt. During a call, a Strands intervention holds the break." |
 | 1:45-2:00 | Break overlay: countdown ring, you look out of a window (phone), "verified" | "After the call: a 20-second far look. It only counts when the camera sees me look away." |

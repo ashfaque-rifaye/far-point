@@ -1,5 +1,9 @@
 # Myrmidon
 
+**A screen that adapts to your eyes, decided locally by Strands Decider 2B.** Built for the AWS Builder Center *Agent Experience Hackathon: Strands Decider*. Tags: `#strands-decider-2b` `#tool-selection`.
+
+**Live demo:** https://main.d15fdmq2raifi0.amplifyapp.com/ (the dashboard on AWS Amplify, playing its scripted demo story) · **Demo video:** _(link added on upload)_ · **Article:** _(link added on publish)_
+
 ![Myrmidon dashboard: the drawn eye, the live distance dial and the Decider's per-rule answers](docs/images/dashboard-now-too-close.png)
 
 Myrmidon watches how you use your eyes at the screen and adapts the screen to you. The webcam measures viewing distance, squint, blinks and head turns on the laptop. Every 2.5 seconds a local Strands Decider 2B checks your personal rulebook against those numbers. Then a Strands Agent changes something reversible, such as text zoom, dark mode, brightness or a camera-verified 20-second far-look break, and checks whether it helped. Amazon Nova on Bedrock writes your rulebook from your own description of your eyes, writes numbers-only reports, proposes new rules for you to approve and drafts an eye-exam email it never sends. Bedrock only ever gets words and numbers, never an image.
@@ -15,14 +19,17 @@ Not a medical device. Myrmidon does not diagnose, treat or prevent any eye condi
 | Reusable decision pattern, clearly labelled | [`patterns/reflex_gate/`](patterns/reflex_gate/README.md): typed questions and option set, the wiring (Strands `InterventionHandler`s), usage note, tests, and a non-eye example |
 | Architecture | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
 | Measured latency / cost vs an LLM, accuracy, low-confidence handling | [Measured](#measured), [`eval/S3_RESULTS.md`](eval/S3_RESULTS.md), [`eval/S4_RESULTS.md`](eval/S4_RESULTS.md), all preregistered in [`eval/PREREGISTRATION.md`](eval/PREREGISTRATION.md) |
-| Article / video | Article draft: [`docs/ARTICLE.md`](docs/ARTICLE.md) · Video: see the links section below |
+| Article / video | Article source: [`docs/ARTICLE.md`](docs/ARTICLE.md) · Video (2:55): see the links section below · How the video is made: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md) |
 | OSI license | Apache-2.0 ([`LICENSE`](LICENSE)) |
-| Try it without a GPU, camera or AWS | Run the backend in replay mode with `--fake-decider --no-bedrock`, or open the dashboard with `?demo=1`; `python -m pytest -q` |
+| Try it without a GPU, camera or AWS | Open the [live demo](https://main.d15fdmq2raifi0.amplifyapp.com/), run the backend in replay mode with `--fake-decider --no-bedrock`, or run `python -m pytest -q` |
 
 ## Links
 
-- Builder Center article: _(added on publish)_
+- Live demo (dashboard, scripted demo story, hosted on AWS Amplify): https://main.d15fdmq2raifi0.amplifyapp.com/
 - Demo video (under 3 minutes): _(added on upload)_
+- Builder Center article: _(added on publish)_
+
+The real agent runs on your Windows laptop: it needs the webcam, the local GPU for the Decider and Win32 for the screen changes. The hosted page is the same dashboard; served from anywhere but `127.0.0.1` it plays the built-in demo story (labelled DEMO, scripted numbers) instead of connecting to a backend. Publish it again with `python scripts/deploy_demo.py` after `npm --prefix web run build`.
 
 ## The decision handed to the Decider
 
@@ -106,7 +113,7 @@ The backend serves the dashboard from `web/dist` at http://127.0.0.1:8765/. It s
 | Report | Nova's numbers-only report for your optometrist and the exam-email draft, which opens only after you confirm |
 | Setup | Distance calibration, camera pause, system status, the not-a-medical-device note |
 
-Themes: Day, Night, and a high-contrast large-text mode. `?demo=1` plays a scripted demo story in the browser with no backend (it is labelled DEMO on screen). The front end is Vite + React + TypeScript with no UI framework; build it with `cd web; npm ci; npm run build`.
+Themes: Day, Night, and a high-contrast large-text mode. `?demo=1` (or any host other than this machine, like the [live demo](https://main.d15fdmq2raifi0.amplifyapp.com/)) plays a scripted demo story in the browser with no backend; it is labelled DEMO on screen. The front end is Vite + React + TypeScript with no UI framework; build it with `cd web; npm ci; npm run build`.
 
 | | |
 |---|---|
@@ -140,8 +147,8 @@ Each original is written to `<runtime>/restore.json` before the change. On exit,
 | `myrmidon/` | The agent: `sense`, `signals`, `context`, `facts`, `doctrine`, `loop`, `tools`, `agent`, `act`, `breaks`, `verify`, `memory`, `escalate`, `coach`, `bus`, `dashboard`, `runtime`, `app` |
 | `web/` | Dashboard (Vite + React + TypeScript); `web/dist` is committed so the backend can serve it without Node |
 | `patterns/reflex_gate/` | Reusable decision pattern (per-rule nouls, policy, InterruptGate / ConfirmGate, fakes, posture example) |
-| `eval/`, `results/` | Preregistrations, spikes S1-S3 and their raw results |
-| `scripts/` | Decider start, calibration, demo trace, smoke tests, guided human session, screenshots, demo recorder, pre-push scan |
+| `eval/`, `results/` | Preregistrations, spikes S1-S4 and their raw results |
+| `scripts/` | Decider start, calibration, demo trace, smoke tests, guided human session, screenshots, the demo video pipeline (`video_record_scenes.py`, `video_scenes.html`, `video_tts.py`, `video_build.py`), doc images, live demo deploy (`deploy_demo.py`), pre-push scan |
 | `docs/` | [Architecture](docs/ARCHITECTURE.md), UI contract, [article draft](docs/ARTICLE.md), [video script](docs/VIDEO_SCRIPT.md), [submission kit](docs/SUBMISSION.md), screenshots and diagrams |
 | `tests/` | pytest suite |
 
