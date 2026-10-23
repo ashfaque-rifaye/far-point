@@ -78,7 +78,8 @@ short sentence. Do not give medical advice."""
 REPORT_TASK = """Write a short report for {period} for the user. Call get_today_stats (and summarize_period
 with days=7 for a week). Use only the numbers the tools return: minutes closer than 30 cm, longest near-work
 bout, breaks offered and verified, squint episodes, adaptations that worked. 4 to 8 bullet points of plain
-Markdown, no HTML, no tables, no diagnosis, no medical advice. End with one practical habit tip."""
+Markdown, no HTML, no tables, no diagnosis, no medical advice. End with one practical habit tip.
+Call no other tool. Reply with the report only: no sentences about what you did or will do."""
 
 REVIEW_TASK = """These moments were logged by the local loop (numbers and short notes):
 {moments}
@@ -136,11 +137,15 @@ def strip_html(md: str) -> str:
 
 
 _PREAMBLE = re.compile(r"^(I('m| am| have| will|'ll| now| can)|Here('s| is| are)|Sure|Okay|OK|Let me|Now I|Based on the data)\b", re.I)
+# Narration about the agent's own tool calls, wherever it appears ("The rule proposal has been sent for
+# human approval.", "I have also proposed a rule ...").
+_NARRATION = re.compile(r"(has been (sent|submitted) for (human )?approval|\bI (will|have|'ve|'ll)( now| also)? "
+                        r"(inform|propos|sen[dt]|call|draft|generat|creat|fetch|retriev|format|submit))", re.I)
 
 
 def strip_preamble(md: str) -> str:
-    """Drop the model's own narration ("I have the data... I will now format it") before the report itself."""
-    lines = md.strip().splitlines()
+    """Drop the model's own narration ("I have the data... I will now format it") around the report itself."""
+    lines = [ln for ln in md.strip().splitlines() if not _NARRATION.search(ln)]
     while lines and (not lines[0].strip() or _PREAMBLE.match(lines[0].strip())):
         lines.pop(0)
     return "\n".join(lines).strip()

@@ -218,3 +218,12 @@ def test_report_preamble_is_stripped():
     md = "I have the data from the tools. I will now format it.\n\n- Today, 0.3 min closer than 30 cm."
     assert strip_preamble(md) == "- Today, 0.3 min closer than 30 cm."
     assert strip_preamble("## Today\n- Here is a line") == "## Today\n- Here is a line"
+
+
+def test_report_tool_narration_is_dropped():
+    from farpoint.coach import strip_preamble
+    md = ("The rule proposal has been sent for human approval. I will now inform the user about the report.\n"
+          "Here is your short report for today:\n- **Breaks verified:** 4\n"
+          "I have also proposed a rule for you to consider: a break every 45 minutes.")
+    assert strip_preamble(md) == "- **Breaks verified:** 4"
+    assert strip_preamble("- I will keep my distance tip short") == "- I will keep my distance tip short"

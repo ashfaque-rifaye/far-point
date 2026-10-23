@@ -38,7 +38,7 @@ Everything left of the line runs on the laptop. Only text and numbers cross to B
 ![One tick of the reflex loop](images/decision-loop.png)
 
 
-Declared pattern: **tool selection**. Which of nine tools, if any, should run right now?
+Declared pattern: **tool selection**. Which of nine tools, if any, should run right now? The user's input here is not a typed request: it is what they are doing (how close they sit, how open their eyes are, which app is in front) read against the rulebook they wrote in their own words.
 
 My first design asked the Decider one 9-way `choice` question. On a preregistered held-out set it agreed with the rulebook on **68.1%** of states. It was not bad at reading the state; it was bad at applying a priority order across several true conditions.
 
@@ -58,7 +58,7 @@ So I split the decision the way the model is strong:
 | Nova Lite alone, all 8 rules per call | 100% | p50 2,572 ms, p90 3,179 ms | 107,500 |
 | **Far Point's loop: Decider + Nova only on unsure rules** | **100%** | 458 ms; +2.2 s on 9 of 72 states | **9,522** |
 
-What I take from it:
+## What I learned
 
 - **The renderer did most of the work.** The same per-rule questions over my old, descriptive text scored 30.6%. Ending every line with one verdict phrase moved per-rule accuracy to 99.7%.
 - **Every Decider miss was a quiet tick, not a wrong action.** All nine misses were states where a higher-priority rule was unsure, so the policy stayed silent. Nova fixed all nine.
@@ -84,6 +84,12 @@ The README has the exact JSON of the questions, the wiring in 15 lines, and the 
 - The eval states are synthetic. Real webcam facts are noisier.
 - Distance from iris size is accurate to roughly 10% after calibration.
 - Image mode fits on the GPU (6.56 GB peak, 0.51 s), but I did not measure its accuracy, so Far Point runs text-only. Glasses-off is inferred from distance and squint changes, not seen.
+
+## Try it
+
+- **Without a GPU or AWS:** `python -m farpoint.app --mode replay --trace farpoint\replay\demo_session.jsonl --fake-decider --no-bedrock`, then open http://127.0.0.1:8765/.
+- **With the real Decider:** start it with `scripts\start_decider.ps1` and drop `--fake-decider`. Drop `--no-bedrock` too if you have Bedrock access to Nova Lite in us-east-1.
+- **Reuse the pattern:** `patterns/reflex_gate/README.md`, with `patterns/reflex_gate/examples/posture_agent.py` as a second agent built on it.
 
 ## Built with
 

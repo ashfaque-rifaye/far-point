@@ -1,5 +1,16 @@
 # Far Point demo video (target 2:45, hard limit 3:00)
 
+## The built cut
+
+`far-point-demo.mp4` is produced without a camera or a microphone:
+
+1. `uv run --no-project --with playwright python scripts/video_record_scenes.py` starts the backend in replay mode with the real local Decider and Amazon Nova (dry-run desktop changes), drives Edge through the screens and captures them at 1080p, about 5 minutes. Add `--coach-only` to refilm just the rulebook and report scenes (about 1 minute).
+2. `uv run --no-project --with playwright python scripts/video_build.py` speaks the narration with Kokoro TTS on the laptop (`scripts/video_tts.py`, its own environment at `E:\farpoint-runtime\tts-env`), renders the diagrams and cards, cuts the recording to the narration, speeds up long waits (labelled on screen), burns in captions and writes `far-point-demo.mp4` and `far-point-demo.srt` to `E:\farpoint-runtime\recordings\video`.
+
+The narration and the scene list live in `SCENES` in `scripts/video_build.py`; its clip windows were picked from the recorded frames, so check them after a new take. The current cut is 2:44. Every dashboard shot carries a label saying it is a synthetic trace replayed through the real agent.
+
+## Recording your own take
+
 Record the screen with `scripts\record_demo.ps1`. Film the "glasses off" moments with your phone (the laptop webcam is busy measuring you, Windows lets only one app use it). No music, or only music you have the rights to. Speak the narration live or record it after; keep it under 400 words.
 
 Before you start:
