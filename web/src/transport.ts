@@ -1,6 +1,7 @@
 import { makeCommand, parseServerMessage, resolveWsUrl, type ClientCommand, type CommandArgsMap, type CommandName } from './contract';
 import { getState, ingest, pushToast, setState } from './store';
 import { startDemo, demoCommand } from './demo';
+import { liveCommand, startLive } from './live/agent';
 
 const BACKOFF = [1000, 2000, 4000, 10000];
 let ws: WebSocket | null = null;
@@ -44,11 +45,18 @@ function scheduleReconnect(url: string) {
 
 /** The backend only ever runs on this machine; served from anywhere else (the hosted demo), there is none. */
 const LOCAL_HOSTS = new Set(['127.0.0.1', 'localhost', '[::1]', '::1']);
+export const HOSTED = !LOCAL_HOSTS.has(window.location.hostname);
 
 export function startTransport() {
   const search = window.location.search;
   const params = new URLSearchParams(search);
-  if (params.has('demo') || !LOCAL_HOSTS.has(window.location.hostname)) {
+  if (params.has('live')) {
+    // Hosted live mode: the visitor's webcam in this tab, the Decider on AWS Lambda.
+    stopped = true;
+    void startLive();
+    return;
+  }
+  if (params.has('demo') || HOSTED) {
     stopped = true;
     setState({ conn: 'demo', wsUrl: 'demo' });
     startDemo();
@@ -69,6 +77,10 @@ export function send<K extends CommandName>(name: K, args: CommandArgsMap[K]) {
   const cmd = makeCommand(name, args);
   if (getState().conn === 'demo') {
     demoCommand(cmd as unknown as ClientCommand);
+    return;
+  }
+  if (getState().conn === 'live') {
+    liveCommand(cmd as unknown as ClientCommand);
     return;
   }
   if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(cmd));

@@ -101,6 +101,7 @@ The full write-ups, including the weaknesses, are in `eval/SPIKE_RESULTS.md`, `e
 
 ## Try it
 
+- **In your browser, live:** https://main.d15fdmq2raifi0.amplifyapp.com/?live=1 measures your webcam inside the tab (MediaPipe as WebAssembly; no image leaves your device). It sends the same verdict sentences and typed questions to Strands Decider 2B on AWS (SageMaker Serverless behind a capped Lambda front door). It changes the page itself: text zoom, dark theme, a camera-verified break. When the hosted Decider is unavailable it says so, and decides with code rules meanwhile.
 - **Without a GPU or AWS:** `python -m myrmidon.app --mode replay --trace myrmidon\replay\demo_session.jsonl --fake-decider --no-bedrock`, then open http://127.0.0.1:8765/.
 - **With the real Decider:** start it with `scripts\start_decider.ps1` and drop `--fake-decider`. Drop `--no-bedrock` too if you have Bedrock access to Nova Lite in us-east-1.
 - **Reuse the pattern:** `patterns/reflex_gate/README.md`, with `patterns/reflex_gate/examples/posture_agent.py` as a second agent built on it.

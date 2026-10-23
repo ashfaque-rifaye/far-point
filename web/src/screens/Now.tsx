@@ -16,7 +16,7 @@ export function Now() {
   const lastVerified = useStore((x) => x.lastVerified);
   const stats = useStore((x) => x.stats);
 
-  const mode = useStore((x) => (x.conn === 'demo' ? 'demo' : x.hello?.mode));
+  const mode = useStore((x) => (x.conn === 'demo' ? 'demo' : x.conn === 'live' ? 'browser' : x.hello?.mode));
   const dist = s?.distance_cm ?? null;
   const band = s?.distance_band ?? null;
   const boutMin = (s?.bout_s ?? 0) / 60;
@@ -25,7 +25,10 @@ export function Now() {
     <section className="now" aria-label="Now">
       <div className="hero">
         <div>
-          <div className="eyebrow">{mode === 'live' ? 'Live · on this laptop' : mode === 'demo' ? 'Demo story · scripted numbers' : 'Replay · recorded numbers, real Decider'}</div>
+          <div className="eyebrow">
+            {mode === 'live' ? 'Live · on this laptop' : mode === 'browser' ? 'Live · your webcam, measured in this tab · Decider 2B on AWS'
+              : mode === 'demo' ? 'Demo story · scripted numbers' : 'Replay · recorded numbers, real Decider'}
+          </div>
           <h1 className="headline" style={{ marginTop: 10 }}>
             You're
             <span className={`inline-pill num ${band ?? ''}`} aria-live="polite">
@@ -36,8 +39,9 @@ export function Now() {
           </h1>
         </div>
         <p className="lede">
-          Myrmidon reads your distance, squint and blinks from the webcam, on this laptop. When your rules say so, it changes the screen
-          and checks whether it helped.
+          {mode === 'browser'
+            ? 'Myrmidon reads your distance, squint and blinks from your webcam, inside this tab: no image leaves your device. Strands Decider 2B on AWS decides, and this page changes itself and checks whether it helped.'
+            : 'Myrmidon reads your distance, squint and blinks from the webcam, on this laptop. When your rules say so, it changes the screen and checks whether it helped.'}
         </p>
         <div className="metric-grid">
           <Metric icon={<Eye size={15} />} k="Eye opening vs. your baseline" v={s ? `${Math.round(s.squint * 100)}` : '--'} unit="%" bar={s ? Math.min(1, s.squint) : 0} warn={!!s?.squinting} />
@@ -175,8 +179,10 @@ export function DecisionCard({ compact = false }: { compact?: boolean }) {
   return (
     <div className="card" aria-live="polite">
       <div className="decision-head">
-        <div className="eyebrow">Decider 2B · local GPU</div>
-        <span className="chip num">{Math.round(dd.latency_ms)} ms</span>
+        <div className="eyebrow">
+          {dd.source === 'fallback' ? 'Code rules · Decider not available' : hello?.decider.device === 'AWS, CPU' ? 'Decider 2B · AWS, CPU' : 'Decider 2B · local GPU'}
+        </div>
+        {dd.source !== 'fallback' && <span className="chip num">{Math.round(dd.latency_ms)} ms</span>}
       </div>
       <div className="big-action">
         <span className="icon-btn" style={{ width: 40, height: 40, background: dd.policy === 'act' ? 'var(--grad)' : 'var(--card-2)', color: dd.policy === 'act' ? 'var(--on-grad)' : 'var(--muted)' }}>
@@ -186,7 +192,7 @@ export function DecisionCard({ compact = false }: { compact?: boolean }) {
       </div>
       <div className="muted" style={{ fontSize: '0.84rem' }}>
         {dd.reason ?? (dd.rule_ref ? `${dd.rule_ref} applies` : 'No rule applies right now.')}
-        {dd.source === 'fallback' && ' Decider unavailable: fail quiet.'}
+        {dd.source === 'fallback' && !dd.reason?.includes('code rules') && ' Decider unavailable: fail quiet.'}
       </div>
       {!compact && rules.length > 0 && (
         <div className="rules" aria-label="Does each rule apply right now?">

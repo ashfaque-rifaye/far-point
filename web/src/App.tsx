@@ -8,7 +8,7 @@ import { Report } from './screens/Report';
 import { Setup } from './screens/Setup';
 import { Ring } from './components/ui';
 import { dismissToast, setState, useStore } from './store';
-import { enterDemo, send } from './transport';
+import { HOSTED, enterDemo, send } from './transport';
 
 type Screen = 'now' | 'reflex' | 'day' | 'rules' | 'report' | 'setup';
 type Theme = 'day' | 'night' | 'contrast';
@@ -58,6 +58,12 @@ export function App() {
     const on = () => setScreen(readHash());
     window.addEventListener('hashchange', on);
     return () => window.removeEventListener('hashchange', on);
+  }, []);
+  useEffect(() => {
+    // the live agent's dark_mode tool switches this page's theme
+    const on = (e: Event) => setTheme((e as CustomEvent<Theme>).detail);
+    window.addEventListener('myrmidon:theme', on);
+    return () => window.removeEventListener('myrmidon:theme', on);
   }, []);
   const go = (s: Screen) => {
     window.location.hash = s === 'now' ? '' : s;
@@ -139,12 +145,16 @@ function TopBar({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => voi
       </div>
       <div className="pills" aria-label="Status">
         {conn === 'demo' && <span className="pill demo">DEMO story, scripted numbers</span>}
+        {conn === 'demo' && HOSTED && (
+          <a className="pill live-cta" href="?live=1">Try it live with your webcam</a>
+        )}
+        {conn === 'live' && <span className="pill live">LIVE · your webcam, measured in this tab</span>}
         {hello?.mode === 'replay' && conn !== 'demo' && <span className="pill demo">Replay of a recorded session</span>}
         {conn === 'offline' && hello && <span className="pill"><span className="dot bad" />Reconnecting…</span>}
         <span className="pill">
           <span className={`dot ${dot(hello?.decider.status)}`} />
-          Decider {hello?.decider.status ?? '…'}
-          {last && <span className="muted num">· {Math.round(last.data.latency_ms)} ms</span>}
+          {last?.data.source === 'fallback' && conn === 'live' ? 'Decider not available · code rules' : `Decider ${hello?.decider.status ?? '…'}`}
+          {last && last.data.source !== 'fallback' && <span className="muted num">· {Math.round(last.data.latency_ms)} ms</span>}
         </span>
         <span className="pill">
           <span className={`dot ${dot(hello?.bedrock.status)}`} />

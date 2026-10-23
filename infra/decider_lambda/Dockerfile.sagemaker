@@ -1,0 +1,7 @@
+# The same image as the Lambda one (Decider + weights baked in), started as the stock HTTP server for
+# SageMaker Serverless Inference. BASE is the Lambda image in this account's ECR.
+ARG BASE
+FROM ${BASE}
+ENV HF_HOME=/opt/hf HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+COPY sm_serve.py /opt/sm_serve.py
+ENTRYPOINT ["python", "/opt/sm_serve.py"]

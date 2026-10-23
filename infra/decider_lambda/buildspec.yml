@@ -1,0 +1,18 @@
+version: 0.2
+# CodeBuild: build an image and push it to ECR. REPO_URI comes from the project; DOCKERFILE and TAG
+# pick the variant (Dockerfile -> latest for Lambda, Dockerfile.sagemaker -> sagemaker).
+env:
+  variables:
+    DOCKERFILE: Dockerfile
+    TAG: latest
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${REPO_URI%%/*}
+  build:
+    commands:
+      # the classic builder writes a Docker v2 manifest, which Lambda and SageMaker accept (no attestation index)
+      - DOCKER_BUILDKIT=0 docker build -f $DOCKERFILE --build-arg BASE=$REPO_URI:latest -t $REPO_URI:$TAG .
+  post_build:
+    commands:
+      - docker push $REPO_URI:$TAG

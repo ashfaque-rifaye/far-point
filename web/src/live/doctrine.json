@@ -1,0 +1,92 @@
+{
+ "_note": "Generated from myrmidon.doctrine.default_doctrine() and patterns.reflex_gate INTERRUPT_OK; do not edit.",
+ "limits": {
+  "near_cm": 30,
+  "near_s": 5,
+  "bout_cm": 60,
+  "bout_min": 45,
+  "bout_reset_s": 20,
+  "relaxed_cm": 50,
+  "relaxed_min": 10,
+  "squint_ratio": 0.75,
+  "squint_s": 3,
+  "lean_in_cm": 8,
+  "low_blink_per_min": 10,
+  "dim_pct_high": 70,
+  "bright_pct_low": 30
+ },
+ "rules": [
+  {
+   "n": 1,
+   "tool": "enlarge_text",
+   "text": "The Viewing distance line says enlarging needed.",
+   "when_true": "the Viewing distance line says 'enlarging needed'",
+   "when_false": "the Viewing distance line says 'no enlarging needed', 'no enlarging needed yet', 'no face visible' or 'this app has no zoom control'",
+   "basis": "Clouclip pilot: under 30 cm for more than 5 s counts as unhealthy near work. Larger text lets you lean back."
+  },
+  {
+   "n": 2,
+   "tool": "glasses_reminder",
+   "text": "The Glasses line says reminder due.",
+   "when_true": "the Glasses line ends with 'reminder due'",
+   "when_false": "the Glasses line ends with 'no reminder needed'",
+   "basis": "Leaning in and squinting at once is a common sign of reading without your prescribed glasses."
+  },
+  {
+   "n": 3,
+   "tool": "dark_mode",
+   "text": "The Theme line says dark mode needed.",
+   "when_true": "the Theme line says 'mismatch, dark mode needed'",
+   "when_false": "the Theme line says 'no change needed'",
+   "basis": "A bright light page in a dark room is a common glare complaint."
+  },
+  {
+   "n": 4,
+   "tool": "dim_screen",
+   "text": "The Screen brightness line says dimming needed.",
+   "when_true": "the Screen brightness line says 'dimming needed'",
+   "when_false": "the Screen brightness line says 'no change needed', 'brightening needed' or 'not adjustable'",
+   "basis": "A screen much brighter than a dark room adds glare. Rule 3 (dark mode) comes first."
+  },
+  {
+   "n": 5,
+   "tool": "brighten_screen",
+   "text": "The Screen brightness line says brightening needed.",
+   "when_true": "the Screen brightness line says 'brightening needed'",
+   "when_false": "the Screen brightness line says 'no change needed', 'dimming needed' or 'not adjustable'",
+   "basis": "A dim screen in a bright room makes you lean in and squint."
+  },
+  {
+   "n": 6,
+   "tool": "far_look_break",
+   "text": "The Near-work bout line says break is due.",
+   "when_true": "the Near-work bout line ends with 'break is due'",
+   "when_false": "the Near-work bout line ends with 'break not due yet'",
+   "basis": "Clouclip pilot: under 60 cm for more than 45 min counts as unhealthy near work. A 20 s far look breaks the bout."
+  },
+  {
+   "n": 7,
+   "tool": "reduce_text",
+   "text": "The Relaxed reading line says text can go back one step.",
+   "when_true": "the Relaxed reading line ends with 'text can go back one step'",
+   "when_false": "the Relaxed reading line ends with 'no change needed'",
+   "basis": "Undo Myrmidon's own zoom once you have read comfortably for a while."
+  },
+  {
+   "n": 8,
+   "tool": "ask_user",
+   "text": "The Squint despite zoom line says yes.",
+   "when_true": "the Squint despite zoom line ends with 'yes'",
+   "when_false": "the Squint despite zoom line ends with 'no'",
+   "basis": "If enlarging text has not helped, ask you instead of guessing. At most once per 30 min."
+  }
+ ],
+ "interrupt_ok": {
+  "type": "noul",
+  "instructions": "Read the Activity line. Is it OK to interrupt the user with a prompt right now?",
+  "criteria": {
+   "true": "Activity says idle, between tasks, or just switched windows",
+   "false": "Activity says video call, presenting or screen sharing, typing in a burst, or fullscreen video"
+  }
+ }
+}

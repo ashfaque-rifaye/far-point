@@ -31,7 +31,7 @@ export interface DecisionExt extends DecisionData {
   escalation?: { model: string; latency_ms: number; verdicts: Record<string, boolean | null>; skipped?: string | null };
 }
 
-export type Conn = 'connecting' | 'open' | 'offline' | 'demo';
+export type Conn = 'connecting' | 'open' | 'offline' | 'demo' | 'live';
 
 export interface Stamped<T> {
   t: number;

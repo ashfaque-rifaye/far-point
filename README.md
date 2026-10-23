@@ -29,7 +29,31 @@ Not a medical device. Myrmidon does not diagnose, treat or prevent any eye condi
 - Demo video (under 3 minutes): _(added on upload)_
 - Builder Center article: _(added on publish)_
 
-The real agent runs on your Windows laptop: it needs the webcam, the local GPU for the Decider and Win32 for the screen changes. The hosted page is the same dashboard; served from anywhere but `127.0.0.1` it plays the built-in demo story (labelled DEMO, scripted numbers) instead of connecting to a backend. Publish it again with `python scripts/deploy_demo.py` after `npm --prefix web run build`.
+### The hosted page: demo story, or live with your webcam
+
+The full agent runs on your Windows laptop (webcam, local GPU for the Decider, Win32 for screen changes). The hosted page is the same dashboard and has two modes:
+
+- **Demo story** (default): scripted numbers, labelled DEMO.
+- **Live** (*Try it live with your webcam*, or [`?live=1`](https://main.d15fdmq2raifi0.amplifyapp.com/?live=1)): the Myrmidon loop runs in your browser tab ([`web/src/live/agent.ts`](web/src/live/agent.ts)).
+  - **Measure:** MediaPipe Face Landmarker runs as WebAssembly inside the tab, so frames never leave your device. It measures distance from iris width, eye opening against your learned baseline, blinks and head turn. Setup → Calibrate sets distance from a measured position.
+  - **Decide:** the desktop's verdict sentences and typed questions, word for word, go to Strands Decider 2B on AWS. Code applies the priority order and the 0.65 / 0.35 thresholds.
+  - **Act:** the page changes itself, reversibly: text zoom, dark theme, and a far-look break verified by your head turn. The InterruptGate rule holds breaks while you type.
+  - **Pace:** a break comes due after 2 minutes of near work instead of 45, so a visitor sees one.
+
+How the hosted Decider runs, with a cost cap:
+
+| Piece | What | Cost |
+|---|---|---|
+| Page | AWS Amplify Hosting (`scripts/deploy_demo.py`) | free tier / cents |
+| Decider | Strands Decider 2B + Qwen3.5-2B weights baked into one image (`infra/decider_lambda/`), built by CodeBuild, served by **SageMaker Serverless Inference** (6 GB, CPU, scales to zero) | per second of inference only, nothing while idle |
+| Front door | a 128 MB Lambda Function URL (`infra/decider_proxy/`) that forwards calls and enforces caps in DynamoDB: 600 s of inference a day and 6,500 s in total (about $0.78), then answers 429 | always-free tier |
+| Guard | AWS Budget alert at $1/month on the services above | free |
+
+While the Decider is unavailable (not deployed yet, warming up, or over the cap), the page keeps deciding with code rules. These are the conditions that wrote each verdict sentence, answered 0.99 / 0.01. The Reflex log and the status pill then say **"Code rules · Decider not available"**. The page asks the Decider again on every tick and switches back as soon as it answers.
+
+Deploy: `python scripts/deploy_decider_sagemaker.py --email you@example.com` (image + endpoint + proxy), then `npm --prefix web run build` (reads `web/.env.production`) and `python scripts/deploy_demo.py`. If your account allows Lambda functions of 10 GB, `scripts/deploy_decider_lambda.py` runs the same image on Lambda instead (always-free tier).
+
+Note for new AWS accounts: Lambda functions are capped at 3,008 MB and SageMaker Serverless endpoints at 3,072 MB until a support case raises them. The Decider needs about 5 GB, so request **SageMaker Serverless memory per endpoint: 6,144 MB** (or Lambda function memory: 10,240 MB) under Support Center → Create case → Service limit increase.
 
 ## The decision handed to the Decider
 

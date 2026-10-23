@@ -341,6 +341,20 @@ button {
   color: var(--warn);
   border-color: transparent;
 }
+.pill.live-cta {
+  background: var(--grad);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pill.live {
+  background: var(--grad-soft);
+  color: var(--ink);
+  border-color: transparent;
+  font-weight: 700;
+}
 .theme-switch {
   display: inline-flex;
   padding: 4px;

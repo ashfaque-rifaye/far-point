@@ -32,6 +32,8 @@ SCREENSHOT_PREFIX = "docs/images/dashboard-"
 # Rendered diagrams and the article cover (from SVG/HTML sources next to them, scripts/render_doc_images.py).
 DOC_IMAGES = {"docs/images/architecture.png", "docs/images/decision-loop.png", "docs/images/cover.png",
               "docs/images/results.png", "docs/images/reflex-gate.png", "docs/images/myrmidon-cover-1200x675.png"}
+# MediaPipe's WebAssembly runtime for the hosted live page carries an image decoder, so it contains JPEG markers.
+VENDOR_BINARIES = {"web/public/mediapipe/vision_wasm_internal.wasm", "web/dist/mediapipe/vision_wasm_internal.wasm"}
 
 
 def account_id() -> bytes | None:
@@ -57,7 +59,7 @@ def main(argv=None) -> int:
     acct = account_id()
     hits = []
     for f in files:
-        screenshot = (f.startswith(SCREENSHOT_PREFIX) and f.lower().endswith(".png")) or f in DOC_IMAGES
+        screenshot = (f.startswith(SCREENSHOT_PREFIX) and f.lower().endswith(".png")) or f in DOC_IMAGES or f in VENDOR_BINARIES
         if f.lower().endswith(IMAGE_EXT) and not screenshot:
             hits.append((f, "image_file"))
         blob = show(f)
